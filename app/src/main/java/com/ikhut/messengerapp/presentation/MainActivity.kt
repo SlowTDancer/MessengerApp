@@ -34,8 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(binding.mainActivityFragmentContainerView.id, LoginFragment())
-                .commit()
+                .replace(binding.mainActivityFragmentContainerView.id, LoginFragment()).commit()
         }
 
     }
@@ -66,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                     val user = state.data
                     showToast("Login successful! Welcome ${user?.username}")
                 }
+
                 is Resource.Error -> showToast("Login failed: ${state.message}")
             }
         }

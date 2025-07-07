@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/authentification_avatar"
         android:layout_width="@dimen/authentification_avatar_width"
         android:layout_height="@dimen/authentification_avatar_height"
 
+        android:layout_marginTop="@dimen/authentification_avatar_margin_top"
         android:contentDescription="@string/authentification_avatar"
-        android:src="@drawable/avatar_image_placeholder"
 
+        android:src="@drawable/avatar_image_placeholder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
 
-        android:layout_marginTop="@dimen/authentification_avatar_margin_top" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/authentification_nickname_input_layout"
@@ -25,30 +25,30 @@
         android:layout_marginTop="@dimen/authentification_margin_between_avatar_and_inputs"
         android:padding="0dp"
 
-        app:hintEnabled="false"
-
         app:boxBackgroundMode="outline"
+
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
+        app:hintEnabled="false"
 
-        app:layout_constraintTop_toBottomOf="@id/authentification_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/authentification_avatar">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/authentification_nickname_input_edit_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/input_background"
+
+            android:gravity="center"
+            android:hint="@string/nickname"
+
+            android:inputType="text"
+            android:maxLines="1"
             android:paddingVertical="@dimen/authentification_input_vertical_padding"
 
-            android:hint="@string/nickname"
-            android:textSize="@dimen/authentification_input_text_size"
-
-            android:maxLines="1"
-            android:inputType="text"
-            android:gravity="center"
-
-            android:background="@drawable/input_background" />
+            android:textSize="@dimen/authentification_input_text_size" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,31 +60,31 @@
         android:layout_marginTop="@dimen/authentification_margin_between_inputs"
         android:padding="0dp"
 
-        app:hintEnabled="false"
-
         app:boxBackgroundMode="outline"
+
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
+        app:hintEnabled="false"
 
-        app:layout_constraintTop_toBottomOf="@id/authentification_nickname_input_layout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/authentification_nickname_input_layout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/authentification_password_input_edit_layout"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/input_background"
+
+            android:gravity="center"
+            android:hint="@string/password"
+
+            android:inputType="textPassword"
+            android:maxLines="1"
             android:paddingVertical="@dimen/authentification_input_vertical_padding"
 
-            android:hint="@string/password"
-            android:textSize="@dimen/authentification_input_text_size"
-
-            android:maxLines="1"
-            android:inputType="textPassword"
-            android:gravity="center"
-
-            android:background="@drawable/input_background" />
+            android:textSize="@dimen/authentification_input_text_size" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,31 +96,31 @@
         android:layout_marginTop="@dimen/authentification_margin_between_inputs"
         android:padding="0dp"
 
-        app:hintEnabled="false"
-
         app:boxBackgroundMode="outline"
+
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
+        app:hintEnabled="false"
 
-        app:layout_constraintTop_toBottomOf="@id/authentification_password_input_layout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/authentification_password_input_layout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/authentification_what_i_do_input_edit_layout"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/input_background"
+
+            android:gravity="center"
+            android:hint="@string/what_i_do"
+
+            android:inputType="text"
+            android:maxLines="1"
             android:paddingVertical="@dimen/authentification_input_vertical_padding"
 
-            android:hint="@string/what_i_do"
-            android:textSize="@dimen/authentification_input_text_size"
-
-            android:maxLines="1"
-            android:inputType="text"
-            android:gravity="center"
-
-            android:background="@drawable/input_background" />
+            android:textSize="@dimen/authentification_input_text_size" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -132,12 +132,12 @@
 
         android:layout_marginTop="@dimen/authentification_margin_between_inputs_and_button_large"
 
-        android:paddingHorizontal="@dimen/login_button_horizontal_padding_large"
-        android:paddingVertical="@dimen/login_button_vertical_padding"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingHorizontal="@dimen/login_button_horizontal_padding_large"
+        android:paddingVertical="@dimen/login_button_vertical_padding"
 
         android:text="@string/sign_up_text"
         android:textAllCaps="true"
@@ -147,10 +147,9 @@
         app:backgroundTint="@color/button_blue"
         app:cornerRadius="@dimen/authentification_button_corner_radius"
 
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/authentification_what_i_do_input_layout"/>
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/authentification_what_i_do_input_layout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

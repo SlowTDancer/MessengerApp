@@ -18,9 +18,7 @@ class LoginFragment : Fragment() {
     private lateinit var authViewModel: AuthViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
@@ -33,8 +31,7 @@ class LoginFragment : Fragment() {
             val mainActivity = requireActivity() as MainActivity
             val containerId = mainActivity.binding.mainActivityFragmentContainerView.id
 
-            parentFragmentManager.beginTransaction()
-                .replace(containerId, RegistrationFragment())
+            parentFragmentManager.beginTransaction().replace(containerId, RegistrationFragment())
                 .commit()
         }
 

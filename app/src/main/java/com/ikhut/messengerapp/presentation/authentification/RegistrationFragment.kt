@@ -10,7 +10,7 @@ import com.ikhut.messengerapp.databinding.FragmentRegistrationBinding
 import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.presentation.viewmodel.AuthViewModel
 
-class RegistrationFragment: Fragment() {
+class RegistrationFragment : Fragment() {
 
     private var _binding: FragmentRegistrationBinding? = null
     private val binding get() = _binding!!
@@ -18,9 +18,7 @@ class RegistrationFragment: Fragment() {
     private lateinit var authViewModel: AuthViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRegistrationBinding.inflate(inflater, container, false)
         return binding.root
