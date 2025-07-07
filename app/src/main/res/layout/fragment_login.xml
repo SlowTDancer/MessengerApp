@@ -81,7 +81,7 @@
             android:textSize="@dimen/authentification_input_text_size"
 
             android:maxLines="1"
-            android:inputType="text"
+            android:inputType="textPassword"
             android:gravity="center"
 
             android:background="@drawable/input_background" />

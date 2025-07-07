@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.ikhut.messengerapp.data.firebase.FirebaseUserDataSource
 import com.ikhut.messengerapp.data.repository.UserRepositoryImpl
 import com.ikhut.messengerapp.databinding.ActivityMainBinding
-import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.domain.repository.UserRepository
 import com.ikhut.messengerapp.domain.usecase.LoginUserUseCase
 import com.ikhut.messengerapp.domain.usecase.RegisterUserUseCase

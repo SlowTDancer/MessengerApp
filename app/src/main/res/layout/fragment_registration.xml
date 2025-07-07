@@ -81,7 +81,7 @@
             android:textSize="@dimen/authentification_input_text_size"
 
             android:maxLines="1"
-            android:inputType="text"
+            android:inputType="textPassword"
             android:gravity="center"
 
             android:background="@drawable/input_background" />
@@ -126,7 +126,7 @@
 
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/sign_in_button"
+        android:id="@+id/sign_up_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
