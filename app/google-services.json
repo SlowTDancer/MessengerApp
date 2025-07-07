@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "72453040471",
+    "project_id": "sithetdvali",
+    "storage_bucket": "sithetdvali.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72453040471:android:f3f810dbb69010ba63f612",
+        "android_client_info": {
+          "package_name": "com.ikhut.messengerapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgKO9QCo79dCT0YYaghQGIo4dKOCVv-iw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
