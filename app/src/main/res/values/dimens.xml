@@ -17,7 +17,6 @@
     <dimen name="authentification_button_corner_radius">7dp</dimen>
     <dimen name="authentification_margin_between_not_registered_button_and_text">5dp</dimen>
     <dimen name="authentification_bottom_margin">40dp</dimen>
-
-
+    <dimen name="authentification_margin_between_inputs_and_button_large">70dp</dimen>
 
 </resources>

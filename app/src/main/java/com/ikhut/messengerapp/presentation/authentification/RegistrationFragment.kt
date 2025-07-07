@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.ikhut.messengerapp.databinding.FragmentLoginBinding
-import com.ikhut.messengerapp.presentation.MainActivity
+import com.ikhut.messengerapp.databinding.FragmentRegistrationBinding
 
-class LoginFragment : Fragment() {
+class RegistrationFragment: Fragment() {
 
-    private var _binding: FragmentLoginBinding? = null
+    private var _binding: FragmentRegistrationBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -18,21 +17,12 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        _binding = FragmentRegistrationBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.signUpButtonInLoginFragment.setOnClickListener {
-            val mainActivity = requireActivity() as MainActivity
-            val containerId = mainActivity.binding.mainActivityFragmentContainerView.id
-
-            parentFragmentManager.beginTransaction()
-                .replace(containerId, RegistrationFragment())
-                .commit()
-        }
     }
 
     override fun onDestroyView() {
