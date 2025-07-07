@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">MessengerApp</string>
+    <string name="authentification_avatar">Avatar image placeholder</string>
+
+    <string name="nickname">Enter your nickname</string>
+    <string name="password">Enter your password</string>
+    <string name="login_button_text">SIGN IN</string>
+    <string name="not_registered_text">Not registered?</string>
+    <string name="sign_up_text">SIGN UP</string>
+
 </resources>
