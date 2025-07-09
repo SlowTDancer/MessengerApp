@@ -19,4 +19,9 @@
     <dimen name="authentification_bottom_margin">40dp</dimen>
     <dimen name="authentification_margin_between_inputs_and_button_large">70dp</dimen>
 
+
+    <dimen name="bottom_navigation_view_height">70dp</dimen>
+    <dimen name="fab_custom_size">70dp</dimen>
+    <dimen name="fab_icon_size">40dp</dimen>
+
 </resources>

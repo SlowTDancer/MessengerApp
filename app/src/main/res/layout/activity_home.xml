@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.HomeActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/main_activity_fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/bottom_navigation_view_height" />
+    
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottom_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_navigation_view_height"
+
+            app:fabCradleMargin="8dp"
+
+            android:backgroundTint="@color/white"
+
+            android:layout_gravity="bottom"
+            app:fabAlignmentMode="center"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabCustomSize="@dimen/fab_custom_size"
+
+        android:src="@drawable/ic_add"
+        android:contentDescription="@string/plus_icon_desc"
+
+        android:backgroundTint="@color/navbar_blue"
+        app:tint="@color/white"
+
+        app:maxImageSize="@dimen/fab_icon_size"
+
+        app:layout_anchor="@id/bottom_app_bar"
+        style="@style/Material2FAB" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

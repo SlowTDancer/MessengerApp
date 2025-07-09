@@ -9,7 +9,9 @@
     <string name="login_button_text">SIGN IN</string>
     <string name="not_registered_text">Not registered?</string>
     <string name="sign_up_text">SIGN UP</string>
-
+    <string name="plus_icon_desc">plus icon</string>
+    <string name="home_title">Home</string>
+    <string name="settings_title">Settings</string>
 
 
 </resources>

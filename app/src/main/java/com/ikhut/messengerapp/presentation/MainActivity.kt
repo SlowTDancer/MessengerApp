@@ -1,5 +1,6 @@
 package com.ikhut.messengerapp.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import com.ikhut.messengerapp.domain.usecase.RegisterUserUseCase
 import com.ikhut.messengerapp.presentation.authentification.LoginFragment
 import com.ikhut.messengerapp.presentation.viewmodel.AuthViewModel
 import com.ikhut.messengerapp.utils.Resource
+
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -64,6 +66,9 @@ class MainActivity : AppCompatActivity() {
                 is Resource.Success -> {
                     val user = state.data
                     showToast("Login successful! Welcome ${user?.username}")
+
+                    val intent = Intent(this@MainActivity, HomeActivity::class.java)
+                    startActivity(intent);
                 }
 
                 is Resource.Error -> showToast("Login failed: ${state.message}")
