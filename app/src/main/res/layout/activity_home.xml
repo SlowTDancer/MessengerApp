@@ -21,9 +21,24 @@
             app:fabCradleMargin="8dp"
 
             android:backgroundTint="@color/white"
+            app:contentInsetStart="0dp"
+            app:contentInsetEnd="0dp"
 
             android:layout_gravity="bottom"
-            app:fabAlignmentMode="center"/>
+            app:fabAlignmentMode="center">
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="@dimen/bottom_navigation_view_padding_horizontal"
+
+                android:background="@android:color/transparent"
+                app:labelVisibilityMode="unlabeled"
+
+                app:menu="@menu/bottom_navigation_menu"/>
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
