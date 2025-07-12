@@ -50,7 +50,7 @@ class ConversationListFragment : Fragment() {
             ConversationSummary(
                 addresseeName = "Sayed Eftiaz",
                 lastMessageTime = LocalDateTime.now().minusMinutes(5),
-                lastMessage = "On my way home but I needed to stop by the block store to...",
+                lastMessage = "On my way home but I needed to stop by the block store to get some items",
                 profileImageRes = R.drawable.avatar_image_placeholder
             ),
             ConversationSummary(
