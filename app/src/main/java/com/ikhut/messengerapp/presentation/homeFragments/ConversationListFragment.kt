@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import com.ikhut.messengerapp.R
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.appbar.AppBarLayout
 import com.ikhut.messengerapp.databinding.FragmentConversationListBinding
 import com.ikhut.messengerapp.domain.model.ConversationSummary
 import java.time.LocalDateTime
+import kotlin.math.abs
 
 class ConversationListFragment : Fragment() {
 
@@ -27,6 +29,8 @@ class ConversationListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setCollapsingViewAnimation()
         setupRecyclerView()
         loadSampleData()
     }
@@ -35,6 +39,26 @@ class ConversationListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun setCollapsingViewAnimation() {
+        val appBarLayout = binding.appBarLayout
+        val imageView = binding.collapsingToolbarOverlay
+
+        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val totalScrollRange = appBarLayout.totalScrollRange
+            val percentage = abs(verticalOffset).toFloat() / totalScrollRange.toFloat()
+
+            // Calculate alpha based on scroll percentage
+            // Alpha decreases as we scroll up (percentage increases)
+            val alpha = 1.0f - percentage
+
+            // Apply smooth fade animation
+            imageView.alpha = alpha
+
+            imageView.visibility = if (alpha <= 0.01f) View.GONE else View.VISIBLE
+        })
+    }
+
 
     private fun setupRecyclerView() {
         adapter = ConversationSummaryAdapter()
