@@ -8,53 +8,55 @@
     tools:context=".presentation.HomeActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/main_activity_fragment_container_view"
+        android:id="@+id/home_activity_fragment_container_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/bottom_navigation_view_height" />
-    
-        <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/bottom_app_bar"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--   Bottom Part  -->
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottom_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_navigation_view_height"
+
+        android:layout_gravity="bottom"
+
+        android:backgroundTint="@color/white"
+        app:contentInsetEnd="0dp"
+        app:contentInsetStart="0dp"
+
+        app:fabAlignmentMode="center"
+        app:fabCradleMargin="8dp">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_navigation_view_height"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
 
-            app:fabCradleMargin="8dp"
+            android:paddingHorizontal="@dimen/bottom_navigation_view_padding_horizontal"
+            app:labelVisibilityMode="unlabeled"
 
-            android:backgroundTint="@color/white"
-            app:contentInsetStart="0dp"
-            app:contentInsetEnd="0dp"
+            app:menu="@menu/bottom_navigation_menu" />
 
-            android:layout_gravity="bottom"
-            app:fabAlignmentMode="center">
+    </com.google.android.material.bottomappbar.BottomAppBar>
 
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/bottom_navigation_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingHorizontal="@dimen/bottom_navigation_view_padding_horizontal"
-
-                android:background="@android:color/transparent"
-                app:labelVisibilityMode="unlabeled"
-
-                app:menu="@menu/bottom_navigation_menu"/>
-
-        </com.google.android.material.bottomappbar.BottomAppBar>
-
+    <!--   FAB  -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/Material2FAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:fabCustomSize="@dimen/fab_custom_size"
-
-        android:src="@drawable/ic_add"
-        android:contentDescription="@string/plus_icon_desc"
 
         android:backgroundTint="@color/navbar_blue"
-        app:tint="@color/white"
+        android:contentDescription="@string/plus_icon_desc"
 
-        app:maxImageSize="@dimen/fab_icon_size"
+        android:src="@drawable/ic_add"
+        app:fabCustomSize="@dimen/fab_custom_size"
 
         app:layout_anchor="@id/bottom_app_bar"
-        style="@style/Material2FAB" />
 
+        app:maxImageSize="@dimen/fab_icon_size"
+        app:tint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
