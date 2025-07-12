@@ -39,4 +39,5 @@
     <dimen name="conversation_summary_last_message_time_margin_top">10dp</dimen>
     <dimen name="conversation_summary_last_message_margin_top">15dp</dimen>
     <dimen name="conversation_summary_last_message_margin_start">30dp</dimen>
+    <dimen name="conversation_summaries_spacing">10dp</dimen>
 </resources>

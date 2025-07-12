@@ -48,7 +48,7 @@
     <TextView
         android:id="@+id/last_message"
         android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.65"
+        app:layout_constraintWidth_percent="0.55"
         android:layout_height="wrap_content"
 
         android:layout_marginStart="@dimen/conversation_summary_last_message_margin_start"
