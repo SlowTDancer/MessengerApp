@@ -28,4 +28,15 @@
     <dimen name="appbar_height">140dp</dimen>
     <dimen name="searchbar_height">60dp</dimen>
     <dimen name="appbar_margin_bottom">20dp</dimen>
+
+    <dimen name="conversation_summary_padding_vertical">15dp</dimen>
+    <dimen name="conversation_summary_padding_horizontal">20dp</dimen>
+
+    <dimen name="conversation_summary_profile_picture_size">60dp</dimen>
+    <dimen name="conversation_summary_addressee_name_margin_top">10dp</dimen>
+    <dimen name="conversation_summary_addressee_name_margin_start">30dp</dimen>
+    <dimen name="conversation_summary_addressee_name_size">16sp</dimen>
+    <dimen name="conversation_summary_last_message_time_margin_top">10dp</dimen>
+    <dimen name="conversation_summary_last_message_margin_top">15dp</dimen>
+    <dimen name="conversation_summary_last_message_margin_start">30dp</dimen>
 </resources>
