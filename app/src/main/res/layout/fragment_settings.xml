@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/settingsRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <ImageView
+        android:id="@+id/profileImage"
+        android:layout_width="@dimen/profile_image_size"
+        android:layout_height="@dimen/profile_image_size"
+        android:layout_marginTop="@dimen/setting_image_top_margin"
+        android:contentDescription="@string/profile_picture"
+        android:src="@drawable/avatar_image_placeholder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/update_nickname"
+        android:layout_width="@dimen/settings_text_edit_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settings_margin_between_avatar_and_inputs"
+        android:padding="0dp"
+
+        app:boxBackgroundMode="outline"
+
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:hintEnabled="false"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileImage">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/update_nickname_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_background"
+
+            android:gravity="center"
+            android:hint="@string/update_your_nickname"
+
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingVertical="@dimen/settings_input_vertical_padding"
+
+            android:textSize="@dimen/settings_input_text_size" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/update_job"
+
+        android:layout_width="@dimen/settings_text_edit_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settings_margin_between_inputs"
+        android:padding="0dp"
+
+        app:boxBackgroundMode="outline"
+
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:hintEnabled="false"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/update_nickname">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/update_job_edit"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_background"
+
+            android:gravity="center"
+            android:hint="@string/update_your_job"
+
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingVertical="@dimen/settings_input_vertical_padding"
+
+            android:textSize="@dimen/settings_input_text_size" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/update_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settings_margin_between_inputs_and_button"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:minWidth="@dimen/settings_button_min_width"
+        android:minHeight="0dp"
+        android:paddingHorizontal="@dimen/settings_button_horizontal_padding"
+        android:paddingVertical="@dimen/settings_button_vertical_padding"
+        android:text="@string/update"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/settings_button_text_size"
+        app:backgroundTint="@color/button_blue"
+        app:cornerRadius="@dimen/settings_button_corner_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/update_job" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/signOutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settings_margin_between_buttons"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:minWidth="@dimen/settings_button_min_width"
+        android:minHeight="0dp"
+        android:paddingHorizontal="@dimen/settings_button_horizontal_padding"
+        android:paddingVertical="@dimen/settings_button_vertical_padding"
+        android:text="@string/sign_out"
+        android:textAllCaps="true"
+        android:textColor="@color/sign_out_gray"
+        android:textSize="@dimen/settings_button_text_size"
+        app:backgroundTint="@android:color/white"
+        app:strokeColor="@color/sign_out_gray"
+        app:strokeWidth="2dp"
+        app:cornerRadius="@dimen/settings_button_corner_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/update_button" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

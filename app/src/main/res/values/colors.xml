@@ -11,5 +11,6 @@
     <color name="navbar_blue">#6366F1</color>
     <color name="navbar_gray">#9CA3AF</color>
 
+    <color name="sign_out_gray">#9CA3AF</color>
 
 </resources>
