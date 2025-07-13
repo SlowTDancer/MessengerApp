@@ -33,6 +33,9 @@
     <dimen name="conversation_summary_padding_vertical">15dp</dimen>
     <dimen name="conversation_summary_padding_horizontal">20dp</dimen>
 
+    <!-- This needs to be at least <bottom_navigation_view_height> -->
+    <dimen name="conversation_summary_recycler_view_padding_bottom">130dp</dimen>
+
     <dimen name="conversation_summary_profile_picture_size">60dp</dimen>
     <dimen name="conversation_summary_addressee_name_margin_top">10dp</dimen>
     <dimen name="conversation_summary_addressee_name_margin_start">30dp</dimen>
