@@ -26,16 +26,24 @@ class FirebaseUserDataSource {
         else Result.failure(Exception("User not found"))
     }
 
-    suspend fun updateUser(username: String, user: User): Result<Unit> {
+    suspend fun updateUser(oldUsername: String, user: User): Result<Unit> {
         return try {
-            val snapshot = usersDB.child(username).get().await()
+            val oldSnapshot = usersDB.child(oldUsername).get().await()
 
-            if (snapshot.exists()) {
-                usersDB.child(username).setValue(user).await()
-                Result.success(Unit)
-            } else {
-                Result.failure(Exception("User not found"))
+            if (!oldSnapshot.exists()) {
+                return Result.failure(Exception("User not found"))
             }
+
+            val newSnapshot = usersDB.child(user.username).get().await()
+            if (newSnapshot.exists()) {
+                return Result.failure(Exception("New username already exists"))
+            }
+
+            usersDB.child(user.username).setValue(user).await()
+
+            usersDB.child(oldUsername).removeValue().await()
+
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }

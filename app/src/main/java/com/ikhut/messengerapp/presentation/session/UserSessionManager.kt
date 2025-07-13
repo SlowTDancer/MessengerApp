@@ -1,4 +1,3 @@
-// presentation/session/UserSessionManager.kt
 package com.ikhut.messengerapp.presentation.session
 
 import android.content.Context
@@ -15,7 +14,7 @@ class UserSessionManager(
     private val prefs: SharedPreferences =
         context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
-    private var currentUser: User? = null
+    var currentUser: User? = null
 
     var isLoggedIn: Boolean = false
 
@@ -33,6 +32,11 @@ class UserSessionManager(
         currentUser = null
         isLoggedIn = false
         clearUserSession()
+    }
+
+    fun updateUser(user: User) {
+        logoutUser()
+        loginUser(user)
     }
 
     private fun saveUsername(username: String) {
