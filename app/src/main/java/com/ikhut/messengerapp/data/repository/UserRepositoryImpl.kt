@@ -8,7 +8,7 @@ class UserRepositoryImpl(
     private val dataSource: FirebaseUserDataSource
 ) : UserRepository {
 
-    override suspend fun registerUser(user: User): Result<Unit> {
+    override suspend fun addUser(user: User): Result<Unit> {
         return dataSource.createUser(user)
     }
 
