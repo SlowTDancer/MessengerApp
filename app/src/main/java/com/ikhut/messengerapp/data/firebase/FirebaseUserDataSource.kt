@@ -35,14 +35,15 @@ class FirebaseUserDataSource {
             }
 
             val newSnapshot = usersDB.child(user.username).get().await()
-            if (newSnapshot.exists()) {
+            if (newSnapshot.exists() && oldUsername != user.username) {
                 return Result.failure(Exception("New username already exists"))
             }
 
             usersDB.child(user.username).setValue(user).await()
 
-            usersDB.child(oldUsername).removeValue().await()
-
+            if (oldUsername != user.username) {
+                usersDB.child(oldUsername).removeValue().await()
+            }
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
