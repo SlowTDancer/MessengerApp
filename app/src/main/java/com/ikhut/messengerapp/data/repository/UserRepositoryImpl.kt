@@ -23,4 +23,8 @@ class UserRepositoryImpl(
             Result.failure(error)
         })
     }
+
+    override suspend fun updateUser(username: String, user: User): Result<Unit> {
+        return dataSource.updateUser(username, user)
+    }
 }

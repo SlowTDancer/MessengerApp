@@ -25,4 +25,19 @@ class FirebaseUserDataSource {
         return if (user != null) Result.success(user)
         else Result.failure(Exception("User not found"))
     }
+
+    suspend fun updateUser(username: String, user: User): Result<Unit> {
+        return try {
+            val snapshot = usersDB.child(username).get().await()
+
+            if (snapshot.exists()) {
+                usersDB.child(username).setValue(user).await()
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("User not found"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
