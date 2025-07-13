@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.ikhut.messengerapp.databinding.FragmentLoginBinding
-import com.ikhut.messengerapp.presentation.MainActivity
+import com.ikhut.messengerapp.presentation.activity.MainActivity
 import com.ikhut.messengerapp.presentation.viewmodel.AuthViewModel
 
 class LoginFragment : Fragment() {

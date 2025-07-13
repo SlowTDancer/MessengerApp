@@ -1,4 +1,4 @@
-package com.ikhut.messengerapp.presentation
+package com.ikhut.messengerapp.presentation.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -10,17 +10,12 @@ import com.ikhut.messengerapp.presentation.homeFragments.SettingsFragment
 class HomeActivity : AppCompatActivity() {
     private var _binding: ActivityHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var username: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         _binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        username = intent.getStringExtra("username") ?: getSharedPreferences(
-            "user_prefs", MODE_PRIVATE
-        ).getString("username", "Unknown")!!
 
         initBottomNavigationView()
     }

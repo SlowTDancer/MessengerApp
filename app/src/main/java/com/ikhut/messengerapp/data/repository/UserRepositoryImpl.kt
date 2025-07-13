@@ -27,4 +27,8 @@ class UserRepositoryImpl(
     override suspend fun updateUser(username: String, user: User): Result<Unit> {
         return dataSource.updateUser(username, user)
     }
+
+    override suspend fun getUser(username: String): Result<User> {
+        return dataSource.getUser(username)
+    }
 }

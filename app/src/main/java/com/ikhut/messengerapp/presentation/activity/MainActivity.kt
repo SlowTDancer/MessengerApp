@@ -1,17 +1,18 @@
-package com.ikhut.messengerapp.presentation
+package com.ikhut.messengerapp.presentation.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.ikhut.messengerapp.data.firebase.FirebaseUserDataSource
-import com.ikhut.messengerapp.data.repository.UserRepositoryImpl
 import com.ikhut.messengerapp.databinding.ActivityMainBinding
 import com.ikhut.messengerapp.domain.repository.UserRepository
 import com.ikhut.messengerapp.domain.usecase.LoginUserUseCase
 import com.ikhut.messengerapp.domain.usecase.RegisterUserUseCase
+import com.ikhut.messengerapp.presentation.application.getUserRepository
+import com.ikhut.messengerapp.presentation.application.getUserSessionManager
 import com.ikhut.messengerapp.presentation.authentification.LoginFragment
+import com.ikhut.messengerapp.presentation.session.UserSessionManager
 import com.ikhut.messengerapp.presentation.viewmodel.AuthViewModel
 import com.ikhut.messengerapp.utils.Resource
 
@@ -20,8 +21,8 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     val binding get() = _binding!!
 
-    private lateinit var firebaseUserDataSource: FirebaseUserDataSource
-    private lateinit var userRepository: UserRepository
+    private val userSessionManager: UserSessionManager = getUserSessionManager()
+    private val userRepository: UserRepository = getUserRepository()
     private lateinit var registerUserUseCase: RegisterUserUseCase
     private lateinit var loginUserUseCase: LoginUserUseCase
     private lateinit var authViewModel: AuthViewModel
@@ -34,26 +35,11 @@ class MainActivity : AppCompatActivity() {
 
         initVariables()
         addViewModelListeners()
-
-        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val savedUsername = prefs.getString("username", null)
-
-        if (savedUsername != null) {
-            showToast("Login successful! Welcome $savedUsername")
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.putExtra("username", savedUsername)
-            startActivity(intent)
-            finish()
-        } else {
-            supportFragmentManager.beginTransaction()
-                .replace(binding.mainActivityFragmentContainerView.id, LoginFragment()).commit()
-        }
+        initApp()
     }
 
 
     private fun initVariables() {
-        firebaseUserDataSource = FirebaseUserDataSource()
-        userRepository = UserRepositoryImpl(firebaseUserDataSource)
         registerUserUseCase = RegisterUserUseCase(userRepository)
         loginUserUseCase = LoginUserUseCase(userRepository)
         authViewModel = ViewModelProvider(
@@ -76,11 +62,8 @@ class MainActivity : AppCompatActivity() {
                 is Resource.Success -> {
                     val user = state.data
                     if (user != null) {
-                        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
-                        prefs.edit().putString("username", user.username).apply()
-
+                        userSessionManager.loginUser(user)
                         showToast("Login successful! Welcome ${user.username}")
-
                         val intent = Intent(this, HomeActivity::class.java)
                         intent.putExtra("username", user.username)
                         startActivity(intent)
@@ -90,6 +73,19 @@ class MainActivity : AppCompatActivity() {
 
                 is Resource.Error -> showToast("Login failed: ${state.message}")
             }
+        }
+    }
+
+    private fun initApp() {
+        if (userSessionManager.isLoggedIn) {
+            val username = userSessionManager.getCurrentUsername()
+            showToast("Login successful! Welcome $username")
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finish()
+        } else {
+            supportFragmentManager.beginTransaction()
+                .replace(binding.mainActivityFragmentContainerView.id, LoginFragment()).commit()
         }
     }
 
