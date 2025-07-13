@@ -124,12 +124,12 @@
         android:textColor="@color/sign_out_gray"
         android:textSize="@dimen/settings_button_text_size"
         app:backgroundTint="@android:color/white"
-        app:strokeColor="@color/sign_out_gray"
-        app:strokeWidth="2dp"
         app:cornerRadius="@dimen/settings_button_corner_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/update_button" />
+        app:layout_constraintTop_toBottomOf="@+id/update_button"
+        app:strokeColor="@color/sign_out_gray"
+        app:strokeWidth="2dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

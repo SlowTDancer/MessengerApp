@@ -18,11 +18,11 @@ class ConversationSummaryAdapter : RecyclerView.Adapter<ConversationSummaryViewH
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConversationSummaryViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup, viewType: Int
+    ): ConversationSummaryViewHolder {
         val binding = ConversationSummaryLayoutBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+            LayoutInflater.from(parent.context), parent, false
         )
         return ConversationSummaryViewHolder(binding)
     }
@@ -36,8 +36,7 @@ class ConversationSummaryAdapter : RecyclerView.Adapter<ConversationSummaryViewH
 }
 
 class ConversationDiffCallback(
-    private val oldList: List<ConversationSummary>,
-    private val newList: List<ConversationSummary>
+    private val oldList: List<ConversationSummary>, private val newList: List<ConversationSummary>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size

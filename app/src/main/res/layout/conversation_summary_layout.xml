@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
 
-    android:paddingVertical="@dimen/conversation_summary_padding_vertical"
-    android:paddingHorizontal="@dimen/conversation_summary_padding_horizontal">
+    android:paddingHorizontal="@dimen/conversation_summary_padding_horizontal"
+    android:paddingVertical="@dimen/conversation_summary_padding_vertical">
 
     <ImageView
         android:id="@+id/profile_picture"
         android:layout_width="@dimen/conversation_summary_profile_picture_size"
         android:layout_height="@dimen/conversation_summary_profile_picture_size"
 
-        tools:src="@drawable/avatar_image_placeholder"
         android:contentDescription="@string/profile_picture"
-
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/avatar_image_placeholder" />
 
     <TextView
         android:id="@+id/addressee_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginTop="@dimen/conversation_summary_addressee_name_margin_top"
         android:layout_marginStart="@dimen/conversation_summary_addressee_name_margin_start"
+        android:layout_marginTop="@dimen/conversation_summary_addressee_name_margin_top"
 
-        tools:text="Sayed Eftiaz"
         android:textColor="@color/black"
         android:textSize="@dimen/conversation_summary_addressee_name_size"
-
         app:layout_constraintStart_toEndOf="@id/profile_picture"
-        app:layout_constraintTop_toTopOf="parent"/>
+
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Sayed Eftiaz" />
 
     <TextView
         android:id="@+id/last_message_time"
@@ -40,23 +40,22 @@
         android:layout_height="wrap_content"
 
         android:layout_marginTop="@dimen/conversation_summary_last_message_time_margin_top"
-        tools:text="5 min"
-
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="5 min" />
 
     <TextView
         android:id="@+id/last_message"
         android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.55"
         android:layout_height="wrap_content"
-
         android:layout_marginStart="@dimen/conversation_summary_last_message_margin_start"
-        android:layout_marginTop="@dimen/conversation_summary_last_message_margin_top"
-        tools:text="On my way home but I needed to stop by the block store to..."
 
+        android:layout_marginTop="@dimen/conversation_summary_last_message_margin_top"
         app:layout_constraintStart_toEndOf="@id/profile_picture"
         app:layout_constraintTop_toBottomOf="@id/addressee_name"
-        />
+
+        app:layout_constraintWidth_percent="0.55"
+        tools:text="On my way home but I needed to stop by the block store to..." />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

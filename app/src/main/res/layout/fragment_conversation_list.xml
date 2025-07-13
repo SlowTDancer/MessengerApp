@@ -13,28 +13,27 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/appbar_height_extended"
+            android:background="@color/navbar_blue"
+
             android:minHeight="@dimen/appbar_height_collapsed"
 
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-
-            android:background="@color/navbar_blue">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/collapsing_toolbar_overlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
-                android:src="@drawable/collapsing_toolbar_background"
-                android:contentDescription="@null"
-
-                android:scaleType="centerCrop"
-                android:scaleX="1.4"
-                android:scaleY="1.1"
-
+                android:layout_gravity="center"
                 android:layout_marginTop="40dp"
 
-                android:layout_gravity="center"
-                />
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                android:scaleX="1.4"
+
+                android:scaleY="1.1"
+
+                android:src="@drawable/collapsing_toolbar_background" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -43,19 +42,19 @@
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/search_view"
                     android:layout_width="0dp"
-                    app:layout_constraintWidth_percent="0.93"
                     android:layout_height="@dimen/searchbar_height"
                     android:layout_marginBottom="@dimen/appbar_margin_bottom"
-
-                    app:searchIcon="@drawable/ic_search_filled"
                     android:background="@drawable/rounded_search_background"
 
-                    app:queryHint="Search"
                     app:iconifiedByDefault="false"
-
                     app:layout_constraintBottom_toBottomOf="parent"
+
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    app:layout_constraintWidth_percent="0.93"
+                    app:queryHint="Search"
+                    app:searchIcon="@drawable/ic_search_filled" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

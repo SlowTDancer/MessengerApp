@@ -4,7 +4,6 @@ import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.domain.repository.UserRepository
 
 class RegisterUserUseCase(private val repository: UserRepository) {
-
     suspend operator fun invoke(user: User): Result<Unit> {
         val username = user.username.trim()
         val job = user.job.trim()
@@ -28,9 +27,7 @@ class RegisterUserUseCase(private val repository: UserRepository) {
         }
 
         val cleanUser = user.copy(
-            username = username,
-            job = job,
-            password = password
+            username = username, job = job, password = password
         )
 
         return repository.addUser(cleanUser)

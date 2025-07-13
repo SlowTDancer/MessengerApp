@@ -12,8 +12,7 @@ import com.ikhut.messengerapp.utils.Resource
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val userRepository: UserRepository,
-    private val userSessionManager: UserSessionManager
+    private val userRepository: UserRepository, private val userSessionManager: UserSessionManager
 ) : ViewModel() {
 
     private val _updateProfileState = MutableLiveData<Resource<User>>()
@@ -50,23 +49,19 @@ class SettingsViewModel(
         _updateProfileState.value = Resource.Loading()
 
         val updatedUser = currentUser!!.copy(
-            username = username.trim(),
-            job = job.trim()
+            username = username.trim(), job = job.trim()
         )
 
         viewModelScope.launch {
             try {
                 val result = userRepository.updateUser(currentUser.username, updatedUser)
-                result.fold(
-                    onSuccess = {
-                        userSessionManager.updateUser(updatedUser)
-                        _currentUser.value = updatedUser
-                        _updateProfileState.value = Resource.Success(updatedUser)
-                    },
-                    onFailure = { exception ->
-                        _updateProfileState.value = Resource.Error(exception.message ?: "Update failed")
-                    }
-                )
+                result.fold(onSuccess = {
+                    userSessionManager.updateUser(updatedUser)
+                    _currentUser.value = updatedUser
+                    _updateProfileState.value = Resource.Success(updatedUser)
+                }, onFailure = { exception ->
+                    _updateProfileState.value = Resource.Error(exception.message ?: "Update failed")
+                })
             } catch (e: Exception) {
                 _updateProfileState.value = Resource.Error(e.message ?: "Network error")
             }
@@ -92,8 +87,7 @@ class SettingsViewModel(
 
     companion object {
         fun create(
-            userRepository: UserRepository,
-            userSessionManager: UserSessionManager
+            userRepository: UserRepository, userSessionManager: UserSessionManager
         ): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")

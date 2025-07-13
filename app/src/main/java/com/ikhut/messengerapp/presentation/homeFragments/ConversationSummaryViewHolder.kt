@@ -7,7 +7,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
-class ConversationSummaryViewHolder(private val binding: ConversationSummaryLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+class ConversationSummaryViewHolder(private val binding: ConversationSummaryLayoutBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
     companion object {
         private const val MAX_MESSAGE_LENGTH = 57
@@ -43,13 +44,16 @@ class ConversationSummaryViewHolder(private val binding: ConversationSummaryLayo
                 val minutes = minutesAgo.coerceAtLeast(1) // Show at least 1 min
                 "$minutes min"
             }
+
             minutesAgo < 1440 -> { // Less than 24 hours (1440 minutes)
                 val hours = minutesAgo / 60
                 "$hours hour"
             }
+
             else -> {
-                this.format(DateTimeFormatter.ofPattern("d MMM").withLocale(java.util.Locale.ENGLISH))
-                    .uppercase()
+                this.format(
+                    DateTimeFormatter.ofPattern("d MMM").withLocale(java.util.Locale.ENGLISH)
+                ).uppercase()
             }
         }
     }
