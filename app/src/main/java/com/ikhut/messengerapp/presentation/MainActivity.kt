@@ -28,18 +28,28 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initVariables()
         addViewModelListeners()
 
-        if (savedInstanceState == null) {
+        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val savedUsername = prefs.getString("username", null)
+
+        if (savedUsername != null) {
+            showToast("Login successful! Welcome $savedUsername")
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.putExtra("username", savedUsername)
+            startActivity(intent)
+            finish()
+        } else {
             supportFragmentManager.beginTransaction()
                 .replace(binding.mainActivityFragmentContainerView.id, LoginFragment()).commit()
         }
-
     }
+
 
     private fun initVariables() {
         firebaseUserDataSource = FirebaseUserDataSource()
@@ -65,10 +75,17 @@ class MainActivity : AppCompatActivity() {
                 is Resource.Loading -> showToast("Logging in...")
                 is Resource.Success -> {
                     val user = state.data
-                    showToast("Login successful! Welcome ${user?.username}")
+                    if (user != null) {
+                        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                        prefs.edit().putString("username", user.username).apply()
 
-                    val intent = Intent(this@MainActivity, HomeActivity::class.java)
-                    startActivity(intent);
+                        showToast("Login successful! Welcome ${user.username}")
+
+                        val intent = Intent(this, HomeActivity::class.java)
+                        intent.putExtra("username", user.username)
+                        startActivity(intent)
+                        finish()
+                    }
                 }
 
                 is Resource.Error -> showToast("Login failed: ${state.message}")
