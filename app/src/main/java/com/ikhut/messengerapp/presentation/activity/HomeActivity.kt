@@ -4,10 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.ikhut.messengerapp.R
 import com.ikhut.messengerapp.databinding.ActivityHomeBinding
+import com.ikhut.messengerapp.presentation.homeFragments.BottomAppBarController
 import com.ikhut.messengerapp.presentation.homeFragments.ConversationListFragment
 import com.ikhut.messengerapp.presentation.homeFragments.SettingsFragment
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), BottomAppBarController {
     private var _binding: ActivityHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -49,5 +50,13 @@ class HomeActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun hideBottomAppBar() {
+        binding.bottomAppBar.performHide()
+    }
+
+    override fun showBottomAppBar() {
+        binding.bottomAppBar.performShow()
     }
 }

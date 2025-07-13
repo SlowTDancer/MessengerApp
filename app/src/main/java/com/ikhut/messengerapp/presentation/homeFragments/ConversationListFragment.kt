@@ -44,6 +44,7 @@ class ConversationListFragment : Fragment() {
         val appBarLayout = binding.appBarLayout
         val imageView = binding.collapsingToolbarOverlay
 
+
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val totalScrollRange = appBarLayout.totalScrollRange
             val percentage = abs(verticalOffset).toFloat() / totalScrollRange.toFloat()
@@ -56,6 +57,14 @@ class ConversationListFragment : Fragment() {
             imageView.alpha = alpha
 
             imageView.visibility = if (alpha <= 0.01f) View.GONE else View.VISIBLE
+
+            (activity as? BottomAppBarController)?.let { controller ->
+                if (percentage > 0.5f) {
+                    controller.hideBottomAppBar()
+                } else {
+                    controller.showBottomAppBar()
+                }
+            }
         })
     }
 
@@ -136,4 +145,9 @@ class ConversationListFragment : Fragment() {
         )
         adapter.submitList(sampleConversations)
     }
+}
+
+interface BottomAppBarController {
+    fun hideBottomAppBar()
+    fun showBottomAppBar()
 }
