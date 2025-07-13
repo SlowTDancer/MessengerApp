@@ -12,18 +12,6 @@ class UserRepositoryImpl(
         return dataSource.createUser(user)
     }
 
-    override suspend fun loginUser(username: String, password: String): Result<User> {
-        return dataSource.getUser(username).fold(onSuccess = { user ->
-            if (user.password == password) {
-                Result.success(user)
-            } else {
-                Result.failure(Exception("Wrong password"))
-            }
-        }, onFailure = { error ->
-            Result.failure(error)
-        })
-    }
-
     override suspend fun updateUser(username: String, user: User): Result<Unit> {
         return dataSource.updateUser(username, user)
     }
