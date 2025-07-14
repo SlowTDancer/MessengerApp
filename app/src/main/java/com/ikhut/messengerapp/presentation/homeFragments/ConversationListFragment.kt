@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
@@ -21,6 +22,9 @@ class ConversationListFragment : Fragment() {
 
     private lateinit var adapter: ConversationSummaryAdapter
 
+    private var allConversations: List<ConversationSummary> = emptyList()
+    private var filteredConversations: List<ConversationSummary> = emptyList()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -33,6 +37,7 @@ class ConversationListFragment : Fragment() {
 
         setCollapsingViewAnimation()
         setupRecyclerView()
+        setupSearchView()
         loadSampleData()
     }
 
@@ -78,6 +83,30 @@ class ConversationListFragment : Fragment() {
         val spacingInPixels =
             resources.getDimensionPixelSize(R.dimen.conversation_summaries_spacing)
         binding.recyclerView.addItemDecoration(VerticalSpaceItemDecoration(spacingInPixels))
+    }
+
+    private fun setupSearchView() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterConversations(newText ?: "")
+                return true
+            }
+        })
+    }
+
+    private fun filterConversations(query: String) {
+        filteredConversations = if (query.isEmpty()) {
+            allConversations
+        } else {
+            allConversations.filter { conversation ->
+                conversation.addresseeName.contains(query, ignoreCase = true)
+            }
+        }
+        adapter.submitList(filteredConversations)
     }
 
     private fun loadSampleData() {
@@ -144,6 +173,8 @@ class ConversationListFragment : Fragment() {
                 profileImageRes = R.drawable.avatar_image_placeholder
             )
         )
+        allConversations = sampleConversations
+        filteredConversations = sampleConversations
         adapter.submitList(sampleConversations)
     }
 }
