@@ -5,17 +5,17 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.ikhut.messengerapp.application.getUserRepository
+import com.ikhut.messengerapp.application.getUserSessionManager
+import com.ikhut.messengerapp.data.session.UserSessionManager
 import com.ikhut.messengerapp.databinding.ActivityMainBinding
+import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.domain.repository.UserRepository
 import com.ikhut.messengerapp.domain.usecase.LoginUserUseCase
 import com.ikhut.messengerapp.domain.usecase.RegisterUserUseCase
-import com.ikhut.messengerapp.application.getUserRepository
-import com.ikhut.messengerapp.application.getUserSessionManager
 import com.ikhut.messengerapp.presentation.authentification.LoginFragment
-import com.ikhut.messengerapp.data.session.UserSessionManager
-import com.ikhut.messengerapp.presentation.viewmodel.AuthViewModel
-import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.presentation.components.LoadingOverlay
+import com.ikhut.messengerapp.presentation.viewmodel.AuthViewModel
 
 
 class MainActivity : AppCompatActivity() {
@@ -57,14 +57,12 @@ class MainActivity : AppCompatActivity() {
     private fun addViewModelListeners() {
         authViewModel.registerState.observe(this) { state ->
             when (state) {
-                is Resource.Loading -> {
-                    loadingOverlay.show()
-                    showToast("Registering...")
-                }
+                is Resource.Loading -> loadingOverlay.show()
                 is Resource.Success -> {
                     loadingOverlay.dismiss()
-                    showToast("Registration successful!")
+                    navigateToHome()
                 }
+
                 is Resource.Error -> {
                     loadingOverlay.dismiss()
                     showToast("Registration failed: ${state.message}")
@@ -80,11 +78,7 @@ class MainActivity : AppCompatActivity() {
                     val user = state.data
                     if (user != null) {
                         userSessionManager.loginUser(user)
-                        showToast("Login successful! Welcome ${user.username}")
-                        val intent = Intent(this, HomeActivity::class.java)
-                        intent.putExtra("username", user.username)
-                        startActivity(intent)
-                        finish()
+                        navigateToHome()
                     }
                 }
 
@@ -107,6 +101,12 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(binding.mainActivityFragmentContainerView.id, LoginFragment()).commit()
         }
+    }
+
+    private fun navigateToHome() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun showToast(message: String) {
