@@ -10,6 +10,8 @@ import com.ikhut.messengerapp.R
 import com.ikhut.messengerapp.databinding.FragmentSearchUsersBinding
 import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.presentation.activity.BottomAppBarController
+import com.ikhut.messengerapp.presentation.adapters.SearchUsersAdapter
+import com.ikhut.messengerapp.presentation.components.VerticalSpaceItemDecoration
 
 class SearchUsersFragment : Fragment() {
 

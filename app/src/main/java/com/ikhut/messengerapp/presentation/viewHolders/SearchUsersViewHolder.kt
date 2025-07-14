@@ -1,4 +1,4 @@
-package com.ikhut.messengerapp.presentation.homeFragments
+package com.ikhut.messengerapp.presentation.viewHolders
 
 import androidx.recyclerview.widget.RecyclerView
 import com.ikhut.messengerapp.R

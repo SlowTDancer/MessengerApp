@@ -1,4 +1,4 @@
-package com.ikhut.messengerapp.presentation.homeFragments
+package com.ikhut.messengerapp.presentation.viewHolders
 
 import androidx.recyclerview.widget.RecyclerView
 import com.ikhut.messengerapp.databinding.ConversationSummaryLayoutBinding
@@ -6,6 +6,7 @@ import com.ikhut.messengerapp.domain.model.ConversationSummary
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 class ConversationSummaryViewHolder(private val binding: ConversationSummaryLayoutBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -52,7 +53,7 @@ class ConversationSummaryViewHolder(private val binding: ConversationSummaryLayo
 
             else -> {
                 this.format(
-                    DateTimeFormatter.ofPattern("d MMM").withLocale(java.util.Locale.ENGLISH)
+                    DateTimeFormatter.ofPattern("d MMM").withLocale(Locale.ENGLISH)
                 ).uppercase()
             }
         }

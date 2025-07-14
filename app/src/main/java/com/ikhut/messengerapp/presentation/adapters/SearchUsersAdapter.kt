@@ -1,4 +1,4 @@
-package com.ikhut.messengerapp.presentation.homeFragments
+package com.ikhut.messengerapp.presentation.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ikhut.messengerapp.databinding.UserProfileSummaryLayoutBinding
 import com.ikhut.messengerapp.domain.model.User
+import com.ikhut.messengerapp.presentation.viewHolders.SearchUsersViewHolder
 
 class SearchUsersAdapter : RecyclerView.Adapter<SearchUsersViewHolder>() {
     private var users: List<User> = emptyList()

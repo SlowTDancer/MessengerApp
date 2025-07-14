@@ -12,6 +12,8 @@ import com.ikhut.messengerapp.R
 import com.ikhut.messengerapp.databinding.FragmentConversationListBinding
 import com.ikhut.messengerapp.domain.model.ConversationSummary
 import com.ikhut.messengerapp.presentation.activity.BottomAppBarController
+import com.ikhut.messengerapp.presentation.adapters.ConversationSummaryAdapter
+import com.ikhut.messengerapp.presentation.components.VerticalSpaceItemDecoration
 import java.time.LocalDateTime
 import kotlin.math.abs
 

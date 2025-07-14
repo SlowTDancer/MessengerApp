@@ -1,4 +1,4 @@
-package com.ikhut.messengerapp.presentation.homeFragments
+package com.ikhut.messengerapp.presentation.components
 
 import android.graphics.Rect
 import android.view.View

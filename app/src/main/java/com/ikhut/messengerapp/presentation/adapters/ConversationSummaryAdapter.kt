@@ -1,4 +1,4 @@
-package com.ikhut.messengerapp.presentation.homeFragments
+package com.ikhut.messengerapp.presentation.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ikhut.messengerapp.databinding.ConversationSummaryLayoutBinding
 import com.ikhut.messengerapp.domain.model.ConversationSummary
+import com.ikhut.messengerapp.presentation.viewHolders.ConversationSummaryViewHolder
 
 class ConversationSummaryAdapter : RecyclerView.Adapter<ConversationSummaryViewHolder>() {
     private var conversations: List<ConversationSummary> = emptyList()
