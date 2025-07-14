@@ -1,0 +1,93 @@
+package com.ikhut.messengerapp.presentation.viewmodel
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.ikhut.messengerapp.domain.common.Resource
+import com.ikhut.messengerapp.domain.model.Message
+import com.ikhut.messengerapp.domain.repository.MessageRepository
+import kotlinx.coroutines.launch
+
+class ChatViewModel(
+    private val messageRepository: MessageRepository,
+    private val currentUserId: String,
+    private val otherUserId: String
+) : ViewModel() {
+
+    private val _sendMessageState = MutableLiveData<Resource<String>>()
+    val sendMessageState: LiveData<Resource<String>> = _sendMessageState
+
+    private val _messages = MutableLiveData<List<Message>>(emptyList())
+    val messages: LiveData<List<Message>> = _messages
+
+    private var isLoadingMore = false
+    private var allMessagesLoaded = false
+    private var lastLoadedTimestamp: Long? = null
+
+    init {
+        loadInitialMessages()
+        observeNewMessages()
+    }
+
+    fun sendMessage(content: String) {
+        _sendMessageState.value = Resource.Loading()
+
+        viewModelScope.launch {
+            val result = messageRepository.sendMessage(currentUserId, otherUserId, content)
+            _sendMessageState.value = result.fold(onSuccess = { Resource.Success(it) },
+                onFailure = { Resource.Error(it.message ?: "Unknown error") })
+        }
+    }
+
+    private fun loadInitialMessages() {
+        loadMoreMessages()
+    }
+
+    fun loadMoreMessages(limit: Int = 20) {
+        if (isLoadingMore || allMessagesLoaded) return
+
+        isLoadingMore = true
+        viewModelScope.launch {
+            val result = messageRepository.getConversation(
+                currentUserId, otherUserId, limit, lastLoadedTimestamp
+            )
+            result.fold(onSuccess = { newMessages ->
+                if (newMessages.isEmpty()) {
+                    allMessagesLoaded = true
+                } else {
+                    lastLoadedTimestamp = newMessages.last().timestamp
+                    val updated =
+                        (newMessages + (_messages.value ?: emptyList())).distinctBy { it.id }
+                    _messages.value = updated
+                }
+            }, onFailure = {
+//                TODO
+            })
+            isLoadingMore = false
+        }
+    }
+
+    private fun observeNewMessages() {
+        viewModelScope.launch {
+            messageRepository.observeNewMessages(currentUserId, otherUserId).collect { newMessage ->
+                val updated = (_messages.value ?: emptyList()) + newMessage
+                _messages.postValue(updated.distinctBy { it.id })
+            }
+        }
+    }
+
+    companion object {
+        fun create(
+            messageRepository: MessageRepository, currentUserId: String, otherUserId: String
+        ): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return ChatViewModel(messageRepository, currentUserId, otherUserId) as T
+                }
+            }
+        }
+    }
+}
