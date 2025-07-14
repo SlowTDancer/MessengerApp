@@ -52,7 +52,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
 
-                    app:layout_constraintWidth_percent="0.93"
+                    android:layout_marginHorizontal="@dimen/searchbar_margin_horizontal"
+
                     app:queryHint="Search"
                     app:searchIcon="@drawable/ic_search_filled" />
 

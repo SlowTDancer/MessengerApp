@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/appbar_height_collapsed"
+
+        android:background="@color/navbar_blue">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="@dimen/back_arrow_size"
+                android:layout_height="@dimen/back_arrow_size"
+
+                android:scaleType="fitXY"
+
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/back_button_arrow"
+
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/white"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/search_view"
+                app:layout_constraintTop_toTopOf="@id/search_view"
+                app:layout_constraintBottom_toBottomOf="@id/search_view"
+                android:layout_marginHorizontal="@dimen/searchbar_margin_horizontal"
+            />
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/searchbar_height"
+                android:layout_marginBottom="@dimen/appbar_margin_bottom"
+                android:background="@drawable/rounded_search_background"
+
+                app:iconifiedByDefault="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/back_button"
+
+                android:layout_marginEnd="@dimen/searchbar_margin_horizontal"
+
+                app:queryHint="Search"
+                app:searchIcon="@drawable/ic_search_filled" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
