@@ -10,6 +10,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.ikhut.messengerapp.R
 import com.ikhut.messengerapp.databinding.FragmentConversationListBinding
 import com.ikhut.messengerapp.domain.model.ConversationSummary
+import com.ikhut.messengerapp.presentation.activity.BottomAppBarController
 import java.time.LocalDateTime
 import kotlin.math.abs
 
@@ -145,9 +146,4 @@ class ConversationListFragment : Fragment() {
         )
         adapter.submitList(sampleConversations)
     }
-}
-
-interface BottomAppBarController {
-    fun hideBottomAppBar()
-    fun showBottomAppBar()
 }

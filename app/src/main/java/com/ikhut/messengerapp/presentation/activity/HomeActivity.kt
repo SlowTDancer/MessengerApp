@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.ikhut.messengerapp.R
 import com.ikhut.messengerapp.databinding.ActivityHomeBinding
-import com.ikhut.messengerapp.presentation.homeFragments.BottomAppBarController
 import com.ikhut.messengerapp.presentation.homeFragments.ConversationListFragment
+import com.ikhut.messengerapp.presentation.homeFragments.SearchUsersFragment
 import com.ikhut.messengerapp.presentation.homeFragments.SettingsFragment
 
 class HomeActivity : AppCompatActivity(), BottomAppBarController {
@@ -44,6 +44,13 @@ class HomeActivity : AppCompatActivity(), BottomAppBarController {
             }
         }
 
+        binding.fab.setOnClickListener { item ->
+            supportFragmentManager.beginTransaction().replace(
+                binding.homeActivityFragmentContainerView.id, SearchUsersFragment()
+            ).commit()
+            true
+        }
+
         binding.bottomNavigationView.selectedItemId = R.id.nav_home
     }
 
@@ -59,4 +66,19 @@ class HomeActivity : AppCompatActivity(), BottomAppBarController {
     override fun showBottomAppBar() {
         binding.bottomAppBar.performShow()
     }
+
+    override fun hideFab() {
+        binding.fab.hide()
+    }
+
+    override fun showFab() {
+        binding.fab.show()
+    }
+}
+
+interface BottomAppBarController {
+    fun hideBottomAppBar()
+    fun showBottomAppBar()
+    fun hideFab()
+    fun showFab()
 }

@@ -44,6 +44,7 @@
 
     <!--   FAB  -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
         style="@style/Material2FAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
