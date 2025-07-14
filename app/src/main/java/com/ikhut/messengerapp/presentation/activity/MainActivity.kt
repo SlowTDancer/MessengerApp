@@ -59,13 +59,13 @@ class MainActivity : AppCompatActivity() {
             when (state) {
                 is Resource.Loading -> loadingOverlay.show()
                 is Resource.Success -> {
-                    loadingOverlay.dismiss()
                     navigateToHome()
+                    loadingOverlay.dismiss()
                 }
 
                 is Resource.Error -> {
-                    loadingOverlay.dismiss()
                     showToast("Registration failed: ${state.message}")
+                    loadingOverlay.dismiss()
                 }
             }
         }
@@ -74,17 +74,17 @@ class MainActivity : AppCompatActivity() {
             when (state) {
                 is Resource.Loading -> loadingOverlay.show()
                 is Resource.Success -> {
-                    loadingOverlay.dismiss()
                     val user = state.data
                     if (user != null) {
                         userSessionManager.loginUser(user)
                         navigateToHome()
                     }
+                    loadingOverlay.dismiss()
                 }
 
                 is Resource.Error -> {
-                    loadingOverlay.dismiss()
                     showToast("Login failed: ${state.message}")
+                    loadingOverlay.dismiss()
                 }
             }
         }
