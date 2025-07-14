@@ -18,6 +18,7 @@
     <string name="update_your_job">update your job</string>
     <string name="sign_out">SIGN OUT</string>
     <string name="please_wait">PLEASE WAIT...</string>
+    <string name="back_button_arrow">back button</string>
 
 
 </resources>

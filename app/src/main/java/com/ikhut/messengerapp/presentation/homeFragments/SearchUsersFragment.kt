@@ -17,6 +17,9 @@ class SearchUsersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchUsersBinding.inflate(inflater, container, false)
+
+        initListeners()
+
         return binding.root
     }
 
@@ -37,5 +40,10 @@ class SearchUsersFragment : Fragment() {
         bottopAppBarController?.showFab()
     }
 
+    fun initListeners() {
+        binding.backButton.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+    }
 
 }
