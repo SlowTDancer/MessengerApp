@@ -78,6 +78,6 @@
     <dimen name="user_profile_summary_addressee_name_size">16sp</dimen>
     <dimen name="user_profile_last_message_margin_start">30dp</dimen>
     <dimen name="user_profile_summary_last_message_margin_top">3dp</dimen>
-    <dimen name="user_profile_summaries_spacing">15dp</dimen>
+    <dimen name="user_profile_summaries_spacing">3dp</dimen>
 
 </resources>
