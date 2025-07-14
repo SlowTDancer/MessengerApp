@@ -17,10 +17,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.ikhut.messengerapp.databinding.FragmentSettingsBinding
 import com.ikhut.messengerapp.presentation.activity.MainActivity
-import com.ikhut.messengerapp.presentation.application.getUserRepository
-import com.ikhut.messengerapp.presentation.application.getUserSessionManager
+import com.ikhut.messengerapp.application.getUserRepository
+import com.ikhut.messengerapp.application.getUserSessionManager
 import com.ikhut.messengerapp.presentation.viewmodel.SettingsViewModel
-import com.ikhut.messengerapp.utils.Resource
+import com.ikhut.messengerapp.domain.common.Resource
 
 class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null

@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.domain.repository.UserRepository
-import com.ikhut.messengerapp.presentation.session.UserSessionManager
-import com.ikhut.messengerapp.utils.Resource
+import com.ikhut.messengerapp.data.session.UserSessionManager
+import com.ikhut.messengerapp.domain.common.Resource
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(

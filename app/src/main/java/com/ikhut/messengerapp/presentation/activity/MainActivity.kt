@@ -9,12 +9,13 @@ import com.ikhut.messengerapp.databinding.ActivityMainBinding
 import com.ikhut.messengerapp.domain.repository.UserRepository
 import com.ikhut.messengerapp.domain.usecase.LoginUserUseCase
 import com.ikhut.messengerapp.domain.usecase.RegisterUserUseCase
-import com.ikhut.messengerapp.presentation.application.getUserRepository
-import com.ikhut.messengerapp.presentation.application.getUserSessionManager
+import com.ikhut.messengerapp.application.getUserRepository
+import com.ikhut.messengerapp.application.getUserSessionManager
 import com.ikhut.messengerapp.presentation.authentification.LoginFragment
-import com.ikhut.messengerapp.presentation.session.UserSessionManager
+import com.ikhut.messengerapp.data.session.UserSessionManager
 import com.ikhut.messengerapp.presentation.viewmodel.AuthViewModel
-import com.ikhut.messengerapp.utils.Resource
+import com.ikhut.messengerapp.domain.common.Resource
+import com.ikhut.messengerapp.presentation.components.LoadingOverlay
 
 
 class MainActivity : AppCompatActivity() {
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private val userSessionManager: UserSessionManager = getUserSessionManager()
     private val userRepository: UserRepository = getUserRepository()
+    private lateinit var loadingOverlay: LoadingOverlay
     private lateinit var registerUserUseCase: RegisterUserUseCase
     private lateinit var loginUserUseCase: LoginUserUseCase
     private lateinit var authViewModel: AuthViewModel
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initVariables()
+        initComponents()
         addViewModelListeners()
         initApp()
     }
@@ -47,19 +50,33 @@ class MainActivity : AppCompatActivity() {
         )[AuthViewModel::class.java]
     }
 
+    private fun initComponents() {
+        loadingOverlay = LoadingOverlay(this)
+    }
+
     private fun addViewModelListeners() {
         authViewModel.registerState.observe(this) { state ->
             when (state) {
-                is Resource.Loading -> showToast("Registering...")
-                is Resource.Success -> showToast("Registration successful!")
-                is Resource.Error -> showToast("Registration failed: ${state.message}")
+                is Resource.Loading -> {
+                    loadingOverlay.show()
+                    showToast("Registering...")
+                }
+                is Resource.Success -> {
+                    loadingOverlay.dismiss()
+                    showToast("Registration successful!")
+                }
+                is Resource.Error -> {
+                    loadingOverlay.dismiss()
+                    showToast("Registration failed: ${state.message}")
+                }
             }
         }
 
         authViewModel.loginState.observe(this) { state ->
             when (state) {
-                is Resource.Loading -> showToast("Logging in...")
+                is Resource.Loading -> loadingOverlay.show()
                 is Resource.Success -> {
+                    loadingOverlay.dismiss()
                     val user = state.data
                     if (user != null) {
                         userSessionManager.loginUser(user)
@@ -71,7 +88,10 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                is Resource.Error -> showToast("Login failed: ${state.message}")
+                is Resource.Error -> {
+                    loadingOverlay.dismiss()
+                    showToast("Login failed: ${state.message}")
+                }
             }
         }
     }

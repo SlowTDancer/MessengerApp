@@ -4,7 +4,7 @@
 
 
     <application
-        android:name=".presentation.application.MessengerApplication"
+        android:name=".application.MessengerApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

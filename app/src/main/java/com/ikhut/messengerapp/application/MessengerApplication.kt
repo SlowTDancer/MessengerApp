@@ -1,10 +1,10 @@
-package com.ikhut.messengerapp.presentation.application
+package com.ikhut.messengerapp.application
 
 import android.app.Application
 import com.ikhut.messengerapp.data.firebase.FirebaseUserDataSource
 import com.ikhut.messengerapp.data.repository.UserRepositoryImpl
 import com.ikhut.messengerapp.domain.repository.UserRepository
-import com.ikhut.messengerapp.presentation.session.UserSessionManager
+import com.ikhut.messengerapp.data.session.UserSessionManager
 
 class MessengerApplication : Application() {
 

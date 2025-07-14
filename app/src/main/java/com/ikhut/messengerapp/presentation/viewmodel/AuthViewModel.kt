@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.domain.usecase.LoginUserUseCase
 import com.ikhut.messengerapp.domain.usecase.RegisterUserUseCase
-import com.ikhut.messengerapp.utils.Resource
+import com.ikhut.messengerapp.domain.common.Resource
 import kotlinx.coroutines.launch
 
 class AuthViewModel(

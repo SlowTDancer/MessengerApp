@@ -1,4 +1,4 @@
-package com.ikhut.messengerapp.utils
+package com.ikhut.messengerapp.domain.common
 
 sealed class Resource<T>(
     val data: T? = null, val message: String? = null

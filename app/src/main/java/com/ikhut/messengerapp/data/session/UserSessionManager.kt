@@ -1,4 +1,4 @@
-package com.ikhut.messengerapp.presentation.session
+package com.ikhut.messengerapp.data.session
 
 import android.content.Context
 import android.content.SharedPreferences
