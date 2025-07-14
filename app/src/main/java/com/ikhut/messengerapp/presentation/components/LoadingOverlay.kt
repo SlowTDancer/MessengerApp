@@ -38,8 +38,4 @@ class LoadingOverlay(private val context: Context) {
         }
         loadingDialog = null
     }
-
-    fun isShowing(): Boolean {
-        return loadingDialog?.isShowing == true
-    }
 }

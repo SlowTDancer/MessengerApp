@@ -15,18 +15,20 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.ikhut.messengerapp.databinding.FragmentSettingsBinding
-import com.ikhut.messengerapp.presentation.activity.MainActivity
 import com.ikhut.messengerapp.application.getUserRepository
 import com.ikhut.messengerapp.application.getUserSessionManager
-import com.ikhut.messengerapp.presentation.viewmodel.SettingsViewModel
+import com.ikhut.messengerapp.databinding.FragmentSettingsBinding
 import com.ikhut.messengerapp.domain.common.Resource
+import com.ikhut.messengerapp.presentation.activity.MainActivity
+import com.ikhut.messengerapp.presentation.components.LoadingOverlay
+import com.ikhut.messengerapp.presentation.viewmodel.SettingsViewModel
 
 class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var settingsViewModel: SettingsViewModel
+    private lateinit var loadingOverlay: LoadingOverlay
 
 
     private val galleryLauncher = registerForActivityResult(
@@ -58,6 +60,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViewModel()
+        initComponents()
         setupClickListeners()
         observeViewModel()
     }
@@ -69,6 +72,10 @@ class SettingsFragment : Fragment() {
         settingsViewModel = ViewModelProvider(
             this, SettingsViewModel.create(userRepository, userSessionManager)
         )[SettingsViewModel::class.java]
+    }
+
+    private fun initComponents() {
+        loadingOverlay = LoadingOverlay(requireContext())
     }
 
     private fun setupClickListeners() {
@@ -97,10 +104,11 @@ class SettingsFragment : Fragment() {
             when (state) {
                 is Resource.Loading -> {
                     binding.updateButton.isEnabled = false
-                    showToast("Updating profile...")
+                    loadingOverlay.show()
                 }
 
                 is Resource.Success -> {
+                    loadingOverlay.dismiss()
                     binding.updateButton.isEnabled = true
                     showToast("Profile updated successfully!")
 
@@ -109,6 +117,7 @@ class SettingsFragment : Fragment() {
                 }
 
                 is Resource.Error -> {
+                    loadingOverlay.dismiss()
                     binding.updateButton.isEnabled = true
 
                     when {
