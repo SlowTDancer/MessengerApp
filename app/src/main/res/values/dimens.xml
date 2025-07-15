@@ -90,8 +90,8 @@
     <dimen name="appbar_chat_username_margin_top">10dp</dimen>
 
     <dimen name="appbar_chat_height_extended">240dp</dimen>
-    <dimen name="appbar_chat_profile_picture_margin_bottom">90dp</dimen>
-    <dimen name="appbar_chat_job_margin_bottom">75dp</dimen>
+    <dimen name="appbar_chat_profile_picture_margin_bottom">40dp</dimen>
+    <dimen name="appbar_chat_job_margin_bottom">35dp</dimen>
 
     <dimen name="appbar_chat_height_collapsed">100dp</dimen>
 

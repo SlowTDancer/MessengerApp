@@ -2,8 +2,9 @@ package com.ikhut.messengerapp.presentation.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.ikhut.messengerapp.databinding.ActivityChatBinding
-import kotlin.math.abs
 
 class ChatActivity : AppCompatActivity() {
 
@@ -15,6 +16,22 @@ class ChatActivity : AppCompatActivity() {
 
         _binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            binding.messageInputContainer.setPadding(
+                0,
+                0,
+                0,
+                imeInsets.bottom.coerceAtLeast(systemBarInsets.bottom)
+            )
+
+            // Consume insets
+            WindowInsetsCompat.CONSUMED
+        }
+
 
         setupViews()
     }
