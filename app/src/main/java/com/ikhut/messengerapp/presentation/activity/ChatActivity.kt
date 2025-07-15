@@ -27,10 +27,10 @@ class ChatActivity : AppCompatActivity() {
             val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
             binding.messageInputContainer.setPadding(
-                16,
-                16,
-                16,
-                imeInsets.bottom.coerceAtLeast(systemBarInsets.bottom) + 16
+                R.dimen.message_input_container_padding,
+                R.dimen.message_input_container_padding,
+                R.dimen.message_input_container_padding,
+                imeInsets.bottom.coerceAtLeast(systemBarInsets.bottom) + R.dimen.message_input_container_padding
             )
 
             // Consume insets
