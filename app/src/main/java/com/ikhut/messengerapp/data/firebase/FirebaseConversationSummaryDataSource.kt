@@ -64,7 +64,7 @@ class FirebaseConversationSummaryDataSource {
         imageRes: Int = 0
     ): Result<Unit> {
         return try {
-            if (oldUsername == newUsername) {
+            if (oldUsername.isEmpty() || oldUsername == newUsername) {
                 return updateUserProfileInfoOnly(
                     newUsername, profileImageUrl, localImagePath, imageRes
                 )
