@@ -13,8 +13,9 @@ import com.ikhut.messengerapp.domain.repository.ConversationSummaryRepository
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-class ConversationViewModel(
-    private val conversationSummaryRepository: ConversationSummaryRepository, private val currentUserId: String
+class ConversationSummaryViewModel(
+    private val conversationSummaryRepository: ConversationSummaryRepository,
+    private val currentUserId: String
 ) : ViewModel() {
 
     private val _conversationsState = MutableLiveData<Resource<List<ConversationSummary>>>()
@@ -99,6 +100,32 @@ class ConversationViewModel(
         }
     }
 
+    fun updateUserProfileInConversations(
+        oldUsername: String,
+        newUsername: String,
+        newProfileImageUrl: String? = null,
+        newLocalImagePath: String? = null,
+        newImageRes: Int = 0
+    ) {
+        viewModelScope.launch {
+            try {
+                val result = conversationSummaryRepository.updateUserProfileInConversations(
+                    oldUsername = oldUsername,
+                    newUsername = newUsername,
+                    newProfileImageUrl = newProfileImageUrl,
+                    newLocalImagePath = newLocalImagePath,
+                    newImageRes = newImageRes
+                )
+
+                result.onSuccess {
+                    loadMoreConversations()
+                }
+            } catch (e: Exception) {
+//                TODO
+            }
+        }
+    }
+
     fun updateConversationSummary(
         otherUserId: String, lastMessage: String
     ) {
@@ -116,7 +143,9 @@ class ConversationViewModel(
             return object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return ConversationViewModel(conversationSummaryRepository, currentUserId) as T
+                    return ConversationSummaryViewModel(
+                        conversationSummaryRepository, currentUserId
+                    ) as T
                 }
             }
         }

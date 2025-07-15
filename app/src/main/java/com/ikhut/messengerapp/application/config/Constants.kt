@@ -20,6 +20,11 @@ object Constants {
     const val UI_AVATARS_BASE = "https://ui-avatars.com/api/"
     const val PLACEHOLDER_NAME = "User"
 
+    const val TAG = "ImageUtils"
+    const val PROFILE_IMAGES_DIR = "profile_images"
+    const val IMAGE_QUALITY = 80
+    const val MAX_IMAGE_SIZE = 1024
+
     const val HEADER_SIGN_OUT = "Sign Out"
     const val QUERY_SIGN_OUT = "Are you sure you want to sign out?"
     const val POSITIVE_RESPONSE_SIGN_OUT = "Yes"

@@ -28,11 +28,19 @@ class FirebaseConversationSummaryDataSource {
             val existing2 = snapshot2.getValue(ConversationSummary::class.java)
 
             val conversationForUser1 = ConversationSummary(
-                addresseeName = userId2, lastMessage = lastMessage, imageURL = existing1?.imageURL
+                addresseeName = userId2,
+                lastMessage = lastMessage,
+                imageRes = existing1?.imageRes ?: 0,
+                imageUrl = existing1?.imageUrl,
+                localImagePath = existing1?.localImagePath
             )
 
             val conversationForUser2 = ConversationSummary(
-                addresseeName = userId1, lastMessage = lastMessage, imageURL = existing2?.imageURL
+                addresseeName = userId1,
+                lastMessage = lastMessage,
+                imageRes = existing2?.imageRes ?: 0,
+                imageUrl = existing2?.imageUrl,
+                localImagePath = existing2?.localImagePath
             )
 
             val updates = mapOf(
@@ -47,6 +55,113 @@ class FirebaseConversationSummaryDataSource {
             Result.failure(e)
         }
     }
+
+    suspend fun updateUserProfileInConversations(
+        oldUsername: String,
+        newUsername: String,
+        profileImageUrl: String? = null,
+        localImagePath: String? = null,
+        imageRes: Int = 0
+    ): Result<Unit> {
+        return try {
+            if (oldUsername == newUsername) {
+                return updateUserProfileInfoOnly(
+                    newUsername, profileImageUrl, localImagePath, imageRes
+                )
+            }
+
+            val allConversationsSnapshot = conversationsDB.get().await()
+            val updatesToApply = mutableMapOf<String, Any>()
+            val pathsToDelete = mutableListOf<String>()
+
+            allConversationsSnapshot.children.forEach { userNode ->
+                val userId = userNode.key ?: return@forEach
+
+                userNode.children.forEach { conversationNode ->
+                    val conversation = conversationNode.getValue(ConversationSummary::class.java)
+
+                    if (conversation?.addresseeName == oldUsername) {
+                        val updatedConversation = conversation.copy(
+                            addresseeName = newUsername,
+                            imageUrl = profileImageUrl,
+                            localImagePath = localImagePath,
+                            imageRes = imageRes
+                        )
+
+                        updatesToApply["$userId/$newUsername"] = updatedConversation
+                        pathsToDelete.add("$userId/$oldUsername")
+                    }
+                }
+            }
+
+            val userOwnConversationsSnapshot = conversationsDB.child(oldUsername).get().await()
+
+            if (userOwnConversationsSnapshot.exists()) {
+                userOwnConversationsSnapshot.children.forEach { conversationNode ->
+                    val addresseeName = conversationNode.key ?: return@forEach
+                    val conversation = conversationNode.getValue(ConversationSummary::class.java)
+                    if (conversation != null) {
+                        updatesToApply["$newUsername/$addresseeName"] = conversation
+                    }
+                }
+                pathsToDelete.add(oldUsername)
+            }
+
+            if (updatesToApply.isNotEmpty()) {
+                conversationsDB.updateChildren(updatesToApply).await()
+            }
+
+            pathsToDelete.forEach { path ->
+                try {
+                    conversationsDB.child(path).removeValue().await()
+                } catch (_: Exception) {
+                }
+            }
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    private suspend fun updateUserProfileInfoOnly(
+        username: String,
+        profileImageUrl: String? = null,
+        localImagePath: String? = null,
+        imageRes: Int = 0
+    ): Result<Unit> {
+        return try {
+            val allConversationsSnapshot = conversationsDB.get().await()
+            val updatesToApply = mutableMapOf<String, Any>()
+
+            allConversationsSnapshot.children.forEach { userNode ->
+                val userId = userNode.key ?: return@forEach
+
+                userNode.children.forEach { conversationNode ->
+                    val conversation = conversationNode.getValue(ConversationSummary::class.java)
+
+                    if (conversation?.addresseeName == username) {
+                        val updatedConversation = conversation.copy(
+                            imageUrl = profileImageUrl,
+                            localImagePath = localImagePath,
+                            imageRes = imageRes
+                        )
+
+                        updatesToApply["$userId/$username"] = updatedConversation
+                    }
+                }
+            }
+
+            if (updatesToApply.isNotEmpty()) {
+                conversationsDB.updateChildren(updatesToApply).await()
+            }
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 
     suspend fun getRecentConversations(
         userId: String,

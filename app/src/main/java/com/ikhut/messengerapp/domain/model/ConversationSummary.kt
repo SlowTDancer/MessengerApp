@@ -8,7 +8,9 @@ data class ConversationSummary(
     var addresseeName: String = "",
     var lastMessageTime: Long = System.currentTimeMillis(),
     var lastMessage: String = "",
-    var imageURL: String? = null
+    var imageRes: Int = 0,
+    var imageUrl: String? = null,
+    var localImagePath: String? = null
 )
 
 fun Long.toLocalDateTime(): LocalDateTime =

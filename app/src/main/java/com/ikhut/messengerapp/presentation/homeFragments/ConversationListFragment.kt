@@ -19,7 +19,7 @@ import com.ikhut.messengerapp.domain.model.ConversationSummary
 import com.ikhut.messengerapp.presentation.activity.BottomAppBarController
 import com.ikhut.messengerapp.presentation.adapters.ConversationSummaryAdapter
 import com.ikhut.messengerapp.presentation.components.VerticalSpaceItemDecoration
-import com.ikhut.messengerapp.presentation.viewmodel.ConversationViewModel
+import com.ikhut.messengerapp.presentation.viewmodel.ConversationSummaryViewModel
 import kotlin.math.abs
 
 class ConversationListFragment : Fragment() {
@@ -28,7 +28,7 @@ class ConversationListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: ConversationSummaryAdapter
-    private lateinit var conversationViewModel: ConversationViewModel
+    private lateinit var conversationSummaryViewModel: ConversationSummaryViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -40,11 +40,12 @@ class ConversationListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        conversationViewModel = ViewModelProvider(
-            this, ConversationViewModel.create(
-                getConversationSummaryRepository(), getUserSessionManager().currentUser?.username ?: ""
+        conversationSummaryViewModel = ViewModelProvider(
+            this, ConversationSummaryViewModel.create(
+                getConversationSummaryRepository(),
+                getUserSessionManager().currentUser?.username ?: ""
             )
-        )[ConversationViewModel::class.java]
+        )[ConversationSummaryViewModel::class.java]
 
         setCollapsingViewAnimation()
         setupRecyclerView()
@@ -119,7 +120,7 @@ class ConversationListFragment : Fragment() {
 
                 // Load more when user reaches the end
                 if (lastVisibleItemPosition >= totalItemCount - 5) {
-                    conversationViewModel.loadMoreConversations()
+                    conversationSummaryViewModel.loadMoreConversations()
                 }
             }
         })
@@ -127,13 +128,13 @@ class ConversationListFragment : Fragment() {
 
     private fun observeViewModel() {
         // Observe the main conversations list
-        conversationViewModel.conversations.observe(viewLifecycleOwner) { conversations ->
+        conversationSummaryViewModel.conversations.observe(viewLifecycleOwner) { conversations ->
             // Apply current search filter
             val currentQuery = binding.searchView.query.toString()
             filterConversations(currentQuery, conversations)
 
             // Update text visibility when conversations change
-            val resource = conversationViewModel.conversationsState.value
+            val resource = conversationSummaryViewModel.conversationsState.value
             val isLoading = resource is Resource.Loading
             val hasError = resource is Resource.Error
 
@@ -149,12 +150,12 @@ class ConversationListFragment : Fragment() {
         }
 
         // Observe loading states and errors
-        conversationViewModel.conversationsState.observe(viewLifecycleOwner) { resource ->
+        conversationSummaryViewModel.conversationsState.observe(viewLifecycleOwner) { resource ->
             val isLoading = resource is Resource.Loading
             val hasError = resource is Resource.Error
             val errorMessage = if (resource is Resource.Error) resource.message else null
 
-            val conversations = conversationViewModel.conversations.value ?: emptyList()
+            val conversations = conversationSummaryViewModel.conversations.value ?: emptyList()
             val currentQuery = binding.searchView.query.toString()
 
             val filteredConversations = if (currentQuery.isEmpty()) {
@@ -173,7 +174,7 @@ class ConversationListFragment : Fragment() {
         query: String, conversations: List<ConversationSummary>? = null
     ) {
         val conversationsToFilter =
-            conversations ?: conversationViewModel.conversations.value ?: emptyList()
+            conversations ?: conversationSummaryViewModel.conversations.value ?: emptyList()
 
         val filteredConversations = if (query.isEmpty()) {
             conversationsToFilter
@@ -186,7 +187,7 @@ class ConversationListFragment : Fragment() {
         adapter.submitList(filteredConversations)
 
         // Update centered text visibility after filtering
-        val resource = conversationViewModel.conversationsState.value
+        val resource = conversationSummaryViewModel.conversationsState.value
         val isLoading = resource is Resource.Loading
         val hasError = resource is Resource.Error
         val errorMessage = if (resource is Resource.Error) resource.message else null

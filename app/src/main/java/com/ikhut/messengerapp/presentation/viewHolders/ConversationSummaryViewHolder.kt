@@ -25,7 +25,9 @@ class ConversationSummaryViewHolder(private val binding: ConversationSummaryLayo
         ProfilePictureLoader.loadProfilePicture(
             context = binding.root.context,
             imageView = binding.profilePicture,
-            imageUrl = conversationSummary.imageURL,
+            imageRes = conversationSummary.imageRes,
+            imageUrl = conversationSummary.imageUrl,
+            localImagePath = conversationSummary.localImagePath,
             placeholderName = conversationSummary.addresseeName
         )
     }

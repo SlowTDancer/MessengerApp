@@ -19,6 +19,9 @@ class SettingsViewModel(
     private val _updateProfileState = MutableLiveData<Resource<User>>()
     val updateProfileState: LiveData<Resource<User>> = _updateProfileState
 
+    private val _updateProfilePictureState = MutableLiveData<Resource<User>>()
+    val updateProfilePictureState: LiveData<Resource<User>> = _updateProfilePictureState
+
     private val _currentUser = MutableLiveData<User?>()
     val currentUser: LiveData<User?> = _currentUser
 
@@ -66,6 +69,90 @@ class SettingsViewModel(
                 })
             } catch (e: Exception) {
                 _updateProfileState.value = Resource.Error(e.message ?: Constants.ERROR_NETWORK)
+            }
+        }
+    }
+
+    fun updateUserLocalImagePath(localImagePath: String) {
+        val currentUser = userSessionManager.currentUser ?: return
+
+        _updateProfilePictureState.value = Resource.Loading()
+
+        val updatedUser = currentUser.copy(localImagePath = localImagePath)
+
+        viewModelScope.launch {
+            try {
+                val result = userRepository.updateUser(currentUser.username, updatedUser)
+                result.fold(onSuccess = {
+                    userSessionManager.updateUser(updatedUser)
+                    _currentUser.value = updatedUser
+                    _updateProfilePictureState.value = Resource.Success(updatedUser)
+                }, onFailure = {
+                    userSessionManager.updateUser(updatedUser)
+                    _currentUser.value = updatedUser
+                    _updateProfilePictureState.value = Resource.Success(updatedUser)
+                })
+            } catch (e: Exception) {
+                userSessionManager.updateUser(updatedUser)
+                _currentUser.value = updatedUser
+                _updateProfilePictureState.value = Resource.Success(updatedUser)
+            }
+        }
+    }
+
+
+    fun updateUserImageUrl(imageUrl: String) {
+        val currentUser = userSessionManager.currentUser ?: return
+
+        _updateProfilePictureState.value = Resource.Loading()
+
+        val updatedUser = currentUser.copy(
+            imageUrl = imageUrl, localImagePath = null
+        )
+
+        viewModelScope.launch {
+            try {
+                val result = userRepository.updateUser(currentUser.username, updatedUser)
+                result.fold(onSuccess = {
+                    userSessionManager.updateUser(updatedUser)
+                    _currentUser.value = updatedUser
+                    _updateProfilePictureState.value = Resource.Success(updatedUser)
+                }, onFailure = { exception ->
+                    _updateProfilePictureState.value =
+                        Resource.Error(exception.message ?: "Failed to update profile picture")
+                })
+            } catch (e: Exception) {
+                _updateProfilePictureState.value =
+                    Resource.Error(e.message ?: Constants.ERROR_NETWORK)
+            }
+        }
+    }
+
+    fun updateUserImageResource(imageRes: Int) {
+        val currentUser = userSessionManager.currentUser ?: return
+
+        _updateProfilePictureState.value = Resource.Loading()
+
+        val updatedUser = currentUser.copy(
+            imageRes = imageRes, imageUrl = null, localImagePath = null
+        )
+
+        viewModelScope.launch {
+            try {
+                val result = userRepository.updateUser(currentUser.username, updatedUser)
+                result.fold(onSuccess = {
+                    userSessionManager.updateUser(updatedUser)
+                    _currentUser.value = updatedUser
+                    _updateProfilePictureState.value = Resource.Success(updatedUser)
+                }, onFailure = {
+                    userSessionManager.updateUser(updatedUser)
+                    _currentUser.value = updatedUser
+                    _updateProfilePictureState.value = Resource.Success(updatedUser)
+                })
+            } catch (e: Exception) {
+                userSessionManager.updateUser(updatedUser)
+                _currentUser.value = updatedUser
+                _updateProfilePictureState.value = Resource.Success(updatedUser)
             }
         }
     }
