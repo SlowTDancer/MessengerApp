@@ -8,7 +8,10 @@ import com.ikhut.messengerapp.databinding.ConversationSummaryLayoutBinding
 import com.ikhut.messengerapp.domain.model.ConversationSummary
 import com.ikhut.messengerapp.presentation.viewHolders.ConversationSummaryViewHolder
 
-class ConversationSummaryAdapter : RecyclerView.Adapter<ConversationSummaryViewHolder>() {
+class ConversationSummaryAdapter(
+    private val onItemClick: (ConversationSummary) -> Unit
+
+) : RecyclerView.Adapter<ConversationSummaryViewHolder>() {
     private var conversations: List<ConversationSummary> = emptyList()
 
     fun submitList(newConversations: List<ConversationSummary>) {
@@ -31,6 +34,10 @@ class ConversationSummaryAdapter : RecyclerView.Adapter<ConversationSummaryViewH
     override fun onBindViewHolder(holder: ConversationSummaryViewHolder, position: Int) {
         val conversation = conversations[position]
         holder.bind(conversation)
+
+        holder.itemView.setOnClickListener {
+            onItemClick(conversation)
+        }
     }
 
     override fun getItemCount(): Int = conversations.size
