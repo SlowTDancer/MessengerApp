@@ -130,19 +130,41 @@ class ConversationListFragment : Fragment() {
             // Apply current search filter
             val currentQuery = binding.searchView.query.toString()
             filterConversations(currentQuery, conversations)
+
+            // Update text visibility when conversations change
+            val resource = conversationViewModel.conversationsState.value
+            val isLoading = resource is Resource.Loading
+            val hasError = resource is Resource.Error
+
+            val filteredConversations = if (currentQuery.isEmpty()) {
+                conversations
+            } else {
+                conversations.filter { conversation ->
+                    conversation.addresseeName.contains(currentQuery, ignoreCase = true)
+                }
+            }
+
+            updateCenteredTextVisibility(filteredConversations, isLoading, hasError)
         }
 
         // Observe loading states and errors
         conversationViewModel.conversationsState.observe(viewLifecycleOwner) { resource ->
-            when (resource) {
-                is Resource.Loading -> {
-                }
-                is Resource.Success -> {
-                    // Data is handled by the conversations LiveData observer above
-                }
-                is Resource.Error -> {
+            val isLoading = resource is Resource.Loading
+            val hasError = resource is Resource.Error
+            val errorMessage = if (resource is Resource.Error) resource.message else null
+
+            val conversations = conversationViewModel.conversations.value ?: emptyList()
+            val currentQuery = binding.searchView.query.toString()
+
+            val filteredConversations = if (currentQuery.isEmpty()) {
+                conversations
+            } else {
+                conversations.filter { conversation ->
+                    conversation.addresseeName.contains(currentQuery, ignoreCase = true)
                 }
             }
+
+            updateCenteredTextVisibility(filteredConversations, isLoading, hasError, errorMessage)
         }
     }
 
@@ -158,5 +180,30 @@ class ConversationListFragment : Fragment() {
         }
 
         adapter.submitList(filteredConversations)
+
+        // Update centered text visibility after filtering
+        val resource = conversationViewModel.conversationsState.value
+        val isLoading = resource is Resource.Loading
+        val hasError = resource is Resource.Error
+        val errorMessage = if (resource is Resource.Error) resource.message else null
+
+
+        updateCenteredTextVisibility(filteredConversations, isLoading, hasError, errorMessage)
+    }
+
+    private fun updateCenteredTextVisibility(conversations: List<ConversationSummary>, isLoading: Boolean, hasError: Boolean, errorMessage: String? = null) {
+        when {
+            hasError -> {
+                binding.centeredText.text = errorMessage ?: getString(R.string.error_loading_conversations)
+                binding.centeredText.visibility = View.VISIBLE
+            }
+            !isLoading && conversations.isEmpty() -> {
+                binding.centeredText.text = getString(R.string.no_conversations)
+                binding.centeredText.visibility = View.VISIBLE
+            }
+            else -> {
+                binding.centeredText.visibility = View.GONE
+            }
+        }
     }
 }

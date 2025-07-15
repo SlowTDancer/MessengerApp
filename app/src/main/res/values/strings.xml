@@ -21,7 +21,9 @@
     <string name="back_button_arrow">back button</string>
 
     <string name="no_users_to_show">No users to show</string>
-    <string name="error_loading_users">Could not fetch users</string>
+    <string name="no_conversations">No conversations found</string>
 
+    <string name="error_loading_users">Could not fetch users</string>
+    <string name="error_loading_conversations">Could not fetch conversations</string>
 
 </resources>

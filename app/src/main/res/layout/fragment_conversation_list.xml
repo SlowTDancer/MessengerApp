@@ -71,4 +71,14 @@
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <TextView
+        android:id="@+id/centered_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        android:visibility="invisible"
+        android:textSize="30sp"
+        android:text="@string/no_conversations" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
