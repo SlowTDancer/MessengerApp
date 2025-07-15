@@ -16,5 +16,13 @@ interface ConversationSummaryRepository {
         lastConversationTime: LocalDateTime? = null
     ): Result<List<ConversationSummary>>
 
+    suspend fun updateUserProfileInConversations(
+        oldUsername: String,
+        newUsername: String,
+        newProfileImageUrl: String? = null,
+        newLocalImagePath: String? = null,
+        newImageRes: Int = 0
+    ): Result<Unit>
+
     fun observeConversationUpdates(userId: String): Flow<ConversationSummary>
 }

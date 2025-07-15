@@ -22,6 +22,28 @@ class ConversationSummaryRepositoryImpl(
         return dataSource.getRecentConversations(userId, limit, lastConversationTime)
     }
 
+    override suspend fun updateUserProfileInConversations(
+        oldUsername: String,
+        newUsername: String,
+        newProfileImageUrl: String?,
+        newLocalImagePath: String?,
+        newImageRes: Int
+    ): Result<Unit> {
+        return try {
+            dataSource.updateUserProfileInConversations(
+                oldUsername = oldUsername,
+                newUsername = newUsername,
+                profileImageUrl = newProfileImageUrl,
+                localImagePath = newLocalImagePath,
+                imageRes = newImageRes
+            )
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override fun observeConversationUpdates(userId: String): Flow<ConversationSummary> {
         return dataSource.observeConversationUpdates(userId)
     }
