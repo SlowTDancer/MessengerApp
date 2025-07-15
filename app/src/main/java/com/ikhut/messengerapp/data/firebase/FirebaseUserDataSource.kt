@@ -2,6 +2,7 @@ package com.ikhut.messengerapp.data.firebase
 
 import com.google.firebase.database.FirebaseDatabase
 import com.ikhut.messengerapp.domain.model.User
+import com.ikhut.messengerapp.domain.repository.PaginatedResult
 import kotlinx.coroutines.tasks.await
 
 class FirebaseUserDataSource {
@@ -45,6 +46,44 @@ class FirebaseUserDataSource {
                 usersDB.child(oldUsername).removeValue().await()
             }
             Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getUsersWithCursor(pageSize: Int, lastUsername: String? = null): Result<PaginatedResult<User>> {
+        return try {
+            val query = if (lastUsername == null) {
+                // First page
+                usersDB.orderByChild("username").limitToFirst(pageSize + 1)
+            } else {
+                // Subsequent pages - start after the last username
+                usersDB.orderByChild("username")
+                    .startAfter(lastUsername)
+                    .limitToFirst(pageSize + 1)
+            }
+
+            val snapshot = query.get().await()
+            val users = mutableListOf<User>()
+
+            snapshot.children.forEach { child ->
+                child.getValue(User::class.java)?.let { user ->
+                    users.add(user)
+                }
+            }
+
+            val hasNext = users.size > pageSize
+            if (hasNext) {
+                users.removeAt(users.size - 1)
+            }
+
+            val result = PaginatedResult(
+                data = users,
+                hasNext = hasNext,
+                nextPageToken = users.lastOrNull()?.username
+            )
+
+            Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)
         }

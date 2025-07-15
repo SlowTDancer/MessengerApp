@@ -6,4 +6,11 @@ interface UserRepository {
     suspend fun addUser(user: User): Result<Unit>
     suspend fun updateUser(username: String, user: User): Result<Unit>
     suspend fun getUser(username: String): Result<User>
-}
+
+    suspend fun getUsersWithCursor(pageSize: Int, lastUsername: String? = null): Result<PaginatedResult<User>>}
+
+data class PaginatedResult<T>(
+    val data: List<T>,
+    val hasNext: Boolean,
+    val nextPageToken: String? = null
+)

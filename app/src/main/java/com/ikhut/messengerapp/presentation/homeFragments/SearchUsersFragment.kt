@@ -4,18 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ikhut.messengerapp.R
+import com.ikhut.messengerapp.application.getUserRepository
+import com.ikhut.messengerapp.application.getUserSessionManager
 import com.ikhut.messengerapp.databinding.FragmentSearchUsersBinding
-import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.presentation.activity.BottomAppBarController
 import com.ikhut.messengerapp.presentation.adapters.SearchUsersAdapter
 import com.ikhut.messengerapp.presentation.components.VerticalSpaceItemDecoration
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import com.ikhut.messengerapp.presentation.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 
 class SearchUsersFragment : Fragment() {
@@ -24,20 +25,24 @@ class SearchUsersFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var searchUsersAdapter: SearchUsersAdapter
-    private var allUsers: List<User> = emptyList()
-    private var filteredUsers: List<User> = emptyList()
-    private var searchJob: Job? = null
-
+    private lateinit var viewModel: UserViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchUsersBinding.inflate(inflater, container, false)
 
+        binding.backButton.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
+        searchUsersAdapter = SearchUsersAdapter()
+        viewModel = ViewModelProvider(this, UserViewModel.create(getUserRepository(),
+            getUserSessionManager().currentUser?.username ?: ""
+        ))[UserViewModel::class.java]
+
         initRecyclerView()
-        initListeners()
-        setupSearchView()
-        loadSampleData()
+        observeViewModel()
 
         return binding.root
     }
@@ -45,26 +50,41 @@ class SearchUsersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bottopAppBarController = (activity as? BottomAppBarController)
-        bottopAppBarController?.hideBottomAppBar()
-        bottopAppBarController?.hideFab()
+        val bottomAppBarController = (activity as? BottomAppBarController)
+        bottomAppBarController?.hideBottomAppBar()
+        bottomAppBarController?.hideFab()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        searchJob?.cancel()
         _binding = null
 
-        val bottopAppBarController = (activity as? BottomAppBarController)
-        bottopAppBarController?.showBottomAppBar()
-        bottopAppBarController?.showFab()
+        val bottomAppBarController = (activity as? BottomAppBarController)
+        bottomAppBarController?.showBottomAppBar()
+        bottomAppBarController?.showFab()
     }
 
     private fun initRecyclerView() {
-        searchUsersAdapter = SearchUsersAdapter()
         binding.recyclerView.apply {
             adapter = searchUsersAdapter
             layoutManager = LinearLayoutManager(requireContext())
+
+            // Add scroll listener for pagination
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val visibleItemCount = layoutManager.childCount
+                    val totalItemCount = layoutManager.itemCount
+                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                    // Load more when near the end - delegate to ViewModel
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 3) {
+                        viewModel.loadMoreUsers()
+                    }
+                }
+            })
         }
 
         val spacingInPixels =
@@ -72,94 +92,21 @@ class SearchUsersFragment : Fragment() {
         binding.recyclerView.addItemDecoration(VerticalSpaceItemDecoration(spacingInPixels))
     }
 
-    fun initListeners() {
-        binding.backButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-    }
-
-    private fun setupSearchView() {
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                val query = newText ?: ""
-
-                searchJob?.cancel()
-
-                if (query.length < 3) {
-                    searchUsersAdapter.submitList(allUsers)
-                } else {
-                    searchJob = lifecycleScope.launch {
-                        delay(300)
-                        filterUsers(query)
-                    }
-                }
-                return true
-            }
-        })
-    }
-
-    private fun filterUsers(query: String) {
-        filteredUsers = if (query.isEmpty()) {
-            allUsers
-        } else {
-            allUsers.filter { user ->
-                user.username.contains(query, ignoreCase = true) ||
-                        user.job.contains(query, ignoreCase = true)
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.users.collect { users ->
+                searchUsersAdapter.submitList(users)
             }
         }
-        searchUsersAdapter.submitList(filteredUsers)
-    }
 
-    private fun loadSampleData() {
-        val sampleUsers = listOf(
-            User(
-                username = "john_doe",
-                job = "Software Engineer"
-            ),
-            User(
-                username = "jane_smith",
-                job = "UI/UX Designer"
-            ),
-            User(
-                username = "mike_johnson",
-                job = "Product Manager"
-            ),
-            User(
-                username = "sarah_wilson",
-                job = "Data Scientist"
-            ),
-            User(
-                username = "alex_brown",
-                job = "DevOps Engineer"
-            ),
-            User(
-                username = "emily_davis",
-                job = "Marketing Specialist"
-            ),
-            User(
-                username = "chris_taylor",
-                job = "Business Analyst"
-            ),
-            User(
-                username = "lisa_anderson",
-                job = "Graphic Designer"
-            ),
-            User(
-                username = "david_martinez",
-                job = "Full Stack Developer"
-            ),
-            User(
-                username = "rachel_garcia",
-                job = "Project Manager"
-            )
-        )
+        viewLifecycleOwner.lifecycleScope.launch {
+            // Observe loading state
+            //TODO:
+        }
 
-        allUsers = sampleUsers
-        filteredUsers = sampleUsers
-        searchUsersAdapter.submitList(sampleUsers)
+        viewLifecycleOwner.lifecycleScope.launch {
+            // Observe errors
+            //TODO:
+        }
     }
 }
