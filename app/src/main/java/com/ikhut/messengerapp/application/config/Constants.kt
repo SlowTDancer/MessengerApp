@@ -5,7 +5,7 @@ object Constants {
     const val FIREBASE_MESSAGES = "messages"
     const val FIREBASE_CONVERSATIONS = "conversations"
 
-    const val DATASTORE_USER_PREFS = "user_prefs"
+    const val PREFS_USER = "user_prefs"
 
     const val PAGE_SIZE = 20
     const val MIN_PASSWORD_SIZE = 4
@@ -17,7 +17,7 @@ object Constants {
     const val ANIM_DELAY = 125
 
     const val HEADER_SIGN_OUT = "Sign Out"
-    const val QUERY_SIGN_OUT = ""
+    const val QUERY_SIGN_OUT = "Are you sure you want to sign out?"
     const val POSITIVE_RESPONSE_SIGN_OUT = "Yes"
     const val NEGATIVE_RESPONSE_SIGN_OUT = "No"
 
