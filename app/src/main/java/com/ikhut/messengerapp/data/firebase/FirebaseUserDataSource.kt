@@ -88,4 +88,51 @@ class FirebaseUserDataSource {
             Result.failure(e)
         }
     }
+
+    suspend fun searchUsersWithCursor(searchQuery: String, pageSize: Int, lastUsername: String? = null): Result<PaginatedResult<User>> {
+        return try {
+            // Firebase range queries for usernames that start with the query
+            val endQuery = searchQuery + "\uf8ff"
+
+            val query = if (lastUsername == null) {
+                // First page - search from beginning
+                usersDB.orderByChild("username")
+                    .startAt(searchQuery)
+                    .endAt(endQuery)
+                    .limitToFirst(pageSize + 1)
+            } else {
+                // Subsequent pages - continue after lastUsername but within search range
+                usersDB.orderByChild("username")
+                    .startAfter(lastUsername)
+                    .endAt(endQuery)
+                    .limitToFirst(pageSize + 1)
+            }
+
+            val snapshot = query.get().await()
+            val users = mutableListOf<User>()
+
+            snapshot.children.forEach { child ->
+                child.getValue(User::class.java)?.let { user ->
+                    if (user.username.startsWith(searchQuery, ignoreCase = true)) {
+                        users.add(user)
+                    }
+                }
+            }
+
+            val hasNext = users.size > pageSize
+            if (hasNext) {
+                users.removeAt(users.size - 1)
+            }
+
+            val result = PaginatedResult(
+                data = users,
+                hasNext = hasNext,
+                nextPageToken = users.lastOrNull()?.username
+            )
+
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

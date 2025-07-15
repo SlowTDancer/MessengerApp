@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +19,8 @@ import com.ikhut.messengerapp.presentation.adapters.SearchUsersAdapter
 import com.ikhut.messengerapp.presentation.components.VerticalSpaceItemDecoration
 import com.ikhut.messengerapp.presentation.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 
 class SearchUsersFragment : Fragment() {
 
@@ -26,6 +29,8 @@ class SearchUsersFragment : Fragment() {
 
     private lateinit var searchUsersAdapter: SearchUsersAdapter
     private lateinit var viewModel: UserViewModel
+
+    private var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -42,6 +47,7 @@ class SearchUsersFragment : Fragment() {
         ))[UserViewModel::class.java]
 
         initRecyclerView()
+        setupSearchView()
         observeViewModel()
 
         return binding.root
@@ -57,6 +63,7 @@ class SearchUsersFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        searchJob?.cancel()
         _binding = null
 
         val bottomAppBarController = (activity as? BottomAppBarController)
@@ -81,7 +88,7 @@ class SearchUsersFragment : Fragment() {
 
                     // Load more when near the end - delegate to ViewModel
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 3) {
-                        viewModel.loadMoreUsers()
+                        viewModel.loadMore()
                     }
                 }
             })
@@ -90,6 +97,23 @@ class SearchUsersFragment : Fragment() {
         val spacingInPixels =
             resources.getDimensionPixelSize(R.dimen.user_profile_summaries_spacing)
         binding.recyclerView.addItemDecoration(VerticalSpaceItemDecoration(spacingInPixels))
+    }
+
+    private fun setupSearchView() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                val query = newText ?: ""
+
+                searchJob?.cancel()
+                searchJob = lifecycleScope.launch {
+                    delay(300) // Debounce
+                    viewModel.setSearchQuery(query)
+                }
+                return true
+            }
+        })
     }
 
     private fun observeViewModel() {
