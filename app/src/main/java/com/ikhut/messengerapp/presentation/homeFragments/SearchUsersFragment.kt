@@ -87,7 +87,7 @@ class SearchUsersFragment : Fragment() {
                     val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
                     // Load more when near the end - delegate to ViewModel
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 3) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 8) {
                         viewModel.loadMore()
                     }
                 }
