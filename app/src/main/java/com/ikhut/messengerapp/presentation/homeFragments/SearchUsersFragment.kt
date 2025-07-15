@@ -120,17 +120,37 @@ class SearchUsersFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.users.collect { users ->
                 searchUsersAdapter.submitList(users)
+                updateCenteredTextVisibility(users, viewModel.isLoading.value, hasError = false)
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            // Observe loading state
-            //TODO:
+            viewModel.isLoading.collect { isLoading ->
+                updateCenteredTextVisibility(viewModel.users.value, isLoading, hasError = false)
+            }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            // Observe errors
-            //TODO:
+         viewLifecycleOwner.lifecycleScope.launch {
+             viewModel.errorState.collect { error ->
+                 val hasError = error != null
+                 updateCenteredTextVisibility(viewModel.users.value, viewModel.isLoading.value, hasError)
+             }
+         }
+    }
+
+    private fun updateCenteredTextVisibility(users: List<*>, isLoading: Boolean, hasError: Boolean) {
+        when {
+            hasError -> {
+                binding.centeredText.text = getString(R.string.error_loading_users)
+                binding.centeredText.visibility = View.VISIBLE
+            }
+            !isLoading && users.isEmpty() -> {
+                binding.centeredText.text = getString(R.string.no_users_to_show)
+                binding.centeredText.visibility = View.VISIBLE
+            }
+            else -> {
+                binding.centeredText.visibility = View.GONE
+            }
         }
     }
 }

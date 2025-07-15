@@ -20,5 +20,8 @@
     <string name="please_wait">PLEASE WAIT...</string>
     <string name="back_button_arrow">back button</string>
 
+    <string name="no_users_to_show">No users to show</string>
+    <string name="error_loading_users">Could not fetch users</string>
+
 
 </resources>

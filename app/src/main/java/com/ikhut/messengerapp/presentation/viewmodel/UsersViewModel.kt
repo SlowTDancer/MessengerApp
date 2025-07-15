@@ -21,6 +21,9 @@ class UserViewModel(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
+    private val _errorState = MutableStateFlow<String?>(null)
+    val errorState: StateFlow<String?> = _errorState.asStateFlow()
+
     private val _hasMore = MutableStateFlow(true)
     val hasMore: StateFlow<Boolean> = _hasMore.asStateFlow()
 
@@ -84,8 +87,7 @@ class UserViewModel(
                         lastUsername = paginatedResult.nextPageToken
                     },
                     onFailure = { error ->
-                        // Handle error - you can add error state if needed
-                        //TODO:
+                        _errorState.value = error.message ?: "Unknown error"
                     }
                 )
             } finally {
