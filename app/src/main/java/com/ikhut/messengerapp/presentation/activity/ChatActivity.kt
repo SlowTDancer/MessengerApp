@@ -4,7 +4,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.ikhut.messengerapp.R
+import com.ikhut.messengerapp.application.getUserRepository
 import com.ikhut.messengerapp.databinding.ActivityChatBinding
+import com.ikhut.messengerapp.presentation.utils.ProfilePictureLoader.loadProfilePicture
+import kotlinx.coroutines.launch
 
 class ChatActivity : AppCompatActivity() {
 
@@ -22,18 +27,33 @@ class ChatActivity : AppCompatActivity() {
             val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
             binding.messageInputContainer.setPadding(
-                0,
-                0,
-                0,
-                imeInsets.bottom.coerceAtLeast(systemBarInsets.bottom)
+                16,
+                16,
+                16,
+                imeInsets.bottom.coerceAtLeast(systemBarInsets.bottom) + 16
             )
 
             // Consume insets
             WindowInsetsCompat.CONSUMED
         }
 
-
         setupViews()
+
+        val username = intent.getStringExtra(EXTRA_USERNAME) ?: ""
+
+        lifecycleScope.launch {
+            val result = getUserRepository().getUser(username)
+            val user = result.getOrNull()
+
+            binding.appbarChatUsername.text = username
+            if (user != null) {
+                binding.appbarChatJob.text = user.job
+                loadProfilePicture(binding.root.context, binding.profilePicture, user.imageRes, user.imageUrl, user.localImagePath, user.username)
+            } else {
+                binding.appbarChatJob.text = ""
+                binding.profilePicture.setImageResource(R.drawable.avatar_image_placeholder)
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -49,4 +69,7 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
+    companion object {
+        const val EXTRA_USERNAME = "extra_username"
+    }
 }
