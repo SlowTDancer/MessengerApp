@@ -17,18 +17,12 @@ class FirebaseConversationSummaryDataSource {
     private val conversationsDB =
         FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CONVERSATIONS)
 
-    private fun generateConversationKey(userId1: String, userId2: String): String {
-        return if (userId1 < userId2) "${userId1}_${userId2}" else "${userId2}_${userId1}"
-    }
-
     suspend fun updateConversationSummary(
         userId1: String, userId2: String, lastMessage: String
     ): Result<Unit> {
         return try {
-            val conversationKey = generateConversationKey(userId1, userId2)
-
-            val snapshot1 = conversationsDB.child(userId1).child(conversationKey).get().await()
-            val snapshot2 = conversationsDB.child(userId2).child(conversationKey).get().await()
+            val snapshot1 = conversationsDB.child(userId1).child(userId2).get().await()
+            val snapshot2 = conversationsDB.child(userId2).child(userId1).get().await()
 
             val existing1 = snapshot1.getValue(ConversationSummary::class.java)
             val existing2 = snapshot2.getValue(ConversationSummary::class.java)
@@ -42,8 +36,8 @@ class FirebaseConversationSummaryDataSource {
             )
 
             val updates = mapOf(
-                "$userId1/$conversationKey" to conversationForUser1,
-                "$userId2/$conversationKey" to conversationForUser2
+                "$userId1/$userId2" to conversationForUser1,
+                "$userId2/$userId1" to conversationForUser2
             )
 
             conversationsDB.updateChildren(updates).await()
