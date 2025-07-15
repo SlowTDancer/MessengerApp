@@ -6,14 +6,12 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 data class ConversationSummary(
-    val addresseeName: String = "",
-    val lastMessageTime: Long = System.currentTimeMillis(),
-    val lastMessage: String = "",
+    var addresseeName: String = "",
+    var lastMessageTime: Long = System.currentTimeMillis(),
+    var lastMessage: String = "",
 
-    /** I don't know yet how we are going to fetch images. */
-    val profileImageUrl: String? = null,
-    val profileImageRes: Int? = null,
-    val defaultProfileImage: Int = R.drawable.avatar_image_placeholder
+    var profileImageUrl: String? = null,
+    var defaultProfileImage: Int = R.drawable.avatar_image_placeholder
 )
 
 fun Long.toLocalDateTime(): LocalDateTime =

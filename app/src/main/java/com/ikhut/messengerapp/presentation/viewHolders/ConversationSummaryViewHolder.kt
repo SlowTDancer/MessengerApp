@@ -1,9 +1,11 @@
 package com.ikhut.messengerapp.presentation.viewHolders
 
 import androidx.recyclerview.widget.RecyclerView
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.databinding.ConversationSummaryLayoutBinding
 import com.ikhut.messengerapp.domain.model.ConversationSummary
 import com.ikhut.messengerapp.domain.model.toLocalDateTime
+import com.ikhut.messengerapp.presentation.utils.ProfilePictureLoader
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -11,10 +13,6 @@ import java.util.Locale
 
 class ConversationSummaryViewHolder(private val binding: ConversationSummaryLayoutBinding) :
     RecyclerView.ViewHolder(binding.root) {
-
-    companion object {
-        private const val MAX_MESSAGE_LENGTH = 57
-    }
 
     fun bind(conversationSummary: ConversationSummary) {
         binding.addresseeName.text = conversationSummary.addresseeName
@@ -24,13 +22,14 @@ class ConversationSummaryViewHolder(private val binding: ConversationSummaryLayo
         binding.lastMessageTime.text =
             conversationSummary.lastMessageTime.toLocalDateTime().formatMessageTime()
 
-        //TODO: fix image setting
-        binding.profilePicture.setImageResource(
-            conversationSummary.profileImageRes ?: conversationSummary.defaultProfileImage
+        ProfilePictureLoader.loadConversationProfilePicture(
+            context = binding.root.context,
+            imageView = binding.profilePicture,
+            conversation = conversationSummary
         )
     }
 
-    fun String.trimWithEllipsis(maxLength: Int = MAX_MESSAGE_LENGTH): String {
+    private fun String.trimWithEllipsis(maxLength: Int = Constants.MAX_MESSAGE_LENGTH): String {
         return if (this.length > maxLength) {
             this.take(maxLength) + "..."
         } else {
@@ -38,7 +37,7 @@ class ConversationSummaryViewHolder(private val binding: ConversationSummaryLayo
         }
     }
 
-    fun LocalDateTime.formatMessageTime(): String {
+    private fun LocalDateTime.formatMessageTime(): String {
         val now = LocalDateTime.now()
         val minutesAgo = ChronoUnit.MINUTES.between(this, now)
 

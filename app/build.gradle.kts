@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.glide)
     implementation(libs.androidx.datastore.preferences)
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

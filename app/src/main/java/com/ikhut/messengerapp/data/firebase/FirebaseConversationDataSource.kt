@@ -27,23 +27,27 @@ class FirebaseConversationDataSource {
         return try {
             val conversationKey = generateConversationKey(userId1, userId2)
 
+            val user1Snapshot = conversationsDB.child("$userId1/$conversationKey").get().await()
+            val user2Snapshot = conversationsDB.child("$userId2/$conversationKey").get().await()
+
+            val oldUser1 = user1Snapshot.getValue(ConversationSummary::class.java)
+            val oldUser2 = user2Snapshot.getValue(ConversationSummary::class.java)
+
             val conversationForUser1 = ConversationSummary(
                 addresseeName = userId2,
                 lastMessage = lastMessage,
-                profileImageUrl = null,
-                profileImageRes = null
+                profileImageUrl = oldUser1?.profileImageUrl
             )
 
             val conversationForUser2 = ConversationSummary(
                 addresseeName = userId1,
                 lastMessage = lastMessage,
-                profileImageUrl = null,
-                profileImageRes = null
+                profileImageUrl = oldUser2?.profileImageUrl
             )
 
             val updates = mapOf(
-                "${userId1}/$conversationKey" to conversationForUser1,
-                "${userId2}/$conversationKey" to conversationForUser2
+                "$userId1/$conversationKey" to conversationForUser1,
+                "$userId2/$conversationKey" to conversationForUser2
             )
 
             conversationsDB.updateChildren(updates).await()
@@ -53,6 +57,7 @@ class FirebaseConversationDataSource {
             Result.failure(e)
         }
     }
+
 
     suspend fun getRecentConversations(
         userId: String,

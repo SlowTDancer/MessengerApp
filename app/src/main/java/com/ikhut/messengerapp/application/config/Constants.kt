@@ -9,12 +9,16 @@ object Constants {
 
     const val PAGE_SIZE = 20
     const val MIN_PASSWORD_SIZE = 4
+    const val MAX_MESSAGE_LENGTH = 57
 
     const val DOT_RADIUS = 15f
     const val DOT_COUNT = 8
     const val CIRCLE_RADIUS = 100f
     const val ANIM_DURATION = 1000L
     const val ANIM_DELAY = 125
+
+    const val UI_AVATARS_BASE = "https://ui-avatars.com/api/"
+    const val PLACEHOLDER_NAME = "User"
 
     const val HEADER_SIGN_OUT = "Sign Out"
     const val QUERY_SIGN_OUT = "Are you sure you want to sign out?"
