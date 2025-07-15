@@ -1,18 +1,19 @@
 package com.ikhut.messengerapp.data.firebase
 
 import com.google.firebase.database.FirebaseDatabase
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.domain.repository.PaginatedResult
 import kotlinx.coroutines.tasks.await
 
 class FirebaseUserDataSource {
-    private val usersDB = FirebaseDatabase.getInstance().getReference("users")
+    private val usersDB = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_USERS)
 
     suspend fun createUser(user: User): Result<Unit> {
         val snapshot = usersDB.child(user.username).get().await()
 
         return if (snapshot.exists()) {
-            Result.failure(Exception("Username already exists"))
+            Result.failure(Exception(Constants.ERROR_USER_ALREADY_EXISTS))
         } else {
             usersDB.child(user.username).setValue(user).await()
             Result.success(Unit)
@@ -24,7 +25,7 @@ class FirebaseUserDataSource {
         val user = snapshot.getValue(User::class.java)
 
         return if (user != null) Result.success(user)
-        else Result.failure(Exception("User not found"))
+        else Result.failure(Exception(Constants.ERROR_USER_NOT_FOUND))
     }
 
     suspend fun updateUser(oldUsername: String, user: User): Result<Unit> {
@@ -32,12 +33,12 @@ class FirebaseUserDataSource {
             val oldSnapshot = usersDB.child(oldUsername).get().await()
 
             if (!oldSnapshot.exists()) {
-                return Result.failure(Exception("User not found"))
+                return Result.failure(Exception(Constants.ERROR_USER_NOT_FOUND))
             }
 
             val newSnapshot = usersDB.child(user.username).get().await()
             if (newSnapshot.exists() && oldUsername != user.username) {
-                return Result.failure(Exception("New username already exists"))
+                return Result.failure(Exception(Constants.ERROR_USER_ALREADY_EXISTS))
             }
 
             usersDB.child(user.username).setValue(user).await()
@@ -51,15 +52,16 @@ class FirebaseUserDataSource {
         }
     }
 
-    suspend fun getUsersWithCursor(pageSize: Int, lastUsername: String? = null): Result<PaginatedResult<User>> {
+    suspend fun getUsersWithCursor(
+        pageSize: Int, lastUsername: String? = null
+    ): Result<PaginatedResult<User>> {
         return try {
             val query = if (lastUsername == null) {
                 // First page
-                usersDB.orderByChild("username").limitToFirst(pageSize + 1)
+                usersDB.orderByChild(Constants.PARAM_USERNAME).limitToFirst(pageSize + 1)
             } else {
                 // Subsequent pages - start after the last username
-                usersDB.orderByChild("username")
-                    .startAfter(lastUsername)
+                usersDB.orderByChild(Constants.PARAM_USERNAME).startAfter(lastUsername)
                     .limitToFirst(pageSize + 1)
             }
 
@@ -78,9 +80,7 @@ class FirebaseUserDataSource {
             }
 
             val result = PaginatedResult(
-                data = users,
-                hasNext = hasNext,
-                nextPageToken = users.lastOrNull()?.username
+                data = users, hasNext = hasNext, nextPageToken = users.lastOrNull()?.username
             )
 
             Result.success(result)
@@ -89,23 +89,21 @@ class FirebaseUserDataSource {
         }
     }
 
-    suspend fun searchUsersWithCursor(searchQuery: String, pageSize: Int, lastUsername: String? = null): Result<PaginatedResult<User>> {
+    suspend fun searchUsersWithCursor(
+        searchQuery: String, pageSize: Int, lastUsername: String? = null
+    ): Result<PaginatedResult<User>> {
         return try {
             // Firebase range queries for usernames that start with the query
             val endQuery = searchQuery + "\uf8ff"
 
             val query = if (lastUsername == null) {
                 // First page - search from beginning
-                usersDB.orderByChild("username")
-                    .startAt(searchQuery)
-                    .endAt(endQuery)
+                usersDB.orderByChild(Constants.PARAM_USERNAME).startAt(searchQuery).endAt(endQuery)
                     .limitToFirst(pageSize + 1)
             } else {
                 // Subsequent pages - continue after lastUsername but within search range
-                usersDB.orderByChild("username")
-                    .startAfter(lastUsername)
-                    .endAt(endQuery)
-                    .limitToFirst(pageSize + 1)
+                usersDB.orderByChild(Constants.PARAM_USERNAME).startAfter(lastUsername)
+                    .endAt(endQuery).limitToFirst(pageSize + 1)
             }
 
             val snapshot = query.get().await()
@@ -125,9 +123,7 @@ class FirebaseUserDataSource {
             }
 
             val result = PaginatedResult(
-                data = users,
-                hasNext = hasNext,
-                nextPageToken = users.lastOrNull()?.username
+                data = users, hasNext = hasNext, nextPageToken = users.lastOrNull()?.username
             )
 
             Result.success(result)

@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.application.getUserRepository
 import com.ikhut.messengerapp.application.getUserSessionManager
 import com.ikhut.messengerapp.databinding.FragmentSettingsBinding
@@ -45,7 +46,7 @@ class SettingsFragment : Fragment() {
         if (isGranted) {
             openGallery()
         } else {
-            showToast("Permission denied. Cannot access gallery.")
+            showToast(Constants.ERROR_PERMISSION_DENIED)
         }
     }
 
@@ -110,7 +111,7 @@ class SettingsFragment : Fragment() {
                 is Resource.Success -> {
                     loadingOverlay.dismiss()
                     binding.updateButton.isEnabled = true
-                    showToast("Profile updated successfully!")
+                    showToast(Constants.SUCCESS_PROFILE_UPDATED)
 
                     binding.updateNicknameEdit.error = null
                     binding.updateJobEdit.error = null
@@ -121,11 +122,11 @@ class SettingsFragment : Fragment() {
                     binding.updateButton.isEnabled = true
 
                     when {
-                        state.message?.contains("Nickname") == true -> {
+                        state.message?.contains(Constants.PARAM_NICKNAME) == true -> {
                             binding.updateNicknameEdit.error = state.message
                         }
 
-                        state.message?.contains("Job") == true -> {
+                        state.message?.contains(Constants.PARAM_JOB) == true -> {
                             binding.updateJobEdit.error = state.message
                         }
 
@@ -146,10 +147,10 @@ class SettingsFragment : Fragment() {
     }
 
     private fun showSignOutConfirmationDialog() {
-        AlertDialog.Builder(requireContext()).setTitle("Sign Out")
-            .setMessage("Are you sure you want to sign out?")
-            .setPositiveButton("Yes") { _, _ -> performSignOut() }.setNegativeButton("No", null)
-            .show()
+        AlertDialog.Builder(requireContext()).setTitle(Constants.HEADER_SIGN_OUT)
+            .setMessage(Constants.QUERY_SIGN_OUT)
+            .setPositiveButton(Constants.POSITIVE_RESPONSE_SIGN_OUT) { _, _ -> performSignOut() }
+            .setNegativeButton(Constants.NEGATIVE_RESPONSE_SIGN_OUT, null).show()
     }
 
     private fun handleSignOut() {
@@ -195,7 +196,7 @@ class SettingsFragment : Fragment() {
         try {
             Glide.with(this).load(uri).circleCrop().into(binding.profileImage)
 
-            showToast("Profile image updated!")
+            showToast(Constants.SUCCESS_IMAGE_UPDATED)
         } catch (e: Exception) {
             showToast("Failed to load image: ${e.message}")
         }

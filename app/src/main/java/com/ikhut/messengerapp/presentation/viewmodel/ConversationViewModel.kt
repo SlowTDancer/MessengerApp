@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.domain.model.ConversationSummary
 import com.ikhut.messengerapp.domain.repository.ConversationRepository
@@ -64,7 +65,7 @@ class ConversationViewModel(
                 }
             }, onFailure = { exception ->
                 _conversationsState.value = Resource.Error(
-                    exception.message ?: "Failed to load conversations"
+                    exception.message ?: Constants.ERROR_FAILED_TO_LOAD_CONVERSATIONS
                 )
             })
             isLoadingMore = false

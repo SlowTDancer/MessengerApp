@@ -11,6 +11,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.content.ContextCompat
 import com.ikhut.messengerapp.R
+import com.ikhut.messengerapp.application.config.Constants
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -22,10 +23,6 @@ class LoadingDotsView @JvmOverloads constructor(
     private val dots = mutableListOf<Dot>()
 
     private val animatorSet = AnimatorSet()
-
-    private val dotRadius = 15f
-    private val dotCount = 8
-    private val circleRadius = 100f
 
     data class Dot(
         var x: Float, var y: Float, var alpha: Float = 1f, var scale: Float = 1f
@@ -45,10 +42,10 @@ class LoadingDotsView @JvmOverloads constructor(
             val centerX = width / 2f
             val centerY = height / 2f
 
-            for (i in 0 until dotCount) {
-                val angle = (2 * Math.PI * i / dotCount).toFloat()
-                val x = centerX + circleRadius * cos(angle)
-                val y = centerY + circleRadius * sin(angle)
+            for (i in 0 until Constants.DOT_COUNT) {
+                val angle = (2 * Math.PI * i / Constants.DOT_COUNT).toFloat()
+                val x = centerX + Constants.CIRCLE_RADIUS * cos(angle)
+                val y = centerY + Constants.CIRCLE_RADIUS * sin(angle)
                 dots.add(Dot(x, y))
             }
 
@@ -68,7 +65,7 @@ class LoadingDotsView @JvmOverloads constructor(
             paint.alpha = (255 * dot.alpha).toInt()
 
             canvas.drawCircle(
-                dot.x, dot.y, dotRadius * dot.scale, paint
+                dot.x, dot.y, Constants.DOT_RADIUS * dot.scale, paint
             )
         }
     }
@@ -81,21 +78,23 @@ class LoadingDotsView @JvmOverloads constructor(
         for (i in dots.indices) {
             val dot = dots[i]
 
-            val scaleAnimator = ObjectAnimator.ofFloat(dot, "scale", 1f, 1.4f, 1f).apply {
-                duration = 1000
-                repeatCount = ObjectAnimator.INFINITE
-                startDelay = (i * 125).toLong()
-                interpolator = AccelerateDecelerateInterpolator()
-                addUpdateListener { invalidate() }
-            }
+            val scaleAnimator =
+                ObjectAnimator.ofFloat(dot, Constants.PARAM_SCALE, 1f, 1.4f, 1f).apply {
+                    duration = Constants.ANIM_DURATION
+                    repeatCount = ObjectAnimator.INFINITE
+                    startDelay = (i * Constants.ANIM_DELAY).toLong()
+                    interpolator = AccelerateDecelerateInterpolator()
+                    addUpdateListener { invalidate() }
+                }
 
-            val alphaAnimator = ObjectAnimator.ofFloat(dot, "alpha", 1f, 0.4f, 1f).apply {
-                duration = 1000
-                repeatCount = ObjectAnimator.INFINITE
-                startDelay = (i * 125).toLong()
-                interpolator = AccelerateDecelerateInterpolator()
-                addUpdateListener { invalidate() }
-            }
+            val alphaAnimator =
+                ObjectAnimator.ofFloat(dot, Constants.PARAM_ALPHA, 1f, 0.4f, 1f).apply {
+                    duration = Constants.ANIM_DURATION
+                    repeatCount = ObjectAnimator.INFINITE
+                    startDelay = (i * Constants.ANIM_DELAY).toLong()
+                    interpolator = AccelerateDecelerateInterpolator()
+                    addUpdateListener { invalidate() }
+                }
 
             animators.add(scaleAnimator)
             animators.add(alphaAnimator)
@@ -105,7 +104,7 @@ class LoadingDotsView @JvmOverloads constructor(
         animatorSet.start()
     }
 
-    fun stopAnimation() {
+    private fun stopAnimation() {
         animatorSet.cancel()
     }
 

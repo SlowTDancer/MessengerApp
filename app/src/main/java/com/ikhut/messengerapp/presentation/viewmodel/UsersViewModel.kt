@@ -3,6 +3,7 @@ package com.ikhut.messengerapp.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,8 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class UserViewModel(
-    private val repository: UserRepository,
-    private val loggedInUsername: String
+    private val repository: UserRepository, private val loggedInUsername: String
 ) : ViewModel() {
 
     private val _users = MutableStateFlow<List<User>>(emptyList())
@@ -76,20 +76,17 @@ class UserViewModel(
                     repository.getUsersWithCursor(pageSize, lastUsername)
                 }
 
-                result.fold(
-                    onSuccess = { paginatedResult ->
-                        val filteredUsers = paginatedResult.data.filter { user ->
-                            user.username != loggedInUsername
-                        }
-
-                        _users.value = _users.value + filteredUsers
-                        _hasMore.value = paginatedResult.hasNext
-                        lastUsername = paginatedResult.nextPageToken
-                    },
-                    onFailure = { error ->
-                        _errorState.value = error.message ?: "Unknown error"
+                result.fold(onSuccess = { paginatedResult ->
+                    val filteredUsers = paginatedResult.data.filter { user ->
+                        user.username != loggedInUsername
                     }
-                )
+
+                    _users.value = _users.value + filteredUsers
+                    _hasMore.value = paginatedResult.hasNext
+                    lastUsername = paginatedResult.nextPageToken
+                }, onFailure = { error ->
+                    _errorState.value = error.message ?: Constants.ERROR_UNKNOWN
+                })
             } finally {
                 _isLoading.value = false
             }
@@ -105,8 +102,7 @@ class UserViewModel(
 
     companion object {
         fun create(
-            userRepository: UserRepository,
-            loggedInUsername: String
+            userRepository: UserRepository, loggedInUsername: String
         ): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")

@@ -5,10 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.ikhut.messengerapp.application.config.Constants
+import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.domain.usecase.LoginUserUseCase
 import com.ikhut.messengerapp.domain.usecase.RegisterUserUseCase
-import com.ikhut.messengerapp.domain.common.Resource
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
@@ -27,22 +28,17 @@ class AuthViewModel(
         viewModelScope.launch {
             val result = registerUserUseCase(user)
             _registerState.value = result.fold(onSuccess = { Resource.Success(Unit) },
-                onFailure = { Resource.Error(it.message ?: "Unknown error") })
+                onFailure = { Resource.Error(it.message ?: Constants.ERROR_UNKNOWN) })
         }
     }
 
     fun loginUser(username: String, password: String) {
-        if(username.isEmpty() || password.isEmpty()) {
-            _loginState.value = Resource.Error("Username or password empty")
-            return
-        }
-
         _loginState.value = Resource.Loading()
 
         viewModelScope.launch {
             val result = loginUserUseCase(username, password)
             _loginState.value = result.fold(onSuccess = { user -> Resource.Success(user) },
-                onFailure = { error -> Resource.Error(error.message ?: "Unknown error") })
+                onFailure = { error -> Resource.Error(error.message ?: Constants.ERROR_UNKNOWN) })
         }
     }
 

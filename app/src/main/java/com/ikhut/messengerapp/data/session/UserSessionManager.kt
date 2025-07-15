@@ -1,22 +1,31 @@
 package com.ikhut.messengerapp.data.session
 
 import android.content.Context
-import android.content.SharedPreferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.domain.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+val Context.dataStore by preferencesDataStore(name = Constants.DATASTORE_USER_PREFS)
+
 class UserSessionManager(
-    context: Context, private val userRepository: UserRepository
+    private val context: Context, private val userRepository: UserRepository
 ) {
-    private val prefs: SharedPreferences =
-        context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+    companion object {
+        private val USERNAME_KEY = stringPreferencesKey(Constants.PARAM_USERNAME)
+    }
 
     var currentUser: User? = null
+        private set
 
     var isLoggedIn: Boolean = false
+        private set
 
     init {
         loadUserSession()
@@ -40,22 +49,24 @@ class UserSessionManager(
     }
 
     private fun saveUsername(username: String) {
-        prefs.edit().apply {
-            putString("username", username)
-            apply()
+        CoroutineScope(Dispatchers.IO).launch {
+            context.dataStore.edit { prefs ->
+                prefs[USERNAME_KEY] = username
+            }
         }
     }
 
     private fun loadUserSession() {
-        val savedUsername = prefs.getString("username", null)
-
-        if (savedUsername != null) {
-            isLoggedIn = true
-            currentUser = User(username = savedUsername)
-            loadUserFromRepository(savedUsername)
-        } else {
-            isLoggedIn = false
-            currentUser = null
+        CoroutineScope(Dispatchers.IO).launch {
+            val savedUsername = context.dataStore.data.first()[USERNAME_KEY]
+            if (savedUsername != null) {
+                isLoggedIn = true
+                currentUser = User(username = savedUsername)
+                loadUserFromRepository(savedUsername)
+            } else {
+                isLoggedIn = false
+                currentUser = null
+            }
         }
     }
 
@@ -63,11 +74,8 @@ class UserSessionManager(
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val result = userRepository.getUser(username)
-                result.fold(onSuccess = { user ->
-                    currentUser = user
-                }, onFailure = {
-                    logoutUser()
-                })
+                result.fold(onSuccess = { user -> currentUser = user },
+                    onFailure = { logoutUser() })
             } catch (e: Exception) {
 //                TODO
             }
@@ -75,22 +83,22 @@ class UserSessionManager(
     }
 
     private fun clearUserSession() {
-        prefs.edit().clear().apply()
+        CoroutineScope(Dispatchers.IO).launch {
+            context.dataStore.edit { it.clear() }
+        }
     }
 
     fun getCurrentUsername(): String? = currentUser?.username
     fun getCurrentJob(): String? = currentUser?.job
 
     suspend fun refreshUserData(): Result<User> {
-        val username = prefs.getString("username", null)
+        val username = context.dataStore.data.first()[USERNAME_KEY]
         return if (username != null) {
             val result = userRepository.getUser(username)
-            result.onSuccess { user ->
-                currentUser = user
-            }
+            result.onSuccess { user -> currentUser = user }
             result
         } else {
-            Result.failure(Exception("No user logged in"))
+            Result.failure(Exception(Constants.ERROR_NO_USER_LOGGED_IN))
         }
     }
 }

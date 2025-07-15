@@ -4,6 +4,7 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.model.ConversationSummary
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -13,9 +14,8 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 class FirebaseConversationDataSource {
-    private val conversationsDB = FirebaseDatabase.getInstance().getReference("conversations")
-
-    private val PAGE_SIZE = 10
+    private val conversationsDB =
+        FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CONVERSATIONS)
 
     private fun generateConversationKey(userId1: String, userId2: String): String {
         return if (userId1 < userId2) "${userId1}_${userId2}" else "${userId2}_${userId1}"
@@ -26,8 +26,6 @@ class FirebaseConversationDataSource {
     ): Result<Unit> {
         return try {
             val conversationKey = generateConversationKey(userId1, userId2)
-            val timestamp =
-                lastMessageTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
             val conversationForUser1 = ConversationSummary(
                 addresseeName = userId2,
@@ -58,7 +56,9 @@ class FirebaseConversationDataSource {
     }
 
     suspend fun getRecentConversations(
-        userId: String, limit: Int = PAGE_SIZE, lastConversationTime: LocalDateTime? = null
+        userId: String,
+        limit: Int = Constants.PAGE_SIZE,
+        lastConversationTime: LocalDateTime? = null
     ): Result<List<ConversationSummary>> {
         return try {
             val userConversationsRef = conversationsDB.child(userId)
@@ -66,10 +66,11 @@ class FirebaseConversationDataSource {
             val query = if (lastConversationTime != null) {
                 val timestamp =
                     lastConversationTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                userConversationsRef.orderByChild("lastMessageTime").endBefore(timestamp.toDouble())
-                    .limitToLast(limit)
+                userConversationsRef.orderByChild(Constants.PARAM_LAST_MESSAGE_TIME)
+                    .endBefore(timestamp.toDouble()).limitToLast(limit)
             } else {
-                userConversationsRef.orderByChild("lastMessageTime").limitToLast(limit)
+                userConversationsRef.orderByChild(Constants.PARAM_LAST_MESSAGE_TIME)
+                    .limitToLast(limit)
             }
 
             val snapshot = query.get().await()

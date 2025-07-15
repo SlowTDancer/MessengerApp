@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.domain.model.Message
 import com.ikhut.messengerapp.domain.repository.MessageRepository
@@ -37,7 +38,7 @@ class ChatViewModel(
         viewModelScope.launch {
             val result = messageRepository.sendMessage(currentUserId, otherUserId, content)
             _sendMessageState.value = result.fold(onSuccess = { Resource.Success(it) },
-                onFailure = { Resource.Error(it.message ?: "Unknown error") })
+                onFailure = { Resource.Error(it.message ?: Constants.ERROR_UNKNOWN) })
         }
     }
 

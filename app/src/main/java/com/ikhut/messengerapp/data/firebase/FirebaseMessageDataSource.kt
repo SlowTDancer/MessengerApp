@@ -4,6 +4,7 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.model.Message
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -11,9 +12,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class FirebaseMessageDataSource {
-    private val messagesDB = FirebaseDatabase.getInstance().getReference("messages")
-
-    private val PAGE_SIZE = 20
+    private val messagesDB =
+        FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_MESSAGES)
 
     private fun generateConversationId(userId1: String, userId2: String): String {
         return if (userId1 < userId2) "${userId1}_${userId2}" else "${userId2}_${userId1}"
@@ -40,16 +40,20 @@ class FirebaseMessageDataSource {
     }
 
     suspend fun getConversation(
-        userId1: String, userId2: String, limit: Int = PAGE_SIZE, lastMessageTimestamp: Long? = null
+        userId1: String,
+        userId2: String,
+        limit: Int = Constants.PAGE_SIZE,
+        lastMessageTimestamp: Long? = null
     ): Result<List<Message>> {
         return try {
             val conversationId = generateConversationId(userId1, userId2)
 
             val query = if (lastMessageTimestamp != null) {
-                messagesDB.child(conversationId).orderByChild("timestamp")
+                messagesDB.child(conversationId).orderByChild(Constants.PARAM_TIMESTAMP)
                     .endBefore(lastMessageTimestamp.toDouble()).limitToLast(limit)
             } else {
-                messagesDB.child(conversationId).orderByChild("timestamp").limitToLast(limit)
+                messagesDB.child(conversationId).orderByChild(Constants.PARAM_TIMESTAMP)
+                    .limitToLast(limit)
             }
 
             val snapshot = query.get().await()
@@ -73,7 +77,7 @@ class FirebaseMessageDataSource {
         return callbackFlow {
             val conversationId = generateConversationId(userId1, userId2)
 
-            val query = messagesDB.child(conversationId).orderByChild("timestamp")
+            val query = messagesDB.child(conversationId).orderByChild(Constants.PARAM_TIMESTAMP)
                 .startAfter(lastKnownTimestamp.toDouble())
 
             val listener = object : ChildEventListener {
