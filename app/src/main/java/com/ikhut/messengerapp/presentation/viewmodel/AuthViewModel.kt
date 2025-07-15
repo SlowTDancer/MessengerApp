@@ -32,6 +32,11 @@ class AuthViewModel(
     }
 
     fun loginUser(username: String, password: String) {
+        if(username.isEmpty() || password.isEmpty()) {
+            _loginState.value = Resource.Error("Username or password empty")
+            return
+        }
+
         _loginState.value = Resource.Loading()
 
         viewModelScope.launch {
