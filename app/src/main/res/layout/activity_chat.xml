@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/appbar_chat_height_extended"
+            android:background="@color/navbar_blue"
+
+            android:minHeight="@dimen/appbar_height_collapsed"
+
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:id="@+id/back_button"
+                    android:layout_width="@dimen/back_arrow_size"
+                    android:layout_height="@dimen/back_arrow_size"
+
+                    android:layout_marginStart="@dimen/appbar_chat_margin_start"
+                    android:layout_marginTop="@dimen/appbar_chat_margin_top"
+
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/back_button_arrow"
+
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_arrow_back"
+
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:id="@+id/appbar_chat_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginStart="@dimen/appbar_chat_margin_start"
+                    android:layout_marginBottom="@dimen/appbar_chat_job_margin_top"
+                    android:paddingHorizontal="@dimen/appbar_chat_username_padding_horizontal"
+                    android:textColor="@color/white"
+
+                    android:textSize="@dimen/appbar_chat_username_font_size"
+
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/appbar_chat_job"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    android:text="Sayed Eftiaz"
+                    />
+
+                <TextView
+                    android:id="@+id/appbar_chat_job"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginStart="@dimen/appbar_chat_margin_start"
+                    android:layout_marginBottom="@dimen/appbar_chat_job_margin_bottom"
+
+                    android:paddingHorizontal="@dimen/appbar_chat_username_padding_horizontal"
+
+                    android:textColor="#99FFFFFF"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="Manager"/>
+
+                <ImageView
+                    android:id="@+id/profile_picture"
+                    android:layout_width="@dimen/conversation_summary_profile_picture_size"
+                    android:layout_height="@dimen/conversation_summary_profile_picture_size"
+
+                    android:layout_marginEnd="@dimen/appbar_chat_margin_start"
+                    android:layout_marginBottom="@dimen/appbar_chat_profile_picture_margin_bottom"
+
+                    android:contentDescription="@string/profile_picture"
+                    app:layout_constraintBottom_toBottomOf="parent"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:src="@drawable/avatar_image_placeholder" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <LinearLayout
+        android:id="@+id/message_input_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="12dp"
+            app:cardCornerRadius="35dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#F0F0F0">
+
+            <EditText
+                android:id="@+id/message_input"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:autofillHints=""
+                android:background="@android:color/transparent"
+                android:hint="@string/message"
+                android:textColorHint="#999999"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:paddingHorizontal="30dp"
+                android:paddingVertical="12dp"
+                android:minHeight="48dp"
+                android:maxLines="4"
+                android:inputType="textMultiLine|textCapSentences"
+                android:imeOptions="actionSend" />
+
+            <ImageButton
+                android:id="@+id/send_button"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_gravity="center_vertical|end"
+
+                android:background="@drawable/ic_send"
+                android:contentDescription="@string/send_message"
+                android:scaleType="center"
+
+                app:tint="@color/white" />
+
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+
+
+
+
+
+

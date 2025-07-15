@@ -1,5 +1,6 @@
 package com.ikhut.messengerapp.presentation.homeFragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import com.ikhut.messengerapp.databinding.FragmentConversationListBinding
 import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.domain.model.ConversationSummary
 import com.ikhut.messengerapp.presentation.activity.BottomAppBarController
+import com.ikhut.messengerapp.presentation.activity.ChatActivity
 import com.ikhut.messengerapp.presentation.adapters.ConversationSummaryAdapter
 import com.ikhut.messengerapp.presentation.components.VerticalSpaceItemDecoration
 import com.ikhut.messengerapp.presentation.viewmodel.ConversationSummaryViewModel
@@ -87,7 +89,9 @@ class ConversationListFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = ConversationSummaryAdapter()
+        adapter = ConversationSummaryAdapter{conversation ->
+            onConversationClick(conversation)
+        }
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -218,5 +222,11 @@ class ConversationListFragment : Fragment() {
                 binding.centeredText.visibility = View.GONE
             }
         }
+    }
+
+    private fun onConversationClick(conversation: ConversationSummary) {
+        // Navigate to chat activity
+        val intent = Intent(requireContext(), ChatActivity::class.java)
+        startActivity(intent)
     }
 }
