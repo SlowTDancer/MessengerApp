@@ -22,14 +22,13 @@ class FirebaseConversationDataSource {
     }
 
     suspend fun updateConversationSummary(
-        userId1: String, userId2: String, lastMessage: String, lastMessageTime: LocalDateTime
+        userId1: String, userId2: String, lastMessage: String
     ): Result<Unit> {
         return try {
             val conversationKey = generateConversationKey(userId1, userId2)
 
             val conversationForUser1 = ConversationSummary(
                 addresseeName = userId2,
-                lastMessageTime = lastMessageTime,
                 lastMessage = lastMessage,
                 profileImageUrl = null,
                 profileImageRes = null
@@ -37,7 +36,6 @@ class FirebaseConversationDataSource {
 
             val conversationForUser2 = ConversationSummary(
                 addresseeName = userId1,
-                lastMessageTime = lastMessageTime,
                 lastMessage = lastMessage,
                 profileImageUrl = null,
                 profileImageRes = null
@@ -49,6 +47,7 @@ class FirebaseConversationDataSource {
             )
 
             conversationsDB.updateChildren(updates).await()
+
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

@@ -11,9 +11,9 @@ class ConversationRepositoryImpl(
 ) : ConversationRepository {
 
     override suspend fun updateConversationSummary(
-        userId1: String, userId2: String, lastMessage: String, lastMessageTime: LocalDateTime
+        userId1: String, userId2: String, lastMessage: String
     ): Result<Unit> {
-        return dataSource.updateConversationSummary(userId1, userId2, lastMessage, lastMessageTime)
+        return dataSource.updateConversationSummary(userId1, userId2, lastMessage)
     }
 
     override suspend fun getRecentConversations(

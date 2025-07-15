@@ -3,6 +3,7 @@ package com.ikhut.messengerapp.presentation.viewHolders
 import androidx.recyclerview.widget.RecyclerView
 import com.ikhut.messengerapp.databinding.ConversationSummaryLayoutBinding
 import com.ikhut.messengerapp.domain.model.ConversationSummary
+import com.ikhut.messengerapp.domain.model.toLocalDateTime
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -20,7 +21,8 @@ class ConversationSummaryViewHolder(private val binding: ConversationSummaryLayo
 
         binding.lastMessage.text = conversationSummary.lastMessage.trimWithEllipsis()
 
-        binding.lastMessageTime.text = conversationSummary.lastMessageTime.formatMessageTime()
+        binding.lastMessageTime.text =
+            conversationSummary.lastMessageTime.toLocalDateTime().formatMessageTime()
 
         //TODO: fix image setting
         binding.profilePicture.setImageResource(

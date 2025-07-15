@@ -15,6 +15,7 @@ import com.ikhut.messengerapp.presentation.activity.BottomAppBarController
 import com.ikhut.messengerapp.presentation.adapters.ConversationSummaryAdapter
 import com.ikhut.messengerapp.presentation.components.VerticalSpaceItemDecoration
 import java.time.LocalDateTime
+import java.time.ZoneId
 import kotlin.math.abs
 
 class ConversationListFragment : Fragment() {
@@ -115,62 +116,74 @@ class ConversationListFragment : Fragment() {
         val sampleConversations = listOf(
             ConversationSummary(
                 addresseeName = "Sayed Eftiaz",
-                lastMessageTime = LocalDateTime.now().minusMinutes(5),
+                lastMessageTime = LocalDateTime.now().minusMinutes(5).atZone(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli(),
                 lastMessage = "On my way home but I needed to stop by the block store to get some items",
                 profileImageRes = R.drawable.avatar_image_placeholder
             ), ConversationSummary(
                 addresseeName = "John Doe",
-                lastMessageTime = LocalDateTime.now().minusMinutes(5),
+                lastMessageTime = LocalDateTime.now().minusMinutes(5).atZone(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli(),
                 lastMessage = "Hey, how are you doing today?",
                 profileImageRes = R.drawable.avatar_image_placeholder
             ), ConversationSummary(
                 addresseeName = "Jane Smith",
-                lastMessageTime = LocalDateTime.now().minusHours(2),
+                lastMessageTime = LocalDateTime.now().minusHours(2).atZone(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli(),
                 lastMessage = "Can we meet tomorrow for the project discussion?",
                 profileImageRes = R.drawable.avatar_image_placeholder
             ), ConversationSummary(
                 addresseeName = "Mike Johnson",
-                lastMessageTime = LocalDateTime.now().minusDays(1),
+                lastMessageTime = LocalDateTime.now().minusDays(1).atZone(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli(),
                 lastMessage = "Thanks for the help with the code review!",
                 profileImageRes = R.drawable.avatar_image_placeholder
             ), ConversationSummary(
                 addresseeName = "Sarah Wilson",
-                lastMessageTime = LocalDateTime.now().minusWeeks(1),
+                lastMessageTime = LocalDateTime.now().minusWeeks(1).atZone(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli(),
                 lastMessage = "This is a very long message to test how the trimming functionality works in the conversation list",
                 profileImageRes = R.drawable.avatar_image_placeholder
             ), ConversationSummary(
                 addresseeName = "David Brown",
-                lastMessageTime = LocalDateTime.now().minusMonths(1),
+                lastMessageTime = LocalDateTime.now().minusMonths(1).atZone(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli(),
                 lastMessage = "See you later!",
                 profileImageRes = R.drawable.avatar_image_placeholder
             ), ConversationSummary(
                 addresseeName = "Sayed Eftiaz",
-                lastMessageTime = LocalDateTime.now().minusMinutes(5),
+                lastMessageTime = LocalDateTime.now().minusMinutes(5).atZone(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli(),
                 lastMessage = "On my way home but I needed to stop by the block store to...",
                 profileImageRes = R.drawable.avatar_image_placeholder
             ), ConversationSummary(
                 addresseeName = "John Doe",
-                lastMessageTime = LocalDateTime.now().minusMinutes(5),
+                lastMessageTime = LocalDateTime.now().minusMinutes(5).atZone(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli(),
                 lastMessage = "Hey, how are you doing today?",
                 profileImageRes = R.drawable.avatar_image_placeholder
             ), ConversationSummary(
                 addresseeName = "Jane Smith",
-                lastMessageTime = LocalDateTime.now().minusHours(2),
+                lastMessageTime = LocalDateTime.now().minusHours(2).atZone(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli(),
                 lastMessage = "Can we meet tomorrow for the project discussion?",
                 profileImageRes = R.drawable.avatar_image_placeholder
             ), ConversationSummary(
                 addresseeName = "Mike Johnson",
-                lastMessageTime = LocalDateTime.now().minusDays(1),
+                lastMessageTime = LocalDateTime.now().minusDays(1).atZone(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli(),
                 lastMessage = "Thanks for the help with the code review!",
                 profileImageRes = R.drawable.avatar_image_placeholder
             ), ConversationSummary(
                 addresseeName = "Sarah Wilson",
-                lastMessageTime = LocalDateTime.now().minusWeeks(1),
+                lastMessageTime = LocalDateTime.now().minusWeeks(1).atZone(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli(),
                 lastMessage = "This is a very long message to test how the trimming functionality works in the conversation list",
                 profileImageRes = R.drawable.avatar_image_placeholder
             ), ConversationSummary(
                 addresseeName = "David Brown",
-                lastMessageTime = LocalDateTime.now().minusMonths(1),
+                lastMessageTime = LocalDateTime.now().minusMonths(1).atZone(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli(),
                 lastMessage = "See you later!",
                 profileImageRes = R.drawable.avatar_image_placeholder
             )

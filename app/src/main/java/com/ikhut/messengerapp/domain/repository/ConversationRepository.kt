@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 interface ConversationRepository {
     suspend fun updateConversationSummary(
-        userId1: String, userId2: String, lastMessage: String, lastMessageTime: LocalDateTime
+        userId1: String, userId2: String, lastMessage: String
     ): Result<Unit>
 
     suspend fun getRecentConversations(

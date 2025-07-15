@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.domain.model.ConversationSummary
+import com.ikhut.messengerapp.domain.model.toLocalDateTime
 import com.ikhut.messengerapp.domain.repository.ConversationRepository
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -54,7 +55,8 @@ class ConversationViewModel(
                         _conversationsState.value = Resource.Success(emptyList())
                     }
                 } else {
-                    lastLoadedConversationTime = newConversations.last().lastMessageTime
+                    lastLoadedConversationTime =
+                        newConversations.last().lastMessageTime.toLocalDateTime()
                     val currentConversations = _conversations.value ?: emptyList()
                     val updatedConversations =
                         (currentConversations + newConversations).distinctBy { it.addresseeName }
@@ -98,14 +100,11 @@ class ConversationViewModel(
     }
 
     fun updateConversationSummary(
-        otherUserId: String, lastMessage: String, lastMessageTime: LocalDateTime
+        otherUserId: String, lastMessage: String
     ) {
         viewModelScope.launch {
             conversationRepository.updateConversationSummary(
-                userId1 = currentUserId,
-                userId2 = otherUserId,
-                lastMessage = lastMessage,
-                lastMessageTime = lastMessageTime
+                userId1 = currentUserId, userId2 = otherUserId, lastMessage = lastMessage
             )
         }
     }
