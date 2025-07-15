@@ -87,20 +87,6 @@ class FirebaseConversationDataSource {
         }
     }
 
-    suspend fun getConversationSummary(
-        userId: String, otherUserId: String
-    ): Result<ConversationSummary?> {
-        return try {
-            val conversationKey = generateConversationKey(userId, otherUserId)
-            val snapshot = conversationsDB.child(userId).child(conversationKey).get().await()
-
-            val conversation = snapshot.getValue(ConversationSummary::class.java)
-            Result.success(conversation)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
     fun observeConversationUpdates(userId: String): Flow<ConversationSummary> {
         return callbackFlow {
             val userConversationsRef = conversationsDB.child(userId)
