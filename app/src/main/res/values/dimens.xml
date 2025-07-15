@@ -96,6 +96,8 @@
     <dimen name="appbar_chat_height_collapsed">100dp</dimen>
 
     <dimen name="appbar_chat_username_font_size_collapsed">18sp</dimen>
+    <dimen name="appbar_chat_collapsed_margin_bottom">20dp</dimen>
+
     <dimen name="appbar_chat_job_font_size_collapsed">12sp</dimen>
     <dimen name="appbar_chat_username_and_job_margin_horizontal">16dp</dimen>
 
@@ -112,5 +114,7 @@
 
     <dimen name="message_input_edit_text_image_size">20dp</dimen>
     <dimen name="message_input_edit_text_image_margin_end">20dp</dimen>
+
+
 
 </resources>
