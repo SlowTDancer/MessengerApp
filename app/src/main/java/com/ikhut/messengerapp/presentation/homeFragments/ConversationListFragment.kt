@@ -6,16 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.ikhut.messengerapp.R
+import com.ikhut.messengerapp.application.getConversationRepository
+import com.ikhut.messengerapp.application.getUserSessionManager
 import com.ikhut.messengerapp.databinding.FragmentConversationListBinding
+import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.domain.model.ConversationSummary
 import com.ikhut.messengerapp.presentation.activity.BottomAppBarController
 import com.ikhut.messengerapp.presentation.adapters.ConversationSummaryAdapter
 import com.ikhut.messengerapp.presentation.components.VerticalSpaceItemDecoration
-import java.time.LocalDateTime
-import java.time.ZoneId
+import com.ikhut.messengerapp.presentation.viewmodel.ConversationViewModel
 import kotlin.math.abs
 
 class ConversationListFragment : Fragment() {
@@ -24,9 +28,7 @@ class ConversationListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: ConversationSummaryAdapter
-
-    private var allConversations: List<ConversationSummary> = emptyList()
-    private var filteredConversations: List<ConversationSummary> = emptyList()
+    private lateinit var conversationViewModel: ConversationViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -38,10 +40,16 @@ class ConversationListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        conversationViewModel = ViewModelProvider(this, ConversationViewModel.create(
+            getConversationRepository(),
+            getUserSessionManager().currentUser?.username ?: ""
+        ))[ConversationViewModel::class.java]
+
         setCollapsingViewAnimation()
         setupRecyclerView()
         setupSearchView()
-        loadSampleData()
+        setupPagination()
+        observeViewModel()
     }
 
     override fun onDestroyView() {
@@ -52,7 +60,6 @@ class ConversationListFragment : Fragment() {
     private fun setCollapsingViewAnimation() {
         val appBarLayout = binding.appBarLayout
         val imageView = binding.collapsingToolbarOverlay
-
 
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val totalScrollRange = appBarLayout.totalScrollRange
@@ -77,7 +84,6 @@ class ConversationListFragment : Fragment() {
         })
     }
 
-
     private fun setupRecyclerView() {
         adapter = ConversationSummaryAdapter()
         binding.recyclerView.adapter = adapter
@@ -101,95 +107,56 @@ class ConversationListFragment : Fragment() {
         })
     }
 
-    private fun filterConversations(query: String) {
-        filteredConversations = if (query.isEmpty()) {
-            allConversations
+    private fun setupPagination() {
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+
+                // Load more when user reaches the end
+                if (lastVisibleItemPosition >= totalItemCount - 5) {
+                    conversationViewModel.loadMoreConversations()
+                }
+            }
+        })
+    }
+
+    private fun observeViewModel() {
+        // Observe the main conversations list
+        conversationViewModel.conversations.observe(viewLifecycleOwner) { conversations ->
+            // Apply current search filter
+            val currentQuery = binding.searchView.query.toString()
+            filterConversations(currentQuery, conversations)
+        }
+
+        // Observe loading states and errors
+        conversationViewModel.conversationsState.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                }
+                is Resource.Success -> {
+                    // Data is handled by the conversations LiveData observer above
+                }
+                is Resource.Error -> {
+                }
+            }
+        }
+    }
+
+    private fun filterConversations(query: String, conversations: List<ConversationSummary>? = null) {
+        val conversationsToFilter = conversations ?: conversationViewModel.conversations.value ?: emptyList()
+
+        val filteredConversations = if (query.isEmpty()) {
+            conversationsToFilter
         } else {
-            allConversations.filter { conversation ->
+            conversationsToFilter.filter { conversation ->
                 conversation.addresseeName.contains(query, ignoreCase = true)
             }
         }
-        adapter.submitList(filteredConversations)
-    }
 
-    private fun loadSampleData() {
-        val sampleConversations = listOf(
-            ConversationSummary(
-                addresseeName = "Sayed Eftiaz",
-                lastMessageTime = LocalDateTime.now().minusMinutes(5).atZone(ZoneId.systemDefault())
-                    .toInstant().toEpochMilli(),
-                lastMessage = "On my way home but I needed to stop by the block store to get some items",
-                profileImageRes = R.drawable.avatar_image_placeholder
-            ), ConversationSummary(
-                addresseeName = "John Doe",
-                lastMessageTime = LocalDateTime.now().minusMinutes(5).atZone(ZoneId.systemDefault())
-                    .toInstant().toEpochMilli(),
-                lastMessage = "Hey, how are you doing today?",
-                profileImageRes = R.drawable.avatar_image_placeholder
-            ), ConversationSummary(
-                addresseeName = "Jane Smith",
-                lastMessageTime = LocalDateTime.now().minusHours(2).atZone(ZoneId.systemDefault())
-                    .toInstant().toEpochMilli(),
-                lastMessage = "Can we meet tomorrow for the project discussion?",
-                profileImageRes = R.drawable.avatar_image_placeholder
-            ), ConversationSummary(
-                addresseeName = "Mike Johnson",
-                lastMessageTime = LocalDateTime.now().minusDays(1).atZone(ZoneId.systemDefault())
-                    .toInstant().toEpochMilli(),
-                lastMessage = "Thanks for the help with the code review!",
-                profileImageRes = R.drawable.avatar_image_placeholder
-            ), ConversationSummary(
-                addresseeName = "Sarah Wilson",
-                lastMessageTime = LocalDateTime.now().minusWeeks(1).atZone(ZoneId.systemDefault())
-                    .toInstant().toEpochMilli(),
-                lastMessage = "This is a very long message to test how the trimming functionality works in the conversation list",
-                profileImageRes = R.drawable.avatar_image_placeholder
-            ), ConversationSummary(
-                addresseeName = "David Brown",
-                lastMessageTime = LocalDateTime.now().minusMonths(1).atZone(ZoneId.systemDefault())
-                    .toInstant().toEpochMilli(),
-                lastMessage = "See you later!",
-                profileImageRes = R.drawable.avatar_image_placeholder
-            ), ConversationSummary(
-                addresseeName = "Sayed Eftiaz",
-                lastMessageTime = LocalDateTime.now().minusMinutes(5).atZone(ZoneId.systemDefault())
-                    .toInstant().toEpochMilli(),
-                lastMessage = "On my way home but I needed to stop by the block store to...",
-                profileImageRes = R.drawable.avatar_image_placeholder
-            ), ConversationSummary(
-                addresseeName = "John Doe",
-                lastMessageTime = LocalDateTime.now().minusMinutes(5).atZone(ZoneId.systemDefault())
-                    .toInstant().toEpochMilli(),
-                lastMessage = "Hey, how are you doing today?",
-                profileImageRes = R.drawable.avatar_image_placeholder
-            ), ConversationSummary(
-                addresseeName = "Jane Smith",
-                lastMessageTime = LocalDateTime.now().minusHours(2).atZone(ZoneId.systemDefault())
-                    .toInstant().toEpochMilli(),
-                lastMessage = "Can we meet tomorrow for the project discussion?",
-                profileImageRes = R.drawable.avatar_image_placeholder
-            ), ConversationSummary(
-                addresseeName = "Mike Johnson",
-                lastMessageTime = LocalDateTime.now().minusDays(1).atZone(ZoneId.systemDefault())
-                    .toInstant().toEpochMilli(),
-                lastMessage = "Thanks for the help with the code review!",
-                profileImageRes = R.drawable.avatar_image_placeholder
-            ), ConversationSummary(
-                addresseeName = "Sarah Wilson",
-                lastMessageTime = LocalDateTime.now().minusWeeks(1).atZone(ZoneId.systemDefault())
-                    .toInstant().toEpochMilli(),
-                lastMessage = "This is a very long message to test how the trimming functionality works in the conversation list",
-                profileImageRes = R.drawable.avatar_image_placeholder
-            ), ConversationSummary(
-                addresseeName = "David Brown",
-                lastMessageTime = LocalDateTime.now().minusMonths(1).atZone(ZoneId.systemDefault())
-                    .toInstant().toEpochMilli(),
-                lastMessage = "See you later!",
-                profileImageRes = R.drawable.avatar_image_placeholder
-            )
-        )
-        allConversations = sampleConversations
-        filteredConversations = sampleConversations
-        adapter.submitList(sampleConversations)
+        adapter.submitList(filteredConversations)
     }
 }
