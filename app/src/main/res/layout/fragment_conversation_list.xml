@@ -43,16 +43,16 @@
                     android:id="@+id/search_view"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/searchbar_height"
-                    android:layout_marginBottom="@dimen/appbar_margin_bottom"
-                    android:background="@drawable/rounded_search_background"
-
-                    app:iconifiedByDefault="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-
                     android:layout_marginHorizontal="@dimen/searchbar_margin_horizontal"
+                    android:layout_marginBottom="@dimen/appbar_margin_bottom"
+
+                    android:background="@drawable/rounded_search_background"
+                    app:iconifiedByDefault="false"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    app:layout_constraintStart_toStartOf="parent"
 
                     app:queryHint="Search"
                     app:searchIcon="@drawable/ic_search_filled" />
@@ -67,8 +67,8 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/conversation_summary_recycler_view_padding_bottom"
         android:clipToPadding="false"
+        android:paddingBottom="@dimen/conversation_summary_recycler_view_padding_bottom"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <TextView
@@ -77,8 +77,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
 
-        android:visibility="invisible"
+        android:text="@string/no_conversations"
         android:textSize="30sp"
-        android:text="@string/no_conversations" />
+        android:visibility="invisible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

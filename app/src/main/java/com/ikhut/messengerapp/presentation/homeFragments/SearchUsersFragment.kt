@@ -18,9 +18,9 @@ import com.ikhut.messengerapp.presentation.activity.BottomAppBarController
 import com.ikhut.messengerapp.presentation.adapters.SearchUsersAdapter
 import com.ikhut.messengerapp.presentation.components.VerticalSpaceItemDecoration
 import com.ikhut.messengerapp.presentation.viewmodel.UserViewModel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SearchUsersFragment : Fragment() {
 
@@ -42,9 +42,11 @@ class SearchUsersFragment : Fragment() {
         }
 
         searchUsersAdapter = SearchUsersAdapter()
-        viewModel = ViewModelProvider(this, UserViewModel.create(getUserRepository(),
-            getUserSessionManager().currentUser?.username ?: ""
-        ))[UserViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this, UserViewModel.create(
+                getUserRepository(), getUserSessionManager().currentUser?.username ?: ""
+            )
+        )[UserViewModel::class.java]
 
         initRecyclerView()
         setupSearchView()
@@ -130,24 +132,30 @@ class SearchUsersFragment : Fragment() {
             }
         }
 
-         viewLifecycleOwner.lifecycleScope.launch {
-             viewModel.errorState.collect { error ->
-                 val hasError = error != null
-                 updateCenteredTextVisibility(viewModel.users.value, viewModel.isLoading.value, hasError)
-             }
-         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.errorState.collect { error ->
+                val hasError = error != null
+                updateCenteredTextVisibility(
+                    viewModel.users.value, viewModel.isLoading.value, hasError
+                )
+            }
+        }
     }
 
-    private fun updateCenteredTextVisibility(users: List<*>, isLoading: Boolean, hasError: Boolean) {
+    private fun updateCenteredTextVisibility(
+        users: List<*>, isLoading: Boolean, hasError: Boolean
+    ) {
         when {
             hasError -> {
                 binding.centeredText.text = getString(R.string.error_loading_users)
                 binding.centeredText.visibility = View.VISIBLE
             }
+
             !isLoading && users.isEmpty() -> {
                 binding.centeredText.text = getString(R.string.no_users_to_show)
                 binding.centeredText.visibility = View.VISIBLE
             }
+
             else -> {
                 binding.centeredText.visibility = View.GONE
             }

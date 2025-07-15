@@ -40,10 +40,11 @@ class ConversationListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        conversationViewModel = ViewModelProvider(this, ConversationViewModel.create(
-            getConversationRepository(),
-            getUserSessionManager().currentUser?.username ?: ""
-        ))[ConversationViewModel::class.java]
+        conversationViewModel = ViewModelProvider(
+            this, ConversationViewModel.create(
+                getConversationRepository(), getUserSessionManager().currentUser?.username ?: ""
+            )
+        )[ConversationViewModel::class.java]
 
         setCollapsingViewAnimation()
         setupRecyclerView()
@@ -168,8 +169,11 @@ class ConversationListFragment : Fragment() {
         }
     }
 
-    private fun filterConversations(query: String, conversations: List<ConversationSummary>? = null) {
-        val conversationsToFilter = conversations ?: conversationViewModel.conversations.value ?: emptyList()
+    private fun filterConversations(
+        query: String, conversations: List<ConversationSummary>? = null
+    ) {
+        val conversationsToFilter =
+            conversations ?: conversationViewModel.conversations.value ?: emptyList()
 
         val filteredConversations = if (query.isEmpty()) {
             conversationsToFilter
@@ -191,16 +195,24 @@ class ConversationListFragment : Fragment() {
         updateCenteredTextVisibility(filteredConversations, isLoading, hasError, errorMessage)
     }
 
-    private fun updateCenteredTextVisibility(conversations: List<ConversationSummary>, isLoading: Boolean, hasError: Boolean, errorMessage: String? = null) {
+    private fun updateCenteredTextVisibility(
+        conversations: List<ConversationSummary>,
+        isLoading: Boolean,
+        hasError: Boolean,
+        errorMessage: String? = null
+    ) {
         when {
             hasError -> {
-                binding.centeredText.text = errorMessage ?: getString(R.string.error_loading_conversations)
+                binding.centeredText.text =
+                    errorMessage ?: getString(R.string.error_loading_conversations)
                 binding.centeredText.visibility = View.VISIBLE
             }
+
             !isLoading && conversations.isEmpty() -> {
                 binding.centeredText.text = getString(R.string.no_conversations)
                 binding.centeredText.visibility = View.VISIBLE
             }
+
             else -> {
                 binding.centeredText.visibility = View.GONE
             }

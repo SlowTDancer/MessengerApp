@@ -37,8 +37,7 @@ class SearchUsersAdapter : RecyclerView.Adapter<SearchUsersViewHolder>() {
 }
 
 class UserDiffCallback(
-    private val oldList: List<User>,
-    private val newList: List<User>
+    private val oldList: List<User>, private val newList: List<User>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size

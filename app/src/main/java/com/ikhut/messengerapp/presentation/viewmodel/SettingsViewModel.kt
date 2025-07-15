@@ -70,7 +70,7 @@ class SettingsViewModel(
         }
     }
 
-    fun refreshUserData() {
+    private fun refreshUserData() {
         viewModelScope.launch {
             try {
                 val result = userSessionManager.refreshUserData()

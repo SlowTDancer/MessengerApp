@@ -22,16 +22,13 @@ class UserRepositoryImpl(
     }
 
     override suspend fun getUsersWithCursor(
-        pageSize: Int,
-        lastUsername: String?
+        pageSize: Int, lastUsername: String?
     ): Result<PaginatedResult<User>> {
         return dataSource.getUsersWithCursor(pageSize, lastUsername)
     }
 
     override suspend fun searchUsersWithCursor(
-        searchQuery: String,
-        pageSize: Int,
-        lastUsername: String?
+        searchQuery: String, pageSize: Int, lastUsername: String?
     ): Result<PaginatedResult<User>> {
         return dataSource.searchUsersWithCursor(searchQuery, pageSize, lastUsername)
     }

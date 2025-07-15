@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
 
     <com.google.android.material.appbar.AppBarLayout
@@ -21,35 +21,34 @@
                 android:layout_width="@dimen/back_arrow_size"
                 android:layout_height="@dimen/back_arrow_size"
 
-                android:scaleType="fitXY"
-
-                android:src="@drawable/ic_arrow_back"
-                android:contentDescription="@string/back_button_arrow"
+                android:layout_marginHorizontal="@dimen/searchbar_margin_horizontal"
 
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/white"
+                android:contentDescription="@string/back_button_arrow"
 
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/search_view"
-                app:layout_constraintTop_toTopOf="@id/search_view"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_arrow_back"
+
                 app:layout_constraintBottom_toBottomOf="@id/search_view"
-                android:layout_marginHorizontal="@dimen/searchbar_margin_horizontal"
-            />
+                app:layout_constraintEnd_toStartOf="@id/search_view"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/search_view"
+                app:tint="@color/white" />
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_view"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/searchbar_height"
-                android:layout_marginBottom="@dimen/appbar_margin_bottom"
-                android:background="@drawable/rounded_search_background"
-
-                app:iconifiedByDefault="false"
-                app:layout_constraintBottom_toBottomOf="parent"
-
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/back_button"
-
                 android:layout_marginEnd="@dimen/searchbar_margin_horizontal"
+                android:layout_marginBottom="@dimen/appbar_margin_bottom"
+
+                android:background="@drawable/rounded_search_background"
+                app:iconifiedByDefault="false"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                app:layout_constraintStart_toEndOf="@id/back_button"
 
                 app:queryHint="Search"
                 app:searchIcon="@drawable/ic_search_filled" />
@@ -62,8 +61,8 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/search_users_recycler_view_padding_bottom"
         android:clipToPadding="false"
+        android:paddingBottom="@dimen/search_users_recycler_view_padding_bottom"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <TextView
@@ -72,8 +71,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
 
-        android:visibility="invisible"
+        android:text="@string/no_users_to_show"
         android:textSize="30sp"
-        android:text="@string/no_users_to_show" />
+        android:visibility="invisible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

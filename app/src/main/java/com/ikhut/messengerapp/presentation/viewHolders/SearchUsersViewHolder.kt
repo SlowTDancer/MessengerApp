@@ -6,7 +6,7 @@ import com.ikhut.messengerapp.databinding.UserProfileSummaryLayoutBinding
 import com.ikhut.messengerapp.domain.model.User
 
 class SearchUsersViewHolder(private val binding: UserProfileSummaryLayoutBinding) :
-    RecyclerView.ViewHolder(binding.root)  {
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(user: User) {
         binding.userName.text = user.username

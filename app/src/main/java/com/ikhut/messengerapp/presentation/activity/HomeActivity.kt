@@ -47,8 +47,7 @@ class HomeActivity : AppCompatActivity(), BottomAppBarController {
         binding.fab.setOnClickListener { item ->
             supportFragmentManager.beginTransaction().replace(
                 binding.homeActivityFragmentContainerView.id, SearchUsersFragment()
-            ).addToBackStack("search_users")
-            .commit()
+            ).addToBackStack("search_users").commit()
             true
         }
 
