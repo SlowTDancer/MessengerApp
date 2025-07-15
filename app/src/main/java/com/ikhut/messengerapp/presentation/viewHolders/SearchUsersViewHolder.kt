@@ -1,9 +1,9 @@
 package com.ikhut.messengerapp.presentation.viewHolders
 
 import androidx.recyclerview.widget.RecyclerView
-import com.ikhut.messengerapp.R
 import com.ikhut.messengerapp.databinding.UserProfileSummaryLayoutBinding
 import com.ikhut.messengerapp.domain.model.User
+import com.ikhut.messengerapp.presentation.utils.ProfilePictureLoader
 
 class SearchUsersViewHolder(private val binding: UserProfileSummaryLayoutBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -12,9 +12,11 @@ class SearchUsersViewHolder(private val binding: UserProfileSummaryLayoutBinding
         binding.userName.text = user.username
         binding.userJob.text = user.job
 
-        //TODO: this may need to be changed
-        binding.profilePicture.setImageResource(
-            R.drawable.avatar_image_placeholder
+        ProfilePictureLoader.loadProfilePicture(
+            context = binding.root.context,
+            imageView = binding.profilePicture,
+            imageUrl = user.profileImageURL,
+            placeholderName = user.username
         )
     }
 }
