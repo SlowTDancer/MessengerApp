@@ -13,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-class FirebaseConversationDataSource {
+class FirebaseConversationSummaryDataSource {
     private val conversationsDB =
         FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CONVERSATIONS)
 
@@ -27,22 +27,18 @@ class FirebaseConversationDataSource {
         return try {
             val conversationKey = generateConversationKey(userId1, userId2)
 
-            val user1Snapshot = conversationsDB.child("$userId1/$conversationKey").get().await()
-            val user2Snapshot = conversationsDB.child("$userId2/$conversationKey").get().await()
+            val snapshot1 = conversationsDB.child(userId1).child(conversationKey).get().await()
+            val snapshot2 = conversationsDB.child(userId2).child(conversationKey).get().await()
 
-            val oldUser1 = user1Snapshot.getValue(ConversationSummary::class.java)
-            val oldUser2 = user2Snapshot.getValue(ConversationSummary::class.java)
+            val existing1 = snapshot1.getValue(ConversationSummary::class.java)
+            val existing2 = snapshot2.getValue(ConversationSummary::class.java)
 
             val conversationForUser1 = ConversationSummary(
-                addresseeName = userId2,
-                lastMessage = lastMessage,
-                profileImageUrl = oldUser1?.profileImageUrl
+                addresseeName = userId2, lastMessage = lastMessage, imageURL = existing1?.imageURL
             )
 
             val conversationForUser2 = ConversationSummary(
-                addresseeName = userId1,
-                lastMessage = lastMessage,
-                profileImageUrl = oldUser2?.profileImageUrl
+                addresseeName = userId1, lastMessage = lastMessage, imageURL = existing2?.imageURL
             )
 
             val updates = mapOf(
@@ -57,7 +53,6 @@ class FirebaseConversationDataSource {
             Result.failure(e)
         }
     }
-
 
     suspend fun getRecentConversations(
         userId: String,

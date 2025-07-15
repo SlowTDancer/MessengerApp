@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.ikhut.messengerapp.R
-import com.ikhut.messengerapp.application.getConversationRepository
+import com.ikhut.messengerapp.application.getConversationSummaryRepository
 import com.ikhut.messengerapp.application.getUserSessionManager
 import com.ikhut.messengerapp.databinding.FragmentConversationListBinding
 import com.ikhut.messengerapp.domain.common.Resource
@@ -42,7 +42,7 @@ class ConversationListFragment : Fragment() {
 
         conversationViewModel = ViewModelProvider(
             this, ConversationViewModel.create(
-                getConversationRepository(), getUserSessionManager().currentUser?.username ?: ""
+                getConversationSummaryRepository(), getUserSessionManager().currentUser?.username ?: ""
             )
         )[ConversationViewModel::class.java]
 

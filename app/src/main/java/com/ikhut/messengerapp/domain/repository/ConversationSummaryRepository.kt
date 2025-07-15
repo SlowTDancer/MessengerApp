@@ -5,12 +5,12 @@ import com.ikhut.messengerapp.domain.model.ConversationSummary
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
-interface ConversationRepository {
+interface ConversationSummaryRepository {
     suspend fun updateConversationSummary(
         userId1: String, userId2: String, lastMessage: String
     ): Result<Unit>
 
-    suspend fun getRecentConversations(
+    suspend fun getRecentConversationSummaries(
         userId: String,
         limit: Int = Constants.PAGE_SIZE,
         lastConversationTime: LocalDateTime? = null

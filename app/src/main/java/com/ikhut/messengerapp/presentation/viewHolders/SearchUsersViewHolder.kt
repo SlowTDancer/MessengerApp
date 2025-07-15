@@ -15,7 +15,7 @@ class SearchUsersViewHolder(private val binding: UserProfileSummaryLayoutBinding
         ProfilePictureLoader.loadProfilePicture(
             context = binding.root.context,
             imageView = binding.profilePicture,
-            imageUrl = user.profileImageURL,
+            imageUrl = user.imageURL,
             placeholderName = user.username
         )
     }

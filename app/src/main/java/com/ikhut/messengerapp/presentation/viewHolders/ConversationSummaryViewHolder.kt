@@ -22,10 +22,11 @@ class ConversationSummaryViewHolder(private val binding: ConversationSummaryLayo
         binding.lastMessageTime.text =
             conversationSummary.lastMessageTime.toLocalDateTime().formatMessageTime()
 
-        ProfilePictureLoader.loadConversationProfilePicture(
+        ProfilePictureLoader.loadProfilePicture(
             context = binding.root.context,
             imageView = binding.profilePicture,
-            conversation = conversationSummary
+            imageUrl = conversationSummary.imageURL,
+            placeholderName = conversationSummary.addresseeName
         )
     }
 

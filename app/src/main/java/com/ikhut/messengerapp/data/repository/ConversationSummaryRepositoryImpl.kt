@@ -1,14 +1,14 @@
 package com.ikhut.messengerapp.data.repository
 
-import com.ikhut.messengerapp.data.firebase.FirebaseConversationDataSource
+import com.ikhut.messengerapp.data.firebase.FirebaseConversationSummaryDataSource
 import com.ikhut.messengerapp.domain.model.ConversationSummary
-import com.ikhut.messengerapp.domain.repository.ConversationRepository
+import com.ikhut.messengerapp.domain.repository.ConversationSummaryRepository
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
-class ConversationRepositoryImpl(
-    private val dataSource: FirebaseConversationDataSource
-) : ConversationRepository {
+class ConversationSummaryRepositoryImpl(
+    private val dataSource: FirebaseConversationSummaryDataSource
+) : ConversationSummaryRepository {
 
     override suspend fun updateConversationSummary(
         userId1: String, userId2: String, lastMessage: String
@@ -16,7 +16,7 @@ class ConversationRepositoryImpl(
         return dataSource.updateConversationSummary(userId1, userId2, lastMessage)
     }
 
-    override suspend fun getRecentConversations(
+    override suspend fun getRecentConversationSummaries(
         userId: String, limit: Int, lastConversationTime: LocalDateTime?
     ): Result<List<ConversationSummary>> {
         return dataSource.getRecentConversations(userId, limit, lastConversationTime)

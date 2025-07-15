@@ -8,7 +8,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.ikhut.messengerapp.R
 import com.ikhut.messengerapp.application.config.Constants
-import com.ikhut.messengerapp.domain.model.ConversationSummary
 
 object ProfilePictureLoader {
 
@@ -23,25 +22,6 @@ object ProfilePictureLoader {
             .circleCrop().override(Target.SIZE_ORIGINAL)
 
         val urlToLoad = imageUrl ?: generateFallbackUrl(placeholderName)
-
-        Glide.with(context).load(urlToLoad).apply(requestOptions).into(imageView)
-    }
-
-    fun loadConversationProfilePicture(
-        context: Context,
-        imageView: ImageView,
-        conversation: ConversationSummary,
-    ) {
-        val sizeInPx = context.resources.getDimensionPixelSize(R.dimen.profile_image_size)
-        val requestOptions = RequestOptions().placeholder(conversation.defaultProfileImage)
-            .error(conversation.defaultProfileImage).diskCacheStrategy(DiskCacheStrategy.ALL)
-            .circleCrop().override(sizeInPx, sizeInPx)
-
-        val urlToLoad = if (!conversation.profileImageUrl.isNullOrEmpty()) {
-            conversation.profileImageUrl
-        } else {
-            generateFallbackUrl(conversation.addresseeName)
-        }
 
         Glide.with(context).load(urlToLoad).apply(requestOptions).into(imageView)
     }

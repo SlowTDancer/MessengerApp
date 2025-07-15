@@ -9,12 +9,12 @@ import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.domain.model.ConversationSummary
 import com.ikhut.messengerapp.domain.model.toLocalDateTime
-import com.ikhut.messengerapp.domain.repository.ConversationRepository
+import com.ikhut.messengerapp.domain.repository.ConversationSummaryRepository
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 class ConversationViewModel(
-    private val conversationRepository: ConversationRepository, private val currentUserId: String
+    private val conversationSummaryRepository: ConversationSummaryRepository, private val currentUserId: String
 ) : ViewModel() {
 
     private val _conversationsState = MutableLiveData<Resource<List<ConversationSummary>>>()
@@ -42,7 +42,7 @@ class ConversationViewModel(
 
         isLoadingMore = true
         viewModelScope.launch {
-            val result = conversationRepository.getRecentConversations(
+            val result = conversationSummaryRepository.getRecentConversationSummaries(
                 userId = currentUserId,
                 limit = limit,
                 lastConversationTime = lastLoadedConversationTime
@@ -76,7 +76,7 @@ class ConversationViewModel(
 
     private fun observeConversationUpdates() {
         viewModelScope.launch {
-            conversationRepository.observeConversationUpdates(currentUserId)
+            conversationSummaryRepository.observeConversationUpdates(currentUserId)
                 .collect { updatedConversation ->
                     val currentConversations =
                         _conversations.value?.toMutableList() ?: mutableListOf()
@@ -103,7 +103,7 @@ class ConversationViewModel(
         otherUserId: String, lastMessage: String
     ) {
         viewModelScope.launch {
-            conversationRepository.updateConversationSummary(
+            conversationSummaryRepository.updateConversationSummary(
                 userId1 = currentUserId, userId2 = otherUserId, lastMessage = lastMessage
             )
         }
@@ -111,12 +111,12 @@ class ConversationViewModel(
 
     companion object {
         fun create(
-            conversationRepository: ConversationRepository, currentUserId: String
+            conversationSummaryRepository: ConversationSummaryRepository, currentUserId: String
         ): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return ConversationViewModel(conversationRepository, currentUserId) as T
+                    return ConversationViewModel(conversationSummaryRepository, currentUserId) as T
                 }
             }
         }
