@@ -1,6 +1,5 @@
 package com.ikhut.messengerapp.presentation.activity
 
-
 import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
