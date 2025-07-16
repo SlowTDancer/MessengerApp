@@ -50,7 +50,7 @@ class UserViewModel(
                 resetAndLoad()
             }
 
-            trimmedQuery.length >= 3 -> {
+            trimmedQuery.length >= Constants.MIN_SEARCH_LENGTH -> {
                 resetAndLoad()
             }
         }
