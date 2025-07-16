@@ -26,7 +26,8 @@
 
         <activity
             android:name=".presentation.activity.HomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
 
         <activity
             android:name=".presentation.activity.ChatActivity"

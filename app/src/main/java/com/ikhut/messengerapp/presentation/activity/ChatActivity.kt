@@ -135,6 +135,7 @@ class ChatActivity : AppCompatActivity() {
                     scrollToBottom()
                 }
             }
+            updateEmptyState(messages.isEmpty())
         }
 
         chatViewModel.messageLoadState.observe(this) { resource ->
