@@ -57,10 +57,8 @@ class FirebaseUserDataSource {
     ): Result<PaginatedResult<User>> {
         return try {
             val query = if (lastUsername == null) {
-                // First page
                 usersDB.orderByChild(Constants.PARAM_USERNAME).limitToFirst(pageSize + 1)
             } else {
-                // Subsequent pages - start after the last username
                 usersDB.orderByChild(Constants.PARAM_USERNAME).startAfter(lastUsername)
                     .limitToFirst(pageSize + 1)
             }
@@ -93,15 +91,12 @@ class FirebaseUserDataSource {
         searchQuery: String, pageSize: Int, lastUsername: String? = null
     ): Result<PaginatedResult<User>> {
         return try {
-            // Firebase range queries for usernames that start with the query
             val endQuery = searchQuery + "\uf8ff"
 
             val query = if (lastUsername == null) {
-                // First page - search from beginning
                 usersDB.orderByChild(Constants.PARAM_USERNAME).startAt(searchQuery).endAt(endQuery)
                     .limitToFirst(pageSize + 1)
             } else {
-                // Subsequent pages - continue after lastUsername but within search range
                 usersDB.orderByChild(Constants.PARAM_USERNAME).startAfter(lastUsername)
                     .endAt(endQuery).limitToFirst(pageSize + 1)
             }

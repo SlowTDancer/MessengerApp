@@ -72,7 +72,7 @@ class UserSessionManager(
                     logoutUser()
                 })
             } catch (e: Exception) {
-//                TODO
+                logoutUser()
             }
         }
     }

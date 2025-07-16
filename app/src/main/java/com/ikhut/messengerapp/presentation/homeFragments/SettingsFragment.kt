@@ -176,6 +176,7 @@ class SettingsFragment : Fragment() {
                 is Resource.Success -> {
                     updateConversationsAfterProfileChange(state.data!!)
                     initProfilePicture()
+                    showToast(Constants.SUCCESS_IMAGE_UPDATED)
                     loadingOverlay.dismiss()
                 }
 

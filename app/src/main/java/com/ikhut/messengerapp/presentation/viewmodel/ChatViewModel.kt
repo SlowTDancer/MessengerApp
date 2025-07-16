@@ -23,6 +23,9 @@ class ChatViewModel(
     private val _messages = MutableLiveData<List<Message>>(emptyList())
     val messages: LiveData<List<Message>> = _messages
 
+    private val _messageLoadState = MutableLiveData<Resource<List<Message>>>()
+    val messageLoadState: LiveData<Resource<List<Message>>> = _messageLoadState
+
     private var isLoadingMore = false
     private var allMessagesLoaded = false
     private var lastLoadedTimestamp: Long? = null
@@ -33,6 +36,8 @@ class ChatViewModel(
     }
 
     fun sendMessage(content: String) {
+        if (content.isBlank()) return
+
         _sendMessageState.value = Resource.Loading()
 
         viewModelScope.launch {
@@ -43,17 +48,23 @@ class ChatViewModel(
     }
 
     private fun loadInitialMessages() {
+        _messages.value = emptyList()
+        lastLoadedTimestamp = null
+        allMessagesLoaded = false
         loadMoreMessages()
     }
 
-    fun loadMoreMessages(limit: Int = 20) {
+    fun loadMoreMessages(limit: Int = Constants.PAGE_SIZE) {
         if (isLoadingMore || allMessagesLoaded) return
 
         isLoadingMore = true
+        _messageLoadState.value = Resource.Loading()
+
         viewModelScope.launch {
             val result = messageRepository.getConversation(
                 currentUserId, otherUserId, limit, lastLoadedTimestamp
             )
+
             result.fold(onSuccess = { newMessages ->
                 if (newMessages.isEmpty()) {
                     allMessagesLoaded = true
@@ -63,9 +74,11 @@ class ChatViewModel(
                         (newMessages + (_messages.value ?: emptyList())).distinctBy { it.id }
                     _messages.value = updated
                 }
+                _messageLoadState.value = Resource.Success(_messages.value ?: emptyList())
             }, onFailure = {
-//                TODO
+                _messageLoadState.value = Resource.Error(it.message ?: Constants.ERROR_UNKNOWN)
             })
+
             isLoadingMore = false
         }
     }
@@ -73,8 +86,10 @@ class ChatViewModel(
     private fun observeNewMessages() {
         viewModelScope.launch {
             messageRepository.observeNewMessages(currentUserId, otherUserId).collect { newMessage ->
-                val updated = (_messages.value ?: emptyList()) + newMessage
-                _messages.postValue(updated.distinctBy { it.id })
+                val current = _messages.value ?: emptyList()
+                if (current.none { it.id == newMessage.id }) {
+                    _messages.postValue(current + newMessage)
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ikhut.messengerapp.R
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.application.getUserRepository
 import com.ikhut.messengerapp.application.getUserSessionManager
 import com.ikhut.messengerapp.databinding.FragmentSearchUsersBinding
@@ -78,7 +79,6 @@ class SearchUsersFragment : Fragment() {
             adapter = searchUsersAdapter
             layoutManager = LinearLayoutManager(requireContext())
 
-            // Add scroll listener for pagination
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -88,7 +88,6 @@ class SearchUsersFragment : Fragment() {
                     val totalItemCount = layoutManager.itemCount
                     val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-                    // Load more when near the end - delegate to ViewModel
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 8) {
                         viewModel.loadMore()
                     }
@@ -110,7 +109,7 @@ class SearchUsersFragment : Fragment() {
 
                 searchJob?.cancel()
                 searchJob = lifecycleScope.launch {
-                    delay(300) // Debounce
+                    delay(Constants.SEARCH_DELAY)
                     viewModel.setSearchQuery(query)
                 }
                 return true

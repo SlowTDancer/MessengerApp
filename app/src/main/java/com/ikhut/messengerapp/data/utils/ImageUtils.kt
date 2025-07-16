@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
 import com.ikhut.messengerapp.application.config.Constants
 import java.io.File
 import java.io.FileOutputStream
@@ -28,7 +27,6 @@ object ImageUtils {
             inputStream?.close()
 
             if (bitmap == null) {
-                Log.e(Constants.TAG, "Failed to decode bitmap from URI")
                 return null
             }
 
@@ -48,10 +46,8 @@ object ImageUtils {
             imageFile.absolutePath
 
         } catch (e: IOException) {
-            Log.e(Constants.TAG, "Error saving image to internal storage", e)
             null
         } catch (e: Exception) {
-            Log.e(Constants.TAG, "Unexpected error saving image", e)
             null
         }
     }

@@ -38,7 +38,7 @@ class ConversationSummaryViewModel(
         loadMoreConversations()
     }
 
-    fun loadMoreConversations(limit: Int = 8) {
+    fun loadMoreConversations(limit: Int = Constants.LAZY_UPDATE_SIZE) {
         if (isLoadingMore || allConversationsLoaded) return
 
         isLoadingMore = true
@@ -120,8 +120,7 @@ class ConversationSummaryViewModel(
                 result.onSuccess {
                     loadMoreConversations()
                 }
-            } catch (e: Exception) {
-//                TODO
+            } catch (_: Exception) {
             }
         }
     }
