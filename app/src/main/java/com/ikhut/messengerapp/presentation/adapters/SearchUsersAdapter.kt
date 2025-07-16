@@ -5,10 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ikhut.messengerapp.databinding.UserProfileSummaryLayoutBinding
+import com.ikhut.messengerapp.domain.model.ConversationSummary
 import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.presentation.viewHolders.SearchUsersViewHolder
 
-class SearchUsersAdapter : RecyclerView.Adapter<SearchUsersViewHolder>() {
+class SearchUsersAdapter(
+    private val onItemClick: (User) -> Unit
+): RecyclerView.Adapter<SearchUsersViewHolder>() {
     private var users: List<User> = emptyList()
 
     fun submitList(newUsers: List<User>) {
@@ -31,6 +34,10 @@ class SearchUsersAdapter : RecyclerView.Adapter<SearchUsersViewHolder>() {
     override fun onBindViewHolder(holder: SearchUsersViewHolder, position: Int) {
         val user = users[position]
         holder.bind(user)
+
+        holder.itemView.setOnClickListener {
+            onItemClick(user)
+        }
     }
 
     override fun getItemCount(): Int = users.size

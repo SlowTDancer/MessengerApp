@@ -1,5 +1,6 @@
 package com.ikhut.messengerapp.presentation.homeFragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +16,10 @@ import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.application.getUserRepository
 import com.ikhut.messengerapp.application.getUserSessionManager
 import com.ikhut.messengerapp.databinding.FragmentSearchUsersBinding
+import com.ikhut.messengerapp.domain.model.ConversationSummary
+import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.presentation.activity.BottomAppBarController
+import com.ikhut.messengerapp.presentation.activity.ChatActivity
 import com.ikhut.messengerapp.presentation.adapters.SearchUsersAdapter
 import com.ikhut.messengerapp.presentation.components.VerticalSpaceItemDecoration
 import com.ikhut.messengerapp.presentation.viewmodel.UserViewModel
@@ -42,7 +46,9 @@ class SearchUsersFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        searchUsersAdapter = SearchUsersAdapter()
+        searchUsersAdapter = SearchUsersAdapter{user ->
+            onProfileClick(user)
+        }
         viewModel = ViewModelProvider(
             this, UserViewModel.create(
                 getUserRepository(), getUserSessionManager().currentUser?.username ?: ""
@@ -159,5 +165,12 @@ class SearchUsersFragment : Fragment() {
                 binding.centeredText.visibility = View.GONE
             }
         }
+    }
+
+    private fun onProfileClick(user: User) {
+        val intent = Intent(requireContext(), ChatActivity::class.java).apply {
+            putExtra(ChatActivity.EXTRA_USERNAME, user.username)
+        }
+        startActivity(intent)
     }
 }
