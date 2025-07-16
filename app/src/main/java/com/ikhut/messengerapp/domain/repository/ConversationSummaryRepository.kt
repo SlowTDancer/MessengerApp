@@ -17,7 +17,7 @@ interface ConversationSummaryRepository {
     ): Result<List<ConversationSummary>>
 
     suspend fun updateUserProfileInConversations(
-        oldUsername: String,
+        oldUsername: String?,
         newUsername: String,
         newProfileImageUrl: String? = null,
         newLocalImagePath: String? = null,

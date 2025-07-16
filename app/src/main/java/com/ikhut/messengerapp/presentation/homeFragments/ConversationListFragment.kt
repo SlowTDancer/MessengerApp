@@ -13,13 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.ikhut.messengerapp.R
 import com.ikhut.messengerapp.application.getConversationSummaryRepository
-import com.ikhut.messengerapp.application.getUserRepository
 import com.ikhut.messengerapp.application.getUserSessionManager
-import com.ikhut.messengerapp.data.session.UserSessionManager
 import com.ikhut.messengerapp.databinding.FragmentConversationListBinding
 import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.domain.model.ConversationSummary
-import com.ikhut.messengerapp.domain.repository.UserRepository
 import com.ikhut.messengerapp.presentation.activity.BottomAppBarController
 import com.ikhut.messengerapp.presentation.activity.ChatActivity
 import com.ikhut.messengerapp.presentation.adapters.ConversationSummaryAdapter
@@ -72,11 +69,8 @@ class ConversationListFragment : Fragment() {
             val totalScrollRange = appBarLayout.totalScrollRange
             val percentage = abs(verticalOffset).toFloat() / totalScrollRange.toFloat()
 
-            // Calculate alpha based on scroll percentage
-            // Alpha decreases as we scroll up (percentage increases)
             val alpha = 1.0f - percentage
 
-            // Apply smooth fade animation
             imageView.alpha = alpha
 
             imageView.visibility = if (alpha <= 0.01f) View.GONE else View.VISIBLE
@@ -92,7 +86,7 @@ class ConversationListFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = ConversationSummaryAdapter{conversation ->
+        adapter = ConversationSummaryAdapter { conversation ->
             onConversationClick(conversation)
         }
         binding.recyclerView.adapter = adapter
@@ -125,7 +119,6 @@ class ConversationListFragment : Fragment() {
                 val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
                 val totalItemCount = layoutManager.itemCount
 
-                // Load more when user reaches the end
                 if (lastVisibleItemPosition >= totalItemCount - 5) {
                     conversationSummaryViewModel.loadMoreConversations()
                 }
@@ -134,13 +127,10 @@ class ConversationListFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        // Observe the main conversations list
         conversationSummaryViewModel.conversations.observe(viewLifecycleOwner) { conversations ->
-            // Apply current search filter
             val currentQuery = binding.searchView.query.toString()
             filterConversations(currentQuery, conversations)
 
-            // Update text visibility when conversations change
             val resource = conversationSummaryViewModel.conversationsState.value
             val isLoading = resource is Resource.Loading
             val hasError = resource is Resource.Error
@@ -156,7 +146,6 @@ class ConversationListFragment : Fragment() {
             updateCenteredTextVisibility(filteredConversations, isLoading, hasError)
         }
 
-        // Observe loading states and errors
         conversationSummaryViewModel.conversationsState.observe(viewLifecycleOwner) { resource ->
             val isLoading = resource is Resource.Loading
             val hasError = resource is Resource.Error
@@ -193,7 +182,6 @@ class ConversationListFragment : Fragment() {
 
         adapter.submitList(filteredConversations)
 
-        // Update centered text visibility after filtering
         val resource = conversationSummaryViewModel.conversationsState.value
         val isLoading = resource is Resource.Loading
         val hasError = resource is Resource.Error
@@ -228,7 +216,6 @@ class ConversationListFragment : Fragment() {
     }
 
     private fun onConversationClick(conversation: ConversationSummary) {
-        // Navigate to chat activity
         val intent = Intent(requireContext(), ChatActivity::class.java).apply {
             putExtra(ChatActivity.EXTRA_USERNAME, conversation.addresseeName)
         }

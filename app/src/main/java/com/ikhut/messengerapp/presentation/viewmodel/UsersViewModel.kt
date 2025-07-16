@@ -31,7 +31,6 @@ class UserViewModel(
     val currentQuery: StateFlow<String> = _currentQuery.asStateFlow()
 
     private var lastUsername: String? = null
-    private val pageSize = 20
 
     init {
         loadMore()
@@ -45,23 +44,18 @@ class UserViewModel(
         val previousQuery = _currentQuery.value
         _currentQuery.value = trimmedQuery
 
-        // Handle different query transition cases
         when {
-            // Case 1: New query is too short (< 3 chars) but previous was valid search
-            trimmedQuery.length < 3 && previousQuery.length >= 3 -> {
-                // Reset to show all users
+            trimmedQuery.length < Constants.MIN_SEARCH_LENGTH && previousQuery.length >= Constants.MIN_SEARCH_LENGTH -> {
+
                 resetAndLoad()
             }
-            // Case 2: New query is valid length (>= 3 chars)
-            trimmedQuery.length >= 3 -> {
+
+            trimmedQuery.length >= Constants.MIN_SEARCH_LENGTH -> {
                 resetAndLoad()
             }
-            // Case 3: New query is too short and previous was also too short
-            // Do nothing - stay in current state
         }
     }
 
-    // Single method to load more (works for both search and regular)
     fun loadMore() {
         if (_isLoading.value || !_hasMore.value) return
 
@@ -70,10 +64,10 @@ class UserViewModel(
 
             try {
                 val query = _currentQuery.value
-                val result = if (query.length >= 3) {
-                    repository.searchUsersWithCursor(query, pageSize, lastUsername)
+                val result = if (query.length >= Constants.MIN_SEARCH_LENGTH) {
+                    repository.searchUsersWithCursor(query, Constants.PAGE_SIZE, lastUsername)
                 } else {
-                    repository.getUsersWithCursor(pageSize, lastUsername)
+                    repository.getUsersWithCursor(Constants.PAGE_SIZE, lastUsername)
                 }
 
                 result.fold(onSuccess = { paginatedResult ->

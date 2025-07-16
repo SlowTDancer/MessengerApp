@@ -118,8 +118,9 @@ class SettingsViewModel(
                     _currentUser.value = updatedUser
                     _updateProfilePictureState.value = Resource.Success(updatedUser)
                 }, onFailure = { exception ->
-                    _updateProfilePictureState.value =
-                        Resource.Error(exception.message ?: "Failed to update profile picture")
+                    _updateProfilePictureState.value = Resource.Error(
+                        exception.message ?: Constants.ERROR_FAILED_TO_UPDATE_PROFILE_PICTURE
+                    )
                 })
             } catch (e: Exception) {
                 _updateProfilePictureState.value =
@@ -165,7 +166,7 @@ class SettingsViewModel(
                     _currentUser.value = user
                 }
             } catch (e: Exception) {
-//              TODO
+                signOut()
             }
         }
     }

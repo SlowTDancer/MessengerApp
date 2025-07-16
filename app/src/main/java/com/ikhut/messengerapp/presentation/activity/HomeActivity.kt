@@ -3,6 +3,7 @@ package com.ikhut.messengerapp.presentation.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.ikhut.messengerapp.R
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.databinding.ActivityHomeBinding
 import com.ikhut.messengerapp.presentation.homeFragments.ConversationListFragment
 import com.ikhut.messengerapp.presentation.homeFragments.SearchUsersFragment
@@ -47,7 +48,7 @@ class HomeActivity : AppCompatActivity(), BottomAppBarController {
         binding.fab.setOnClickListener { item ->
             supportFragmentManager.beginTransaction().replace(
                 binding.homeActivityFragmentContainerView.id, SearchUsersFragment()
-            ).addToBackStack("search_users").commit()
+            ).addToBackStack(Constants.PARAM_SEARCH_USERS).commit()
             true
         }
 

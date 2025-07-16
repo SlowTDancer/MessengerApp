@@ -10,7 +10,6 @@ class VerticalSpaceItemDecoration(private val verticalSpaceHeight: Int) :
     override fun getItemOffsets(
         outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
     ) {
-        // Add bottom margin to all items except the last one
         if (parent.getChildAdapterPosition(view) != parent.adapter?.itemCount?.minus(1)) {
             outRect.bottom = verticalSpaceHeight
         }

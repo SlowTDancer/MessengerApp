@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.data.utils.ImageUtils
 import com.ikhut.messengerapp.domain.common.Resource
 import kotlinx.coroutines.Dispatchers
@@ -30,17 +31,16 @@ class ImageViewModel : ViewModel() {
                 }
 
                 if (newPath != null) {
-                    // Delete old image in background
                     withContext(Dispatchers.IO) {
                         currentLocalPath?.let { ImageUtils.deleteOldProfileImage(it) }
                     }
 
                     _imageUpdateState.postValue(Resource.Success(newPath))
                 } else {
-                    _imageUpdateState.postValue(Resource.Error("Failed to save image locally"))
+                    _imageUpdateState.postValue(Resource.Error(Constants.ERROR_FAILED_TO_SAVE_IMAGE_LOCALLY))
                 }
             } catch (e: Exception) {
-                _imageUpdateState.postValue(Resource.Error(e.message ?: "Unexpected error"))
+                _imageUpdateState.postValue(Resource.Error(e.message ?: Constants.ERROR_UNEXPECTED))
             }
         }
     }

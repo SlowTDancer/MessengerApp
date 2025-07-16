@@ -8,19 +8,22 @@ object Constants {
     const val PREFS_USER = "user_prefs"
 
     const val PAGE_SIZE = 20
+    const val LAZY_UPDATE_SIZE = 8
     const val MIN_PASSWORD_SIZE = 4
     const val MAX_MESSAGE_LENGTH = 57
+    const val MIN_SEARCH_LENGTH = 3
 
     const val DOT_RADIUS = 15f
     const val DOT_COUNT = 8
+    const val MAX_OPACITY = 255
     const val CIRCLE_RADIUS = 100f
     const val ANIM_DURATION = 1000L
     const val ANIM_DELAY = 125
+    const val SEARCH_DELAY = 300L
 
     const val UI_AVATARS_BASE = "https://ui-avatars.com/api/"
     const val PLACEHOLDER_NAME = "User"
 
-    const val TAG = "ImageUtils"
     const val PROFILE_IMAGES_DIR = "profile_images"
     const val IMAGE_QUALITY = 80
     const val MAX_IMAGE_SIZE = 1024
@@ -37,6 +40,7 @@ object Constants {
     const val PARAM_SCALE = "scale"
     const val PARAM_NICKNAME = "Nickname"
     const val PARAM_JOB = "Job"
+    const val PARAM_SEARCH_USERS = "search_users"
 
     const val SUCCESS_PROFILE_UPDATED = "Profile updated successfully!"
     const val SUCCESS_IMAGE_UPDATED = "Profile image updated!"
@@ -55,4 +59,7 @@ object Constants {
     const val ERROR_NICKNAME_CANNOT_BE_EMPTY = "Nickname cannot be empty"
     const val ERROR_UPDATE_FAILED = "Update failed"
     const val ERROR_NETWORK = "Network error"
+    const val ERROR_UNEXPECTED = "Unexpected error"
+    const val ERROR_FAILED_TO_SAVE_IMAGE_LOCALLY = "Failed to save image locally"
+    const val ERROR_FAILED_TO_UPDATE_PROFILE_PICTURE = "Failed to update profile picture"
 }

@@ -57,14 +57,14 @@ class FirebaseConversationSummaryDataSource {
     }
 
     suspend fun updateUserProfileInConversations(
-        oldUsername: String,
+        oldUsername: String?,
         newUsername: String,
         profileImageUrl: String? = null,
         localImagePath: String? = null,
         imageRes: Int = 0
     ): Result<Unit> {
         return try {
-            if (oldUsername.isEmpty() || oldUsername == newUsername) {
+            if (oldUsername.isNullOrEmpty() || oldUsername == newUsername) {
                 return updateUserProfileInfoOnly(
                     newUsername, profileImageUrl, localImagePath, imageRes
                 )

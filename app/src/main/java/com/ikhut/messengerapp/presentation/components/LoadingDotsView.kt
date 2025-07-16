@@ -62,7 +62,7 @@ class LoadingDotsView @JvmOverloads constructor(
         super.onDraw(canvas)
 
         for (dot in dots) {
-            paint.alpha = (255 * dot.alpha).toInt()
+            paint.alpha = (Constants.MAX_OPACITY * dot.alpha).toInt()
 
             canvas.drawCircle(
                 dot.x, dot.y, Constants.DOT_RADIUS * dot.scale, paint

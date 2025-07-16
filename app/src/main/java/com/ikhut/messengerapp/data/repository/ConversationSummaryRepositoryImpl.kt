@@ -23,7 +23,7 @@ class ConversationSummaryRepositoryImpl(
     }
 
     override suspend fun updateUserProfileInConversations(
-        oldUsername: String,
+        oldUsername: String?,
         newUsername: String,
         newProfileImageUrl: String?,
         newLocalImagePath: String?,
