@@ -174,15 +174,14 @@ class SettingsFragment : Fragment() {
                 is Resource.Loading -> loadingOverlay.show()
 
                 is Resource.Success -> {
-                    loadingOverlay.dismiss()
-                    updateConversationsAfterProfileChange(settingsViewModel.currentUser.value!!)
-
+                    updateConversationsAfterProfileChange(state.data!!)
                     initProfilePicture()
+                    loadingOverlay.dismiss()
                 }
 
                 is Resource.Error -> {
-                    loadingOverlay.dismiss()
                     showToast("Failed to update profile picture: ${state.message}")
+                    loadingOverlay.dismiss()
                 }
             }
         }
@@ -218,7 +217,7 @@ class SettingsFragment : Fragment() {
 
     private fun updateConversationsAfterProfileChange(updatedUser: User) {
         conversationSummaryViewModel.updateUserProfileInConversations(
-            oldUsername = oldUsername!!,
+            oldUsername = oldUsername,
             newUsername = updatedUser.username,
             newProfileImageUrl = updatedUser.imageUrl,
             newLocalImagePath = updatedUser.localImagePath,

@@ -101,7 +101,7 @@ class ConversationSummaryViewModel(
     }
 
     fun updateUserProfileInConversations(
-        oldUsername: String,
+        oldUsername: String?,
         newUsername: String,
         newProfileImageUrl: String? = null,
         newLocalImagePath: String? = null,
