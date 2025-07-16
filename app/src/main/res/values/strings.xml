@@ -27,5 +27,6 @@
     <string name="error_loading_conversations">Could not fetch conversations</string>
     <string name="send_message">Send message</string>
     <string name="message">Message</string>
+    <string name="send_message_to_start_conversation">Send message to start conversation</string>
 
 </resources>

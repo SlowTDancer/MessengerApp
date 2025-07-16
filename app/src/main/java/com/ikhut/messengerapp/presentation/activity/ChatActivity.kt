@@ -113,10 +113,13 @@ class ChatActivity : AppCompatActivity() {
 
         // Observe messages list
         chatViewModel.messages.observe(this) { messages ->
+            updateEmptyState(messages.isEmpty())
+
             if(messages.isEmpty()) return@observe
             val isAtBottom = isAtBottom()
             messageAdapter.submitList(messages) {
                 if (isAtBottom || messageAdapter.itemCount <= 20) {
+
                     scrollToBottom()
                 }
             }
@@ -229,6 +232,16 @@ class ChatActivity : AppCompatActivity() {
 
         loadProfilePicture(context, binding.profilePicture, user.imageRes, user.imageUrl, user.localImagePath, user.username)
         loadProfilePicture(context, binding.profilePictureCollapsed, user.imageRes, user.imageUrl, user.localImagePath, user.username)
+    }
+
+    private fun updateEmptyState(isEmpty: Boolean) {
+        if (isEmpty) {
+            binding.emptyStateText.visibility = android.view.View.VISIBLE
+            binding.chatRecyclerView.visibility = android.view.View.GONE
+        } else {
+            binding.emptyStateText.visibility = android.view.View.GONE
+            binding.chatRecyclerView.visibility = android.view.View.VISIBLE
+        }
     }
 
     companion object {
