@@ -110,7 +110,8 @@ class ChatActivity : AppCompatActivity() {
 
         // Observe messages list
         chatViewModel.messages.observe(this) { messages ->
-            if(messages.isEmpty()) return@observe
+            if (messages == null || messages.isEmpty()) return@observe
+
             val isAtBottom = isAtBottom()
             messageAdapter.submitList(messages) {
                 if (isAtBottom || messageAdapter.itemCount <= 20) {
@@ -121,12 +122,18 @@ class ChatActivity : AppCompatActivity() {
 
         chatViewModel.messageLoadState.observe(this) { resource ->
             when (resource) {
-                is Resource.Loading -> {}
-                is Resource.Success -> {}
+                is Resource.Loading -> {
+                    updateEmptyState(false)
+                }
+                is Resource.Success -> {
+                    // Show empty state only if no messages after successful load
+                    val currentMessages = chatViewModel.messages.value
+                    updateEmptyState(currentMessages == null || currentMessages.isEmpty())
+                }
                 is Resource.Error -> {
                     Toast.makeText(this, "Failed to load messages: ${resource.message}", Toast.LENGTH_SHORT).show()
-                    val currentMessages = chatViewModel.messages.value ?: emptyList()
-                    updateEmptyState(currentMessages.isEmpty())
+                    val currentMessages = chatViewModel.messages.value
+                    updateEmptyState(currentMessages == null || currentMessages.isEmpty())
                 }
             }
         }

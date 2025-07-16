@@ -20,7 +20,7 @@ class ChatViewModel(
     private val _sendMessageState = MutableLiveData<Resource<String>>()
     val sendMessageState: LiveData<Resource<String>> = _sendMessageState
 
-    private val _messages = MutableLiveData<List<Message>>(emptyList())
+    private val _messages = MutableLiveData<List<Message>>()
     val messages: LiveData<List<Message>> = _messages
 
     private val _messageLoadState = MutableLiveData<Resource<List<Message>>>()
@@ -34,6 +34,7 @@ class ChatViewModel(
     init {
         initializeVariables()
         observeNewMessages()
+        loadMoreMessages()
     }
 
     fun sendMessage(content: String) {
@@ -49,7 +50,6 @@ class ChatViewModel(
     }
 
     private fun initializeVariables() {
-        _messages.value = emptyList()
         lastLoadedTimestamp = null
         allMessagesLoaded = false
         hasInitialLoad = false
@@ -93,6 +93,8 @@ class ChatViewModel(
     private fun observeNewMessages() {
         viewModelScope.launch {
             messageRepository.observeNewMessages(currentUserId, otherUserId).collect { newMessage ->
+                if (!hasInitialLoad) return@collect
+
                 val current = _messages.value ?: emptyList()
                 if (current.none { it.id == newMessage.id }) {
                     val updated = (current + newMessage).sortedBy { it.timestamp }
