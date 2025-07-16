@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ikhut.messengerapp.R
+import com.ikhut.messengerapp.application.getConversationSummaryRepository
 import com.ikhut.messengerapp.application.getUserRepository
 import com.ikhut.messengerapp.application.getUserSessionManager
 import com.ikhut.messengerapp.application.getMessageRepository
@@ -19,6 +20,7 @@ import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.presentation.adapters.MessageAdapter
 import com.ikhut.messengerapp.presentation.utils.ProfilePictureLoader.loadProfilePicture
 import com.ikhut.messengerapp.presentation.viewmodel.ChatViewModel
+import com.ikhut.messengerapp.presentation.viewmodel.ConversationSummaryViewModel
 import kotlinx.coroutines.launch
 
 class ChatActivity : AppCompatActivity() {
@@ -28,6 +30,7 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var chatViewModel: ChatViewModel
+    private lateinit var conversationSummaryViewModel: ConversationSummaryViewModel
 
     private val targetUsername: String by lazy {
         intent.getStringExtra(EXTRA_USERNAME) ?: ""
@@ -73,12 +76,18 @@ class ChatActivity : AppCompatActivity() {
             this,
             ChatViewModel.create(getMessageRepository(), currentUser.username, targetUsername)
         )[ChatViewModel::class.java]
+
+        conversationSummaryViewModel = ViewModelProvider(
+            this,
+            ConversationSummaryViewModel.create(getConversationSummaryRepository(), currentUser.username)
+        )[ConversationSummaryViewModel::class.java]
     }
 
     private fun setupMessageInput() {
         binding.sendButton.setOnClickListener {
             val messageContent = binding.messageInput.text.toString().trim()
             if (messageContent.isNotEmpty()) {
+                conversationSummaryViewModel.updateConversationSummary(targetUser.username, messageContent)
                 chatViewModel.sendMessage(messageContent)
                 binding.messageInput.setText("")
             }

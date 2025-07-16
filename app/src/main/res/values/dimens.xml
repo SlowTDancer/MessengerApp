@@ -115,7 +115,7 @@
     <dimen name="message_input_edit_text_image_size">20dp</dimen>
     <dimen name="message_input_edit_text_image_margin_end">20dp</dimen>
 
-    <dimen name="message_section_padding_vertical">16dp</dimen>
+    <dimen name="message_section_padding_vertical">3dp</dimen>
     <dimen name="message_text_wrapper_min_width">30dp</dimen>
     <dimen name="message_text_wrapper_max_width">260dp</dimen>
     <dimen name="message_padding_horizontal">30dp</dimen>
