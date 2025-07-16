@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ikhut.messengerapp.R
 import com.ikhut.messengerapp.application.getUserRepository
 import com.ikhut.messengerapp.application.getUserSessionManager
@@ -68,11 +69,9 @@ class ChatActivity : AppCompatActivity() {
         val currentUser = getUserSessionManager().currentUser
             ?: throw IllegalStateException("Current user is null")
 
-        val messageRepository = getMessageRepository()
-
         chatViewModel = ViewModelProvider(
             this,
-            ChatViewModel.create(messageRepository, currentUser.username, targetUsername)
+            ChatViewModel.create(getMessageRepository(), currentUser.username, targetUsername)
         )[ChatViewModel::class.java]
     }
 
@@ -92,15 +91,12 @@ class ChatActivity : AppCompatActivity() {
             when (resource) {
                 is Resource.Loading -> {
                     binding.sendButton.isEnabled = false
-                    // You can show a loading indicator here if needed
                 }
                 is Resource.Success -> {
                     binding.sendButton.isEnabled = true
-                    // Message sent successfully
                     scrollToBottom()
                 }
                 is Resource.Error -> {
-                    binding.sendButton.isEnabled = true
                     Toast.makeText(this, "Failed to send message: ${resource.message}", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -108,9 +104,23 @@ class ChatActivity : AppCompatActivity() {
 
         // Observe messages list
         chatViewModel.messages.observe(this) { messages ->
-            messageAdapter.submitList(messages)
-            if (messages.isNotEmpty()) {
-                scrollToBottom()
+            if(messages.isEmpty()) return@observe
+            val isAtBottom = isAtBottom()
+            messageAdapter.submitList(messages) {
+                if (isAtBottom || messageAdapter.itemCount <= 20) {
+                    scrollToBottom()
+                }
+            }
+        }
+
+        // Observe message loading state
+        chatViewModel.messageLoadState.observe(this) { resource ->
+            when (resource) {
+                is Resource.Loading -> {}
+                is Resource.Success -> {}
+                is Resource.Error -> {
+                    Toast.makeText(this, "Failed to load messages: ${resource.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -121,6 +131,15 @@ class ChatActivity : AppCompatActivity() {
                 binding.chatRecyclerView.smoothScrollToPosition(messageAdapter.itemCount - 1)
             }
         }
+    }
+
+    private fun isAtBottom(): Boolean {
+        val layoutManager = binding.chatRecyclerView.layoutManager as LinearLayoutManager
+        val lastVisiblePosition = layoutManager.findLastVisibleItemPosition()
+        val totalItems = messageAdapter.itemCount
+
+        // Consider "at bottom" if within 3 items of the end
+        return lastVisiblePosition >= totalItems - 3
     }
 
     private fun updatePaddingForKeyboard(
@@ -150,6 +169,20 @@ class ChatActivity : AppCompatActivity() {
                 stackFromEnd = true
                 reverseLayout = false
             }
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                    // Load more messages when scrolling to the top
+                    if (firstVisibleItemPosition <= 5) {
+                        chatViewModel.loadMoreMessages()
+                    }
+                }
+            })
         }
     }
 

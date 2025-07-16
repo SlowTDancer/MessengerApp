@@ -29,9 +29,10 @@ class ChatViewModel(
     private var isLoadingMore = false
     private var allMessagesLoaded = false
     private var lastLoadedTimestamp: Long? = null
+    var hasInitialLoad = false
 
     init {
-        loadInitialMessages()
+        initializeVariables()
         observeNewMessages()
     }
 
@@ -47,11 +48,11 @@ class ChatViewModel(
         }
     }
 
-    private fun loadInitialMessages() {
+    private fun initializeVariables() {
         _messages.value = emptyList()
         lastLoadedTimestamp = null
         allMessagesLoaded = false
-        loadMoreMessages()
+        hasInitialLoad = false
     }
 
     fun loadMoreMessages(limit: Int = Constants.PAGE_SIZE) {
@@ -70,11 +71,17 @@ class ChatViewModel(
                     allMessagesLoaded = true
                 } else {
                     lastLoadedTimestamp = newMessages.last().timestamp
-                    val updated =
-                        (newMessages + (_messages.value ?: emptyList())).distinctBy { it.id }
-                    _messages.value = updated
+                    val existingMessages = _messages.value ?: emptyList()
+
+                    // Combine and sort by timestamp, then remove duplicates
+                    val allMessages = (existingMessages + newMessages)
+                        .distinctBy { it.id }
+                        .sortedBy { it.timestamp }
+
+                    _messages.value = allMessages
                 }
                 _messageLoadState.value = Resource.Success(_messages.value ?: emptyList())
+                hasInitialLoad = true // Mark initial load as complete
             }, onFailure = {
                 _messageLoadState.value = Resource.Error(it.message ?: Constants.ERROR_UNKNOWN)
             })
@@ -88,7 +95,8 @@ class ChatViewModel(
             messageRepository.observeNewMessages(currentUserId, otherUserId).collect { newMessage ->
                 val current = _messages.value ?: emptyList()
                 if (current.none { it.id == newMessage.id }) {
-                    _messages.postValue(current + newMessage)
+                    val updated = (current + newMessage).sortedBy { it.timestamp }
+                    _messages.postValue(updated)
                 }
             }
         }
