@@ -51,7 +51,8 @@
                 app:layout_constraintStart_toEndOf="@id/back_button"
 
                 app:queryHint="Search"
-                app:searchIcon="@drawable/ic_search_filled" />
+                app:searchIcon="@drawable/ic_search_filled"
+                app:queryBackground="@android:color/transparent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
