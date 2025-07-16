@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/message_received_color" />
+            <corners
+                android:topLeftRadius="@dimen/message_border_radius"
+                android:topRightRadius="@dimen/message_border_radius"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="@dimen/message_border_radius" />
+        </shape>
+    </item>
+</selector>

@@ -16,4 +16,8 @@
     <color name="loading_overlay_background">#F5F5F5</color>
     <color name="loading_dots_color">#4A90E2</color>
     <color name="loading_text_color">#666666</color>
+
+    <color name="message_sent_color">#6476f3</color>
+    <color name="message_received_color">#f5f6ff</color>
+
 </resources>
