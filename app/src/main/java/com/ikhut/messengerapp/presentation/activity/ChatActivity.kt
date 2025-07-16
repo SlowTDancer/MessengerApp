@@ -1,8 +1,10 @@
 package com.ikhut.messengerapp.presentation.activity
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
@@ -10,10 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ikhut.messengerapp.R
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.application.getConversationSummaryRepository
+import com.ikhut.messengerapp.application.getMessageRepository
 import com.ikhut.messengerapp.application.getUserRepository
 import com.ikhut.messengerapp.application.getUserSessionManager
-import com.ikhut.messengerapp.application.getMessageRepository
 import com.ikhut.messengerapp.databinding.ActivityChatBinding
 import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.domain.model.User
@@ -33,7 +36,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var conversationSummaryViewModel: ConversationSummaryViewModel
 
     private val targetUsername: String by lazy {
-        intent.getStringExtra(EXTRA_USERNAME) ?: ""
+        intent.getStringExtra(Constants.EXTRA_USERNAME) ?: ""
     }
     private lateinit var targetUser: User
 
@@ -73,13 +76,13 @@ class ChatActivity : AppCompatActivity() {
             ?: throw IllegalStateException("Current user is null")
 
         chatViewModel = ViewModelProvider(
-            this,
-            ChatViewModel.create(getMessageRepository(), currentUser.username, targetUsername)
+            this, ChatViewModel.create(getMessageRepository(), currentUser.username, targetUsername)
         )[ChatViewModel::class.java]
 
         conversationSummaryViewModel = ViewModelProvider(
-            this,
-            ConversationSummaryViewModel.create(getConversationSummaryRepository(), currentUser.username)
+            this, ConversationSummaryViewModel.create(
+                getConversationSummaryRepository(), currentUser.username
+            )
         )[ConversationSummaryViewModel::class.java]
     }
 
@@ -87,7 +90,10 @@ class ChatActivity : AppCompatActivity() {
         binding.sendButton.setOnClickListener {
             val messageContent = binding.messageInput.text.toString().trim()
             if (messageContent.isNotEmpty()) {
-                conversationSummaryViewModel.updateConversationSummary(targetUser.username, messageContent)
+                conversationSummaryViewModel.updateConversationSummary(
+                    targetUser, messageContent
+                )
+
                 chatViewModel.sendMessage(messageContent)
                 binding.messageInput.setText("")
             }
@@ -97,18 +103,23 @@ class ChatActivity : AppCompatActivity() {
     private fun observeViewModel() {
         chatViewModel.sendMessageState.observe(this) { resource ->
             when (resource) {
-                is Resource.Loading -> { binding.sendButton.isEnabled = false }
+                is Resource.Loading -> {
+                    binding.sendButton.isEnabled = false
+                }
+
                 is Resource.Success -> {
                     binding.sendButton.isEnabled = true
                     scrollToBottom()
                 }
+
                 is Resource.Error -> {
-                    Toast.makeText(this, "Failed to send message: ${resource.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this, "Failed to send message: ${resource.message}", Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
 
-        // Observe messages list
         chatViewModel.messages.observe(this) { messages ->
             if (messages == null || messages.isEmpty()) return@observe
 
@@ -125,13 +136,16 @@ class ChatActivity : AppCompatActivity() {
                 is Resource.Loading -> {
                     updateEmptyState(false)
                 }
+
                 is Resource.Success -> {
-                    // Show empty state only if no messages after successful load
                     val currentMessages = chatViewModel.messages.value
                     updateEmptyState(currentMessages == null || currentMessages.isEmpty())
                 }
+
                 is Resource.Error -> {
-                    Toast.makeText(this, "Failed to load messages: ${resource.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this, "Failed to load messages: ${resource.message}", Toast.LENGTH_SHORT
+                    ).show()
                     val currentMessages = chatViewModel.messages.value
                     updateEmptyState(currentMessages == null || currentMessages.isEmpty())
                 }
@@ -152,13 +166,11 @@ class ChatActivity : AppCompatActivity() {
         val lastVisiblePosition = layoutManager.findLastVisibleItemPosition()
         val totalItems = messageAdapter.itemCount
 
-        // Consider "at bottom" if within 3 items of the end
         return lastVisiblePosition >= totalItems - 3
     }
 
     private fun updatePaddingForKeyboard(
-        imeInsets: androidx.core.graphics.Insets,
-        systemBarInsets: androidx.core.graphics.Insets
+        imeInsets: Insets, systemBarInsets: Insets
     ) {
         val padding = resources.getDimensionPixelSize(R.dimen.message_input_container_padding)
         val bottomPadding = imeInsets.bottom.coerceAtLeast(systemBarInsets.bottom) + padding
@@ -191,7 +203,6 @@ class ChatActivity : AppCompatActivity() {
                     val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                     val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-                    // Load more messages when scrolling to the top
                     if (firstVisibleItemPosition <= 5) {
                         chatViewModel.loadMoreMessages()
                     }
@@ -232,21 +243,32 @@ class ChatActivity : AppCompatActivity() {
     private fun loadUserProfilePictures(user: User) {
         val context = binding.root.context
 
-        loadProfilePicture(context, binding.profilePicture, user.imageRes, user.imageUrl, user.localImagePath, user.username)
-        loadProfilePicture(context, binding.profilePictureCollapsed, user.imageRes, user.imageUrl, user.localImagePath, user.username)
+        loadProfilePicture(
+            context,
+            binding.profilePicture,
+            user.imageRes,
+            user.imageUrl,
+            user.localImagePath,
+            user.username
+        )
+        loadProfilePicture(
+            context,
+            binding.profilePictureCollapsed,
+            user.imageRes,
+            user.imageUrl,
+            user.localImagePath,
+            user.username
+        )
     }
 
     private fun updateEmptyState(isEmpty: Boolean) {
         if (isEmpty) {
-            binding.emptyStateText.visibility = android.view.View.VISIBLE
-            binding.chatRecyclerView.visibility = android.view.View.GONE
+            binding.emptyStateText.visibility = View.VISIBLE
+            binding.chatRecyclerView.visibility = View.GONE
         } else {
-            binding.emptyStateText.visibility = android.view.View.GONE
-            binding.chatRecyclerView.visibility = android.view.View.VISIBLE
+            binding.emptyStateText.visibility = View.GONE
+            binding.chatRecyclerView.visibility = View.VISIBLE
         }
     }
 
-    companion object {
-        const val EXTRA_USERNAME = "extra_username"
-    }
 }

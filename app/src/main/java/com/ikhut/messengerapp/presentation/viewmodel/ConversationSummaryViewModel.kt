@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.ikhut.messengerapp.application.config.Constants
+import com.ikhut.messengerapp.application.getUserRepository
 import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.domain.model.ConversationSummary
+import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.domain.model.toLocalDateTime
 import com.ikhut.messengerapp.domain.repository.ConversationSummaryRepository
 import kotlinx.coroutines.launch
@@ -126,11 +128,13 @@ class ConversationSummaryViewModel(
     }
 
     fun updateConversationSummary(
-        otherUserId: String, lastMessage: String
+        otherUser: User, lastMessage: String
     ) {
         viewModelScope.launch {
             conversationSummaryRepository.updateConversationSummary(
-                userId1 = currentUserId, userId2 = otherUserId, lastMessage = lastMessage
+                user1 = getUserRepository().getUser(currentUserId).getOrNull()!!,
+                user2 = otherUser,
+                lastMessage = lastMessage
             )
         }
     }

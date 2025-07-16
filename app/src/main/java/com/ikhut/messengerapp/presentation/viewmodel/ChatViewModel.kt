@@ -73,7 +73,6 @@ class ChatViewModel(
                     lastLoadedTimestamp = newMessages.last().timestamp
                     val existingMessages = _messages.value ?: emptyList()
 
-                    // Combine and sort by timestamp, then remove duplicates
                     val allMessages = (existingMessages + newMessages)
                         .distinctBy { it.id }
                         .sortedBy { it.timestamp }
@@ -81,7 +80,7 @@ class ChatViewModel(
                     _messages.value = allMessages
                 }
                 _messageLoadState.value = Resource.Success(_messages.value ?: emptyList())
-                hasInitialLoad = true // Mark initial load as complete
+                hasInitialLoad = true
             }, onFailure = {
                 _messageLoadState.value = Resource.Error(it.message ?: Constants.ERROR_UNKNOWN)
             })

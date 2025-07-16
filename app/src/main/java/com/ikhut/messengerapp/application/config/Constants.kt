@@ -23,6 +23,7 @@ object Constants {
 
     const val UI_AVATARS_BASE = "https://ui-avatars.com/api/"
     const val PLACEHOLDER_NAME = "User"
+    const val EXTRA_USERNAME = "extra_username"
 
     const val PROFILE_IMAGES_DIR = "profile_images"
     const val IMAGE_QUALITY = 80

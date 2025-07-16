@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.ikhut.messengerapp.R
+import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.application.getConversationSummaryRepository
 import com.ikhut.messengerapp.application.getUserSessionManager
 import com.ikhut.messengerapp.databinding.FragmentConversationListBinding
@@ -217,7 +218,7 @@ class ConversationListFragment : Fragment() {
 
     private fun onConversationClick(conversation: ConversationSummary) {
         val intent = Intent(requireContext(), ChatActivity::class.java).apply {
-            putExtra(ChatActivity.EXTRA_USERNAME, conversation.addresseeName)
+            putExtra(Constants.EXTRA_USERNAME, conversation.addresseeName)
         }
         startActivity(intent)
     }

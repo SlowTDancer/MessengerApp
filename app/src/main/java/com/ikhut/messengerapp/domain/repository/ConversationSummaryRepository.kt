@@ -2,12 +2,13 @@ package com.ikhut.messengerapp.domain.repository
 
 import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.model.ConversationSummary
+import com.ikhut.messengerapp.domain.model.User
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
 interface ConversationSummaryRepository {
     suspend fun updateConversationSummary(
-        userId1: String, userId2: String, lastMessage: String
+        user1: User, user2: User, lastMessage: String
     ): Result<Unit>
 
     suspend fun getRecentConversationSummaries(

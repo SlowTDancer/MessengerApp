@@ -169,7 +169,7 @@ class SearchUsersFragment : Fragment() {
 
     private fun onProfileClick(user: User) {
         val intent = Intent(requireContext(), ChatActivity::class.java).apply {
-            putExtra(ChatActivity.EXTRA_USERNAME, user.username)
+            putExtra(Constants.EXTRA_USERNAME, user.username)
         }
         startActivity(intent)
     }

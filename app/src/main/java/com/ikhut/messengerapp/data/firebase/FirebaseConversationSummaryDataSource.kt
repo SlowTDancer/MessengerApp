@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.model.ConversationSummary
+import com.ikhut.messengerapp.domain.model.User
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -18,34 +19,36 @@ class FirebaseConversationSummaryDataSource {
         FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_CONVERSATIONS)
 
     suspend fun updateConversationSummary(
-        userId1: String, userId2: String, lastMessage: String
+        user1: User, user2: User, lastMessage: String
     ): Result<Unit> {
         return try {
-            val snapshot1 = conversationsDB.child(userId1).child(userId2).get().await()
-            val snapshot2 = conversationsDB.child(userId2).child(userId1).get().await()
+            val snapshot1 =
+                conversationsDB.child(user1.username).child(user2.username).get().await()
+            val snapshot2 =
+                conversationsDB.child(user2.username).child(user1.username).get().await()
 
             val existing1 = snapshot1.getValue(ConversationSummary::class.java)
             val existing2 = snapshot2.getValue(ConversationSummary::class.java)
 
             val conversationForUser1 = ConversationSummary(
-                addresseeName = userId2,
+                addresseeName = user2.username,
                 lastMessage = lastMessage,
-                imageRes = existing1?.imageRes ?: 0,
-                imageUrl = existing1?.imageUrl,
-                localImagePath = existing1?.localImagePath
+                imageRes = existing2?.imageRes ?: 0,
+                imageUrl = existing2?.imageUrl ?: user2.imageUrl,
+                localImagePath = existing2?.localImagePath ?: user2.localImagePath
             )
 
             val conversationForUser2 = ConversationSummary(
-                addresseeName = userId1,
+                addresseeName = user1.username,
                 lastMessage = lastMessage,
-                imageRes = existing2?.imageRes ?: 0,
-                imageUrl = existing2?.imageUrl,
-                localImagePath = existing2?.localImagePath
+                imageRes = existing1?.imageRes ?: 0,
+                imageUrl = existing1?.imageUrl ?: user1.imageUrl,
+                localImagePath = existing1?.localImagePath ?: user1.localImagePath
             )
 
             val updates = mapOf(
-                "$userId1/$userId2" to conversationForUser1,
-                "$userId2/$userId1" to conversationForUser2
+                "${user1.username}/${user2.username}" to conversationForUser1,
+                "${user2.username}/${user1.username}" to conversationForUser2
             )
 
             conversationsDB.updateChildren(updates).await()
