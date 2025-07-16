@@ -22,28 +22,20 @@ class FirebaseConversationSummaryDataSource {
         user1: User, user2: User, lastMessage: String
     ): Result<Unit> {
         return try {
-            val snapshot1 =
-                conversationsDB.child(user1.username).child(user2.username).get().await()
-            val snapshot2 =
-                conversationsDB.child(user2.username).child(user1.username).get().await()
-
-            val existing1 = snapshot1.getValue(ConversationSummary::class.java)
-            val existing2 = snapshot2.getValue(ConversationSummary::class.java)
-
             val conversationForUser1 = ConversationSummary(
                 addresseeName = user2.username,
                 lastMessage = lastMessage,
-                imageRes = existing2?.imageRes ?: 0,
-                imageUrl = existing2?.imageUrl ?: user2.imageUrl,
-                localImagePath = existing2?.localImagePath ?: user2.localImagePath
+                imageRes = user2.imageRes,
+                imageUrl = user2.imageUrl,
+                localImagePath = user2.localImagePath
             )
 
             val conversationForUser2 = ConversationSummary(
                 addresseeName = user1.username,
                 lastMessage = lastMessage,
-                imageRes = existing1?.imageRes ?: 0,
-                imageUrl = existing1?.imageUrl ?: user1.imageUrl,
-                localImagePath = existing1?.localImagePath ?: user1.localImagePath
+                imageRes = user1.imageRes,
+                imageUrl = user1.imageUrl,
+                localImagePath = user1.localImagePath
             )
 
             val updates = mapOf(

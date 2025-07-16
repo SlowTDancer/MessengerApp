@@ -1,9 +1,13 @@
 package com.ikhut.messengerapp.presentation.activity
 
+
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -25,6 +29,7 @@ import com.ikhut.messengerapp.presentation.utils.ProfilePictureLoader.loadProfil
 import com.ikhut.messengerapp.presentation.viewmodel.ChatViewModel
 import com.ikhut.messengerapp.presentation.viewmodel.ConversationSummaryViewModel
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 class ChatActivity : AppCompatActivity() {
 
@@ -59,6 +64,7 @@ class ChatActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener { finish() }
         binding.backButtonCollapsed.setOnClickListener { finish() }
 
+        setupCollapsingAppBar()
         loadUserProfile()
         setupRecyclerView()
         setupViewModel()
@@ -271,4 +277,112 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupCollapsingAppBar() {
+        val appBarContainer = binding.appBarContainer
+        val expandedLayout = binding.expandedLayout
+        val collapsedLayout = binding.collapsedLayout
+        val chatRecyclerView = binding.chatRecyclerView
+
+        val expandedHeight = resources.getDimensionPixelSize(R.dimen.appbar_chat_height_extended)
+        val collapsedHeight = resources.getDimensionPixelSize(R.dimen.appbar_chat_height_collapsed)
+
+        var currentCollapseProgress = 0f
+        val animationDuration = 50L
+
+        val layoutParams = appBarContainer.layoutParams
+        layoutParams.height = expandedHeight
+        appBarContainer.layoutParams = layoutParams
+
+        expandedLayout.visibility = View.VISIBLE
+        collapsedLayout.visibility = View.INVISIBLE
+        expandedLayout.alpha = 1f
+        collapsedLayout.alpha = 0f
+        currentCollapseProgress = 0f
+
+        chatRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val isScrollingUp = dy > 0
+
+                if (abs(dy) > 5) {
+                    val targetProgress = if (isScrollingUp) 0f else 1f
+
+                    if (currentCollapseProgress != targetProgress) {
+                        animateToCollapseState(
+                            appBarContainer,
+                            expandedLayout,
+                            collapsedLayout,
+                            expandedHeight,
+                            collapsedHeight,
+                            targetProgress,
+                            animationDuration
+                        )
+                        currentCollapseProgress = targetProgress
+                    }
+                }
+            }
+        })
+    }
+
+    private fun animateToCollapseState(
+        appBarContainer: ConstraintLayout,
+        expandedLayout: ConstraintLayout,
+        collapsedLayout: ConstraintLayout,
+        expandedHeight: Int,
+        collapsedHeight: Int,
+        targetProgress: Float,
+        duration: Long
+    ) {
+        val startHeight = appBarContainer.layoutParams.height
+        val endHeight =
+            expandedHeight - ((expandedHeight - collapsedHeight) * targetProgress).toInt()
+
+        val startExpandedAlpha = expandedLayout.alpha
+        val startCollapsedAlpha = collapsedLayout.alpha
+
+        val endExpandedAlpha = 1f - targetProgress
+        val endCollapsedAlpha = targetProgress
+
+        ValueAnimator.ofFloat(0f, 1f).apply {
+            this.duration = duration
+            interpolator = DecelerateInterpolator()
+
+            addUpdateListener { animator ->
+                val progress = animator.animatedValue as Float
+
+                val currentHeight = startHeight + ((endHeight - startHeight) * progress).toInt()
+                val layoutParams = appBarContainer.layoutParams
+                layoutParams.height = currentHeight
+                appBarContainer.layoutParams = layoutParams
+
+                expandedLayout.alpha =
+                    startExpandedAlpha + ((endExpandedAlpha - startExpandedAlpha) * progress)
+                collapsedLayout.alpha =
+                    startCollapsedAlpha + ((endCollapsedAlpha - startCollapsedAlpha) * progress)
+
+                val currentExpandedAlpha = expandedLayout.alpha
+                val currentCollapsedAlpha = collapsedLayout.alpha
+
+                when {
+                    currentExpandedAlpha > 0.9f -> {
+                        expandedLayout.visibility = View.VISIBLE
+                        collapsedLayout.visibility = View.INVISIBLE
+                    }
+
+                    currentCollapsedAlpha > 0.9f -> {
+                        expandedLayout.visibility = View.INVISIBLE
+                        collapsedLayout.visibility = View.VISIBLE
+                    }
+
+                    else -> {
+                        expandedLayout.visibility = View.VISIBLE
+                        collapsedLayout.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            start()
+        }
+    }
 }
