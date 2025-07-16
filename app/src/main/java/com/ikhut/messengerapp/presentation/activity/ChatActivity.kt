@@ -95,12 +95,9 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        // Observe message sending state
         chatViewModel.sendMessageState.observe(this) { resource ->
             when (resource) {
-                is Resource.Loading -> {
-                    binding.sendButton.isEnabled = false
-                }
+                is Resource.Loading -> { binding.sendButton.isEnabled = false }
                 is Resource.Success -> {
                     binding.sendButton.isEnabled = true
                     scrollToBottom()
@@ -113,25 +110,23 @@ class ChatActivity : AppCompatActivity() {
 
         // Observe messages list
         chatViewModel.messages.observe(this) { messages ->
-            updateEmptyState(messages.isEmpty())
-
             if(messages.isEmpty()) return@observe
             val isAtBottom = isAtBottom()
             messageAdapter.submitList(messages) {
                 if (isAtBottom || messageAdapter.itemCount <= 20) {
-
                     scrollToBottom()
                 }
             }
         }
 
-        // Observe message loading state
         chatViewModel.messageLoadState.observe(this) { resource ->
             when (resource) {
                 is Resource.Loading -> {}
                 is Resource.Success -> {}
                 is Resource.Error -> {
                     Toast.makeText(this, "Failed to load messages: ${resource.message}", Toast.LENGTH_SHORT).show()
+                    val currentMessages = chatViewModel.messages.value ?: emptyList()
+                    updateEmptyState(currentMessages.isEmpty())
                 }
             }
         }
