@@ -73,8 +73,7 @@ class ChatViewModel(
                     lastLoadedTimestamp = newMessages.last().timestamp
                     val existingMessages = _messages.value ?: emptyList()
 
-                    val allMessages = (existingMessages + newMessages)
-                        .distinctBy { it.id }
+                    val allMessages = (existingMessages + newMessages).distinctBy { it.id }
                         .sortedBy { it.timestamp }
 
                     _messages.value = allMessages

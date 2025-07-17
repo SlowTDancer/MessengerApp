@@ -129,7 +129,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/update_button"
         app:strokeColor="@color/sign_out_gray"
-        app:strokeWidth="2dp" />
+        app:strokeWidth="@dimen/settings_stroke_width" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

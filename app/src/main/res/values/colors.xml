@@ -3,7 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-
     <color name="input_background">#F3F6FF</color>
     <color name="button_blue">#5A7FFF</color>
     <color name="black_blurry">#808080</color>
@@ -20,4 +19,8 @@
     <color name="message_sent_color">#6476f3</color>
     <color name="message_received_color">#f5f6ff</color>
 
+    <color name="app_bar_job_color">#99FFFFFF</color>
+    <color name="send_message_to_start_conversation_color">#999999</color>
+    <color name="message_card_background_color">#F0F0F0</color>
+    <color name="send_message_edit_text_color">#999999</color>
 </resources>

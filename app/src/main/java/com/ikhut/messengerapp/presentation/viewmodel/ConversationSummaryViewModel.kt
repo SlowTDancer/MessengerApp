@@ -9,6 +9,7 @@ import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.application.getUserRepository
 import com.ikhut.messengerapp.domain.common.Resource
 import com.ikhut.messengerapp.domain.model.ConversationSummary
+import com.ikhut.messengerapp.domain.model.UpdateType
 import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.domain.model.toLocalDateTime
 import com.ikhut.messengerapp.domain.repository.ConversationSummaryRepository
@@ -80,17 +81,33 @@ class ConversationSummaryViewModel(
     private fun observeConversationUpdates() {
         viewModelScope.launch {
             conversationSummaryRepository.observeConversationUpdates(currentUserId)
-                .collect { updatedConversation ->
+                .collect { (updatedConversation, updateType) ->
                     val currentConversations =
                         _conversations.value?.toMutableList() ?: mutableListOf()
                     val existingIndex = currentConversations.indexOfFirst {
                         it.addresseeName == updatedConversation.addresseeName
                     }
 
-                    if (existingIndex != -1) {
-                        currentConversations[existingIndex] = updatedConversation
-                    } else {
-                        currentConversations.add(0, updatedConversation)
+                    when (updateType) {
+                        UpdateType.ADDED -> {
+                            if (existingIndex == -1) {
+                                currentConversations.add(0, updatedConversation)
+                            }
+                        }
+
+                        UpdateType.UPDATED -> {
+                            if (existingIndex != -1) {
+                                currentConversations[existingIndex] = updatedConversation
+                            } else {
+                                currentConversations.add(0, updatedConversation)
+                            }
+                        }
+
+                        UpdateType.DELETED -> {
+                            if (existingIndex != -1) {
+                                currentConversations.removeAt(existingIndex)
+                            }
+                        }
                     }
 
                     val sortedConversations = currentConversations.distinctBy { it.addresseeName }
@@ -101,6 +118,7 @@ class ConversationSummaryViewModel(
                 }
         }
     }
+
 
     fun updateUserProfileInConversations(
         oldUsername: String?,

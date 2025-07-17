@@ -82,7 +82,6 @@ class UserSessionManager(
     }
 
     fun getCurrentUsername(): String? = currentUser?.username
-    fun getCurrentJob(): String? = currentUser?.job
 
     suspend fun refreshUserData(): Result<User> {
         val username = prefs.getString(Constants.PARAM_USERNAME, null)

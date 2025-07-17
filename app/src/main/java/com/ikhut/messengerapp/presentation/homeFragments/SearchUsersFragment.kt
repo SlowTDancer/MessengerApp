@@ -16,7 +16,6 @@ import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.application.getUserRepository
 import com.ikhut.messengerapp.application.getUserSessionManager
 import com.ikhut.messengerapp.databinding.FragmentSearchUsersBinding
-import com.ikhut.messengerapp.domain.model.ConversationSummary
 import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.presentation.activity.BottomAppBarController
 import com.ikhut.messengerapp.presentation.activity.ChatActivity
@@ -46,7 +45,7 @@ class SearchUsersFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        searchUsersAdapter = SearchUsersAdapter{user ->
+        searchUsersAdapter = SearchUsersAdapter { user ->
             onProfileClick(user)
         }
         viewModel = ViewModelProvider(

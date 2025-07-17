@@ -53,7 +53,7 @@
                 android:layout_marginStart="@dimen/appbar_chat_margin_start"
                 android:layout_marginBottom="@dimen/appbar_chat_job_margin_bottom"
                 android:paddingHorizontal="@dimen/appbar_chat_username_padding_horizontal"
-                android:textColor="#99FFFFFF"
+                android:textColor="@color/app_bar_job_color"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Manager" />
@@ -116,7 +116,7 @@
                 android:layout_marginBottom="@dimen/appbar_chat_collapsed_margin_bottom"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#99FFFFFF"
+                android:textColor="@color/app_bar_job_color"
                 android:textSize="@dimen/appbar_chat_job_font_size_collapsed"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/profile_picture_collapsed"
@@ -154,8 +154,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/send_message_to_start_conversation"
-        android:textColor="#999999"
-        android:textSize="16sp"
+        android:textColor="@color/send_message_to_start_conversation_color"
+        android:textSize="@dimen/send_message_to_start_conversation_text_size"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -178,7 +178,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/message_input_card_view_margin_horizontal"
             android:layout_weight="1"
-            app:cardBackgroundColor="#F0F0F0"
+            app:cardBackgroundColor="@color/message_card_background_color"
             app:cardCornerRadius="@dimen/message_input_card_view_border_radius"
             app:cardElevation="0dp">
 
@@ -196,7 +196,7 @@
                 android:paddingHorizontal="@dimen/message_input_edit_text_padding_horizontal"
                 android:paddingVertical="@dimen/message_input_edit_text_padding_vertical"
                 android:textColor="@android:color/black"
-                android:textColorHint="#999999"
+                android:textColorHint="@color/send_message_edit_text_color"
                 android:textSize="@dimen/message_input_edit_text_font_size" />
 
             <ImageButton

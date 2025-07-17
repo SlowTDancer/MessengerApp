@@ -1,6 +1,5 @@
 package com.ikhut.messengerapp.presentation.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -24,14 +23,14 @@ class MessageAdapter(
     private var messages: List<Message> = emptyList()
 
     fun submitList(newMessages: List<Message>, commitCallback: Runnable?) {
-        Log.d("MessageAdapter", "submitList with callback called with ${newMessages.size} messages")
+//        Log.d("MessageAdapter", "submitList with callback called with ${newMessages.size} messages")
         val diffCallback = MessageDiffCallback(messages, newMessages)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
 
         messages = newMessages
         diffResult.dispatchUpdatesTo(this)
         commitCallback?.run()
-        Log.d("MessageAdapter", "DiffUtil updates dispatched with callback, new size: ${messages.size}")
+//        Log.d("MessageAdapter", "DiffUtil updates dispatched with callback, new size: ${messages.size}")
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -41,7 +40,7 @@ class MessageAdapter(
         } else {
             VIEW_TYPE_RECEIVED
         }
-        Log.d("MessageAdapter", "Position $position: senderId=${message.senderId}, currentUser=${currentUser.username}, viewType=$viewType")
+//        Log.d("MessageAdapter", "Position $position: senderId=${message.senderId}, currentUser=${currentUser.username}, viewType=$viewType")
         return viewType
     }
 
@@ -53,17 +52,19 @@ class MessageAdapter(
                 val binding = MessageSentLayoutBinding.inflate(inflater, parent, false)
                 SentMessageViewHolder(binding)
             }
+
             VIEW_TYPE_RECEIVED -> {
                 val binding = MessageReceivedLayoutBinding.inflate(inflater, parent, false)
                 ReceivedMessageViewHolder(binding)
             }
+
             else -> throw IllegalArgumentException("Invalid view type: $viewType")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val message = messages[position]
-        Log.d("MessageAdapter", "Binding message at position $position: ${message.content}")
+//        Log.d("MessageAdapter", "Binding message at position $position: ${message.content}")
         when (holder) {
             is SentMessageViewHolder -> holder.bind(message)
             is ReceivedMessageViewHolder -> holder.bind(message)
@@ -71,14 +72,13 @@ class MessageAdapter(
     }
 
     override fun getItemCount(): Int {
-        Log.d("MessageAdapter", "getItemCount: ${messages.size}")
+//        Log.d("MessageAdapter", "getItemCount: ${messages.size}")
         return messages.size
     }
 }
 
 class MessageDiffCallback(
-    private val oldList: List<Message>,
-    private val newList: List<Message>
+    private val oldList: List<Message>, private val newList: List<Message>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size
@@ -87,13 +87,13 @@ class MessageDiffCallback(
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val same = oldList[oldItemPosition].id == newList[newItemPosition].id
-        Log.d("MessageDiffCallback", "areItemsTheSame: ${oldList[oldItemPosition].id} == ${newList[newItemPosition].id} = $same")
+//        Log.d("MessageDiffCallback", "areItemsTheSame: ${oldList[oldItemPosition].id} == ${newList[newItemPosition].id} = $same")
         return same
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val same = oldList[oldItemPosition] == newList[newItemPosition]
-        Log.d("MessageDiffCallback", "areContentsTheSame: $same")
+//        Log.d("MessageDiffCallback", "areContentsTheSame: $same")
         return same
     }
 }

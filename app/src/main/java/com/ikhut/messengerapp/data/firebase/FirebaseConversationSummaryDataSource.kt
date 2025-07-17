@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.model.ConversationSummary
+import com.ikhut.messengerapp.domain.model.UpdateType
 import com.ikhut.messengerapp.domain.model.User
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -191,24 +192,28 @@ class FirebaseConversationSummaryDataSource {
         }
     }
 
-    fun observeConversationUpdates(userId: String): Flow<ConversationSummary> {
+    fun observeConversationUpdates(userId: String): Flow<Pair<ConversationSummary, UpdateType>> {
         return callbackFlow {
             val userConversationsRef = conversationsDB.child(userId)
 
             val listener = object : ChildEventListener {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     snapshot.getValue(ConversationSummary::class.java)?.let { conversation ->
-                        trySend(conversation)
+                        trySend(conversation to UpdateType.ADDED)
                     }
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                     snapshot.getValue(ConversationSummary::class.java)?.let { conversation ->
-                        trySend(conversation)
+                        trySend(conversation to UpdateType.UPDATED)
                     }
                 }
 
-                override fun onChildRemoved(snapshot: DataSnapshot) {}
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    snapshot.getValue(ConversationSummary::class.java)?.let { conversation ->
+                        trySend(conversation to UpdateType.DELETED)
+                    }
+                }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
 
@@ -224,4 +229,5 @@ class FirebaseConversationSummaryDataSource {
             }
         }
     }
+
 }

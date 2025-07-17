@@ -25,7 +25,7 @@
                 android:layout_height="match_parent"
 
                 android:layout_gravity="center"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="@dimen/collapsing_toolbar_overlay_margin"
 
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
@@ -46,9 +46,9 @@
                     android:layout_marginHorizontal="@dimen/searchbar_margin_horizontal"
                     android:layout_marginBottom="@dimen/appbar_margin_bottom"
 
-                    android:elevation="0dp"
-
                     android:background="@drawable/rounded_search_background"
+
+                    android:elevation="0dp"
                     app:iconifiedByDefault="false"
 
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -56,9 +56,9 @@
 
                     app:layout_constraintStart_toStartOf="parent"
 
+                    app:queryBackground="@android:color/transparent"
                     app:queryHint="Search"
-                    app:searchIcon="@drawable/ic_search_filled"
-                    app:queryBackground="@android:color/transparent" />
+                    app:searchIcon="@drawable/ic_search_filled" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -81,7 +81,7 @@
         android:layout_gravity="center"
 
         android:text="@string/no_conversations"
-        android:textSize="30sp"
+        android:textSize="@dimen/no_conversation_found_text_size"
         android:visibility="invisible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

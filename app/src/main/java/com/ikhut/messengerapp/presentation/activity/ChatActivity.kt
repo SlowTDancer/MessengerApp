@@ -77,8 +77,9 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        val currentUser = getUserSessionManager().currentUser
-            ?: throw IllegalStateException("Current user is null")
+        val currentUser = getUserSessionManager().currentUser ?: throw IllegalStateException(
+            Constants.ERROR_NO_USER_LOGGED_IN
+        )
 
         chatViewModel = ViewModelProvider(
             this, ChatViewModel.create(getMessageRepository(), currentUser.username, targetUsername)
@@ -190,8 +191,9 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        val currentUser = getUserSessionManager().currentUser
-            ?: throw IllegalStateException("Current user is null")
+        val currentUser = getUserSessionManager().currentUser ?: throw IllegalStateException(
+            Constants.ERROR_NO_USER_LOGGED_IN
+        )
 
         messageAdapter = MessageAdapter(currentUser)
 
@@ -287,7 +289,7 @@ class ChatActivity : AppCompatActivity() {
         val collapsedHeight = resources.getDimensionPixelSize(R.dimen.appbar_chat_height_collapsed)
 
         var currentCollapseProgress = 0f
-        val animationDuration = 50L
+        val animationDuration = 80L
 
         val layoutParams = appBarContainer.layoutParams
         layoutParams.height = expandedHeight

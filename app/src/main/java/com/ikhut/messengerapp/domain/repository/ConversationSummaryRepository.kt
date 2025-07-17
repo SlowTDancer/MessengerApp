@@ -2,6 +2,7 @@ package com.ikhut.messengerapp.domain.repository
 
 import com.ikhut.messengerapp.application.config.Constants
 import com.ikhut.messengerapp.domain.model.ConversationSummary
+import com.ikhut.messengerapp.domain.model.UpdateType
 import com.ikhut.messengerapp.domain.model.User
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
@@ -25,5 +26,5 @@ interface ConversationSummaryRepository {
         newImageRes: Int = 0
     ): Result<Unit>
 
-    fun observeConversationUpdates(userId: String): Flow<ConversationSummary>
+    fun observeConversationUpdates(userId: String): Flow<Pair<ConversationSummary, UpdateType>>
 }

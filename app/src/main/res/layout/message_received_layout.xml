@@ -1,49 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="@dimen/message_section_padding_vertical"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:paddingVertical="@dimen/message_section_padding_vertical">
 
     <TextView
         android:id="@+id/message_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:minWidth="@dimen/message_text_wrapper_min_width"
-        android:maxWidth="@dimen/message_text_wrapper_max_width"
-
-        android:background="@drawable/message_received_background"
-
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-
-        tools:text="Hello! How are you doing today? This is a received message example."
-        android:textColor="@color/black"
-
-        android:paddingHorizontal="@dimen/message_padding_horizontal"
-        android:paddingVertical="@dimen/message_padding_vertical"
         android:layout_marginStart="@dimen/message_margin_from_screen_end"
+        android:background="@drawable/message_received_background"
 
         android:gravity="center_vertical"
 
-        tools:ignore="UnusedAttribute"
         android:justificationMode="inter_word"
-        />
+        android:maxWidth="@dimen/message_text_wrapper_max_width"
+        android:minWidth="@dimen/message_text_wrapper_min_width"
+
+        android:paddingHorizontal="@dimen/message_padding_horizontal"
+        android:paddingVertical="@dimen/message_padding_vertical"
+
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toTopOf="parent"
+
+        tools:ignore="UnusedAttribute"
+        tools:text="Hello! How are you doing today? This is a received message example." />
 
     <TextView
         android:id="@+id/message_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        tools:text="12:18"
+        android:layout_marginStart="@dimen/message_time_margin_end"
 
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/message_text"
-        android:layout_marginStart="@dimen/message_time_margin_end"
-        />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="12:18" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

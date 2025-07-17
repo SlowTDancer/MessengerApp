@@ -50,9 +50,9 @@
 
                 app:layout_constraintStart_toEndOf="@id/back_button"
 
+                app:queryBackground="@android:color/transparent"
                 app:queryHint="Search"
-                app:searchIcon="@drawable/ic_search_filled"
-                app:queryBackground="@android:color/transparent"/>
+                app:searchIcon="@drawable/ic_search_filled" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -73,7 +73,7 @@
         android:layout_gravity="center"
 
         android:text="@string/no_users_to_show"
-        android:textSize="30sp"
+        android:textSize="@dimen/no_users_to_show_text_size"
         android:visibility="invisible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

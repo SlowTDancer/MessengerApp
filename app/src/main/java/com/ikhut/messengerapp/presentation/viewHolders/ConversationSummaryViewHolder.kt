@@ -46,11 +46,11 @@ class ConversationSummaryViewHolder(private val binding: ConversationSummaryLayo
 
         return when {
             minutesAgo < 60 -> {
-                val minutes = minutesAgo.coerceAtLeast(1) // Show at least 1 min
+                val minutes = minutesAgo.coerceAtLeast(1)
                 "$minutes min"
             }
 
-            minutesAgo < 1440 -> { // Less than 24 hours (1440 minutes)
+            minutesAgo < 1440 -> {
                 val hours = minutesAgo / 60
                 "$hours hour"
             }

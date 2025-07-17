@@ -2,6 +2,7 @@ package com.ikhut.messengerapp.data.repository
 
 import com.ikhut.messengerapp.data.firebase.FirebaseConversationSummaryDataSource
 import com.ikhut.messengerapp.domain.model.ConversationSummary
+import com.ikhut.messengerapp.domain.model.UpdateType
 import com.ikhut.messengerapp.domain.model.User
 import com.ikhut.messengerapp.domain.repository.ConversationSummaryRepository
 import kotlinx.coroutines.flow.Flow
@@ -45,7 +46,7 @@ class ConversationSummaryRepositoryImpl(
         }
     }
 
-    override fun observeConversationUpdates(userId: String): Flow<ConversationSummary> {
+    override fun observeConversationUpdates(userId: String): Flow<Pair<ConversationSummary, UpdateType>> {
         return dataSource.observeConversationUpdates(userId)
     }
 }
